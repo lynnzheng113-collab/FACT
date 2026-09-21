@@ -1,3 +1,5 @@
 node_modules/
 *.tsbuildinfo
 .DS_Store
+vite.stdout.log
+vite.stderr.log
