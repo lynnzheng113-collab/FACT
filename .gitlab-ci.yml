@@ -1,4 +1,6 @@
-pages:
+deploy-pages:
+  stage: deploy
+  pages: true
   script:
     # dist is built and verified locally before it is pushed.
     - rm -rf public
@@ -7,15 +9,3 @@ pages:
   artifacts:
     paths:
       - public/
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "main"'
-  script:
-    - mkdir public
-    - cp -r dist/. public/
-  dependencies:
-    - build
-  artifacts:
-    paths:
-      - public/
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "main"'
