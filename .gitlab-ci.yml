@@ -1,28 +1,14 @@
-image: node:20
-
-stages:
-  - build
-  - deploy
-
-cache:
-  key:
-    files:
-      - package-lock.json
-  paths:
-    - node_modules/
-
-build:
-  stage: build
+pages:
   script:
-    - npm ci
-    - npm run build
+    # dist is built and verified locally before it is pushed.
+    - rm -rf public
+    - mkdir -p public
+    - cp -r dist/. public/
   artifacts:
     paths:
-      - dist/
-    expire_in: 1 week
-
-pages:
-  stage: deploy
+      - public/
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
   script:
     - mkdir public
     - cp -r dist/. public/
