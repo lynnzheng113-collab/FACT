@@ -16,6 +16,8 @@
 | 页面 | 主要交互 | 状态入口 |
 | --- | --- | --- |
 | Home | 工作流卡片和待关注事项跳转到对应页面 | `src/pages/HomePage.tsx` |
+| Users / Groups | 新建、编辑、保存并新建、保存并返回、用户启用确认、用户组成员的双栏添加与移除 | `src/pages/UsersPage.tsx`、`src/components/UserForm.tsx`、`src/components/TransferList.tsx` |
+| Workspaces 的记录详情 | Manage Workspace Permissions → Add / Remove Groups → 左右移动组 → Save；组详情同步显示关联工作区 | `src/components/WorkspacePermissions.tsx` |
 | Processing | 新建数据源弹层、输入方式、Inventory 开关、异常重试 | `src/pages/ProcessingPage.tsx` |
 | Documents | 文件夹、搜索条件、保存搜索、结果行、锁定文档提示 | `src/pages/DocumentsPage.tsx` |
 | Analytics | 标签页、增量索引运行状态、新建分析集 | `src/pages/AnalyticsPage.tsx` |
@@ -28,6 +30,7 @@
 
 - `qcPassed` 位于 `src/App.tsx`，由 Redaction 页面设置，Production 页面读取。
 - `page` 位于 `src/App.tsx`，由全局导航和页面跳转共同更新。
+- `src/state/Administration.tsx` 共享客户、事项、工作区、用户和组；页面切换保留数据，刷新恢复初始值。工作区关联从组的 `workspaceIds` 派生，用户通过组成员关系查看工作区关联。
 - 各页面其余状态目前是演示状态，只存在于当前浏览器会话，不连接后端。
 
 ## 调整交互的最小步骤

@@ -3,10 +3,10 @@ import { Building2, BriefcaseBusiness, ChevronRight, FolderKanban, Pin, PinOff, 
 import { copy } from "../constants/copy";
 import { Badge, Button, Field, Modal, PageHeader, Panel } from "../components/UI";
 
+import { useAdministration, type ClientRecord, type MatterRecord, type WorkspaceRecord } from "../state/Administration";
+import { WorkspacePermissions } from "../components/WorkspacePermissions";
+
 type TabId = "clients" | "matters" | "workspaces";
-type ClientRecord = { id: string; name: string; number: string; status: string; domain: string };
-type MatterRecord = { id: string; name: string; number: string; clientId: string; clientName: string; clientNumber: string; status: string; keywords: string; notes: string };
-type WorkspaceRecord = { id: string; name: string; matterId: string; matterName: string; clientName: string; artifactId: string; template: string; status: string; pinned: boolean };
 type ClientFormValue = { name: string; number: string; status: string };
 type MatterFormValue = { name: string; number: string; status: string; clientId: string; keywords: string; notes: string };
 
@@ -15,9 +15,8 @@ const IconByTab = { clients: Building2, matters: BriefcaseBusiness, workspaces: 
 export function WorkspacesPage({ notify, navigateHome }: { notify: (message: string) => void; navigateHome: () => void }) {
   const text = copy.workspaceManagement;
   const [tab, setTab] = useState<TabId>("workspaces");
-  const [clients, setClients] = useState<ClientRecord[]>(() => text.clients.map((item) => ({ ...item })));
-  const [matters, setMatters] = useState<MatterRecord[]>(() => text.matters.map((item) => ({ ...item })));
-  const [workspaces, setWorkspaces] = useState<WorkspaceRecord[]>(() => text.workspaces.map((item) => ({ ...item })));
+  const { clients, setClients, matters, setMatters, workspaces, setWorkspaces } = useAdministration();
+  const [permissionsOpen, setPermissionsOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<string>(text.workspaces[1].id);
   const [createOpen, setCreateOpen] = useState(false);
   const [validation, setValidation] = useState(false);
@@ -163,13 +162,15 @@ export function WorkspacesPage({ notify, navigateHome }: { notify: (message: str
       <Panel
         title={text.details}
         className="entity-detail"
-        actions={selectedId ? <><Button variant="secondary" onClick={() => notify(text.permissionsDemo)}>{text.editPermissions}</Button><Button variant="quiet" onClick={() => notify(text.auditDemo)}>{text.viewAudit}</Button>{selectedWorkspace && <Button variant="primary" onClick={navigateHome}>{text.openWorkspace}</Button>}</> : undefined}
+        actions={selectedId ? <><Button variant="secondary" onClick={() => selectedWorkspace ? setPermissionsOpen(true) : notify(text.permissionsDemo)}>{selectedWorkspace ? copy.userManagement.manageWorkspacePermissions : text.editPermissions}</Button><Button variant="quiet" onClick={() => notify(text.auditDemo)}>{text.viewAudit}</Button>{selectedWorkspace && <Button variant="primary" onClick={navigateHome}>{text.openWorkspace}</Button>}</> : undefined}
       >
         {!selectedId && <div className="empty-detail"><Icon size={24} /><span>{text.selectRecord}</span></div>}
         {selectedClient && <DetailGrid items={[[text.name, selectedClient.name], [text.clientNumber, selectedClient.number], [text.status, selectedClient.status], [text.clientDomainStatus, selectedClient.domain], [text.createdBy, text.history.actor], [text.createdOn, text.history.created]]} />}
         {selectedMatter && <DetailGrid items={[[text.name, selectedMatter.name], [text.matterNumber, selectedMatter.number], [text.status, selectedMatter.status], [text.client, selectedMatter.clientName], [text.keywords, selectedMatter.keywords || text.notProvided], [text.notes, selectedMatter.notes || text.notProvided], [text.lastModifiedBy, text.history.actor], [text.lastModifiedOn, text.history.modified]]} />}
         {selectedWorkspace && <DetailGrid items={[[text.name, selectedWorkspace.name], [text.status, selectedWorkspace.status], [text.client, selectedWorkspace.clientName], [text.matter, selectedWorkspace.matterName], [text.caseArtifactId, selectedWorkspace.artifactId], [text.templateWorkspace, selectedWorkspace.template], [text.lastModifiedBy, text.history.actor], [text.lastModifiedOn, text.history.modified]]} />}
       </Panel>
+
+      {selectedWorkspace && <WorkspacePermissions open={permissionsOpen} workspace={selectedWorkspace} onClose={() => setPermissionsOpen(false)} notify={notify} />}
 
       <Modal open={createOpen} title={actionLabel} onClose={() => setCreateOpen(false)} wide footer={<><Button variant="secondary" onClick={() => setCreateOpen(false)}>{copy.common.cancel}</Button><Button variant="primary" onClick={tab === "clients" ? saveClient : tab === "matters" ? saveMatter : saveWorkspace}>{copy.common.save}</Button></>}>
         {validation && <div className="form-alert"><ShieldCheck size={18} /><span>{text.requiredHint}</span></div>}

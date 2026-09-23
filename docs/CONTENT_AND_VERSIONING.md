@@ -25,6 +25,15 @@
 - 初始 P0 + P1 交互原型。
 - 覆盖 Workspace、Processing、Documents、Analytics、Review、Redact、Production 和 Tasks。
 
+### v0.3 · 2026-09-23
+
+- 依据 `C:\Users\AA\Desktop\截图\02 User` 的 22 张截图，增加 Users、Groups 和工作区组关联流程，沿用现有中英双语风格。
+- 用户表单覆盖基本信息、访问、权限开关与默认设置；支持 Save、Save & New、Save & Back、席位确认、编辑和删除。
+- 用户组支持双栏选择成员、添加完成提示、移除成员及关联工作区展示；工作区详情的 Manage Workspace Permissions 支持添加/移除组。
+- 客户、事项、工作区、用户和组使用同一份浏览器内演示状态，跨页面保留；刷新页面恢复初始数据。
+- 类型检查、生产构建和浏览器端完整创建/关联/移除/取消流程通过；检查 1440px 桌面和 390px 窄屏，未发现运行错误。
+- 具体对象权限、标签可见性和真实异步后台任务不在本轮模拟范围内；不创建真实账号或发送邮件。
+
 ## 验证
 
 ```powershell

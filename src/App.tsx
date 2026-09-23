@@ -1,4 +1,6 @@
 import { useEffect, useState, type ReactNode } from "react";
+import { AdministrationProvider } from "./state/Administration";
+import { UsersPage } from "./pages/UsersPage";
 import { AppShell } from "./components/AppShell";
 import { Toast } from "./components/UI";
 import { copy, type PageId } from "./constants/copy";
@@ -13,6 +15,10 @@ import { TasksPage } from "./pages/TasksPage";
 import { WorkspacesPage } from "./pages/WorkspacesPage";
 
 export default function App() {
+  return <AdministrationProvider><PrototypeApp /></AdministrationProvider>;
+}
+
+function PrototypeApp() {
   const [page, setPage] = useState<PageId>("workspaces");
   const [scopeOpen, setScopeOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
@@ -37,6 +43,7 @@ export default function App() {
 
   const content = {
     workspaces: <WorkspacesPage notify={setToast} navigateHome={() => navigate("home")} />,
+    users: <UsersPage notify={setToast} />,
     home: <HomePage navigate={navigate} />,
     processing: <ProcessingPage notify={setToast} />,
     documents: <DocumentsPage navigate={navigate} notify={setToast} />,

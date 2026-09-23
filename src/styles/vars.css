@@ -68,6 +68,10 @@
   --size-redaction-short: 330px;
   --size-redaction-long: 286px;
   --size-content-min: 980px;
+  --size-admin-list: 300px;
+  --size-admin-label: 260px;
+  --size-transfer-column: 280px;
+  --size-admin-search: 440px;
 
   --font-family: "Segoe UI", "Microsoft YaHei UI", "Microsoft YaHei", Arial, sans-serif;
   --font-size-xs: 11px;

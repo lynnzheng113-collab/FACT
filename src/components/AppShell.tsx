@@ -15,12 +15,14 @@ import {
   ScanSearch,
   Search,
   User,
+  Users,
 } from "lucide-react";
 import { copy, type PageId } from "../constants/copy";
 import { Badge, Drawer, IconButton } from "./UI";
 
 const iconMap: Record<PageId, typeof Home> = {
   workspaces: FolderCog,
+  users: Users,
   home: Home,
   processing: FolderCog,
   documents: Files,
