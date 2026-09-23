@@ -73,6 +73,13 @@
   --size-field-order: 120px;
   --size-field-actions: 460px;
   --size-field-mobile-name: 120px;
+  --size-layout-sidebar: 360px;
+  --size-layout-section: 260px;
+  --size-layout-cell: 120px;
+  --size-layout-list: 320px;
+  --size-help-editor: 260px;
+  --size-preview-label: 260px;
+  --size-preview-form: 820px;
   --size-admin-label: 260px;
   --size-transfer-column: 280px;
   --size-admin-search: 440px;

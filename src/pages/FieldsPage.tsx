@@ -4,13 +4,14 @@ import { copy } from "../constants/copy";
 import { useAdministration } from "../state/Administration";
 import { fieldTimestamp, type FieldRecord, type FieldCategory } from "../state/fields";
 import { Button, Field, Modal, PageHeader, Panel, Tabs } from "../components/UI";
+import { LayoutsPage } from "./LayoutsPage";
 import { FieldChoices } from "../components/FieldChoices";
 import { TransferList } from "../components/TransferList";
 import "../styles/users.css";
 import "../styles/fields.css";
 
 const t = copy.fieldManagement, c = copy.common, w = copy.workspaceManagement;
-type Entity = "fields" | "categories" | "choices";
+type Entity = "fields" | "categories" | "choices" | "layouts";
 type SaveMode = "save" | "new" | "back";
 type Draft = { id: string; name: string; type: string; order: string };
 const blank = (): Draft => ({ id: "", name: "", type: "", order: String(t.defaultOrder) });
@@ -18,7 +19,7 @@ const typeName = (type: string) => t.typeOptions.find(option => option.id === ty
 const details = (items: ReadonlyArray<readonly [string, string | number]>) => <dl className="detail-grid">{items.map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value === "" ? t.empty : value}</dd></div>)}</dl>;
 
 export function FieldsPage({ notify }: { notify: (message: string) => void }) {
-  const { fields, setFields, fieldCategories, setFieldCategories } = useAdministration();
+  const { fields, setFields, fieldCategories, setFieldCategories, layouts } = useAdministration();
   const [entity, setEntity] = useState<Entity>("fields");
   const [view, setView] = useState<"list" | "form" | "detail">("list");
   const [selectedId, setSelectedId] = useState("");
@@ -72,6 +73,7 @@ export function FieldsPage({ notify }: { notify: (message: string) => void }) {
   };
   const remove = () => {
     if (entity === "fields") {
+      if (layouts.some(layout => layout.sections.some(section => section.items.some(item => item.fieldId === selectedId)))) { setDeleteOpen(false); setError(copy.layoutManagement.fieldInUse); return; }
       setFields(current => current.filter(field => field.id !== selectedId));
       setFieldCategories(current => current.map(category => category.fieldIds.includes(selectedId) ? { ...category, fieldIds: category.fieldIds.filter(id => id !== selectedId), modifiedOn: fieldTimestamp() } : category));
     } else setFieldCategories(current => current.filter(category => category.id !== selectedId));
@@ -91,12 +93,12 @@ export function FieldsPage({ notify }: { notify: (message: string) => void }) {
   const settings = <><Panel><div className="tabs"><span className="field-settings">{t.fieldSettings}</span><button type="button" disabled title={t.advancedUnavailable}>{t.advancedSettings}</button></div>{details(t.settings)}</Panel><Panel title={t.dashboard}>{details(t.dashboardSettings)}</Panel></>;
   return <div className="page users-admin fields-admin">
     <PageHeader title={t.title} subtitle={t.subtitle} ids={t.ids} priorities={[]} />
-    <Tabs items={[t.choices, t.categories, t.fields]} active={t[entity]} onChange={label => { setEntity(label === t.fields ? "fields" : label === t.categories ? "categories" : "choices"); setSelectedId(""); setFilter(""); back(); }} />
-    {entity !== "choices" && view === "list" && <>
+    <Tabs items={[t.choices, t.categories, t.fields, t.layouts]} active={t[entity]} onChange={label => { setEntity(label === t.layouts ? "layouts" : label === t.fields ? "fields" : label === t.categories ? "categories" : "choices"); setSelectedId(""); setFilter(""); back(); }} />
+    {entity !== "choices" && entity !== "layouts" && view === "list" && <>
       <div className="admin-toolbar"><Button variant="primary" icon={<Plus size={17} />} onClick={startNew}>{entity === "fields" ? t.newField : t.newCategory}</Button><strong>{entity === "fields" ? t.allFields : t.allCategories}</strong><label className="admin-search"><Search size={16} /><input aria-label={entity === "fields" ? t.filterFields : t.filterCategories} placeholder={entity === "fields" ? t.filterFields : t.filterCategories} value={filter} onChange={e => setFilter(e.target.value)} /></label></div>
       <Panel className="table-panel admin-list">{entity === "fields" ? fieldTable(fields.filter(field => `${field.name} ${typeName(field.type)}`.toLowerCase().includes(filter.toLowerCase()))) : <div className="table-scroll"><table><thead><tr>{t.categoryColumns.map(label => <th key={label}>{label}</th>)}</tr></thead><tbody>{sortedCategories.filter(category => category.name.toLowerCase().includes(filter.toLowerCase())).map(category => <tr key={category.id}><td><button className="table-link" onClick={() => openRecord(category.id)}>{category.name}</button></td><td>{category.order}</td><td><div className="field-links">{category.fieldIds.map(id => fields.find(field => field.id === id)).filter((field): field is FieldRecord => !!field).map(field => <button key={field.id} className="table-link" onClick={() => openRecord(field.id, "fields")}>{field.name}</button>)}</div></td></tr>)}{!sortedCategories.some(category => category.name.toLowerCase().includes(filter.toLowerCase())) && <tr><td colSpan={t.categoryColumns.length} className="admin-empty">{copy.userManagement.noData}</td></tr>}</tbody></table></div>}</Panel>
     </>}
-    {entity !== "choices" && view === "form" && <form noValidate onSubmit={e => { e.preventDefault(); save("save"); }}>
+    {entity !== "choices" && entity !== "layouts" && view === "form" && <form noValidate onSubmit={e => { e.preventDefault(); save("save"); }}>
       <div className="admin-actions"><Button type="submit" variant="primary">{c.save}</Button><Button onClick={() => save("new")}>{w.saveAndNew}</Button><Button onClick={() => save("back")}>{w.saveAndBack}</Button><Button onClick={() => draft.id ? openRecord(draft.id) : back()}>{c.cancel}</Button></div>
       {error && <p role="alert" className="form-alert">{error}</p>}
       <Panel title={entity === "fields" ? t.fieldInformation : t.categoryDetails}><div className="admin-identity-form field-form">
@@ -105,7 +107,7 @@ export function FieldsPage({ notify }: { notify: (message: string) => void }) {
       </div></Panel>
       {entity === "fields" && draft.type === "multiple" && settings}
     </form>}
-    {entity !== "choices" && view === "detail" && activeRecord && <>
+    {entity !== "choices" && entity !== "layouts" && view === "detail" && activeRecord && <>
       <div className="admin-actions"><Button variant="primary" onClick={startEdit}>{c.edit}</Button><Button onClick={() => setDeleteOpen(true)}>{w.delete}</Button><Button onClick={back}>{c.back}</Button><span title={t.advancedUnavailable}><Button disabled>{w.editPermissions}</Button></span><Button onClick={() => historyRef.current?.scrollIntoView({ behavior: "smooth", block: "center" })}>{w.viewAudit}</Button></div>
       {entity === "fields" && selectedField ? <>
         <Panel title={t.fieldInformation}>{details([[w.name, selectedField.name], [t.objectType, t.document], [t.fieldType, typeName(selectedField.type)]])}</Panel>
@@ -116,6 +118,8 @@ export function FieldsPage({ notify }: { notify: (message: string) => void }) {
       </>}
       {history}
     </>}
+    {entity === "layouts" && <LayoutsPage notify={notify} />}
+    {error && view !== "form" && <p className="form-alert" role="alert">{error}</p>}
     {entity === "choices" && <>
       <div className="admin-toolbar"><Field label={t.chooseField}><select aria-label={t.chooseField} value={choiceField?.id ?? ""} onChange={e => setSelectedId(e.target.value)}>{!choiceFields.length && <option value="">{w.select}</option>}{choiceFields.map(field => <option key={field.id} value={field.id}>{field.name}</option>)}</select></Field></div>
       {choiceField ? <FieldChoices key={choiceField.id} choices={choiceField.choices} onChange={choices => updateChoices(choiceField, choices)} /> : <Panel><p className="admin-empty">{t.noChoiceField}</p><Button variant="primary" onClick={() => { setEntity("fields"); startNew(); }}>{t.newField}</Button></Panel>}
