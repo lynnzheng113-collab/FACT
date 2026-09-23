@@ -21,7 +21,7 @@ const validIP = (value: string) => {
 };
 
 export function UsersPage({ notify }: { notify: (message: string) => void }) {
-  const { clients, users, setUsers, groups, setGroups, workspaces } = useAdministration();
+  const { clients, users, setUsers, groups, setGroups, workspaces, setWorkspaces, setPermissions } = useAdministration();
   const [entity, setEntity] = useState<Entity>("users");
   const [view, setView] = useState<"list" | "form" | "detail">("list");
   const [selectedId, setSelectedId] = useState("");
@@ -56,7 +56,7 @@ export function UsersPage({ notify }: { notify: (message: string) => void }) {
       setUsers(current => record.id === userForm.id ? current.map(item => item.id === record.id ? record : item) : [...current, record]);
       notify(text.userSaved);
     } else {
-      id = groupForm.id || String(Math.max(text.idStart - 1, ...groups.map(group => Number(group.id))) + 1);
+      id = groupForm.id || String(Math.max(text.idStart - 1, ...groups.map(group => Number(group.id)).filter(Number.isFinite)) + 1);
       const record = { ...groupForm, id, name: groupForm.name.trim(), createdOn: groupForm.createdOn || now(), modifiedOn: now() };
       setGroups(current => groupForm.id ? current.map(item => item.id === id ? record : item) : [...current, record]);
       notify(text.groupSaved);
@@ -83,7 +83,11 @@ export function UsersPage({ notify }: { notify: (message: string) => void }) {
   };
   const removeRecord = () => {
     if (entity === "users") { setUsers(current => current.filter(user => user.id !== selectedId)); setGroups(current => current.map(group => ({ ...group, userIds: group.userIds.filter(id => id !== selectedId) }))); }
-    else setGroups(current => current.filter(group => group.id !== selectedId));
+    else {
+      setGroups(current => current.filter(group => group.id !== selectedId));
+      setWorkspaces(current => current.map(workspace => workspace.adminGroupId === selectedId ? { ...workspace, adminGroupId: undefined } : workspace));
+      setPermissions(current => Object.fromEntries(Object.entries(current).map(([workspaceId, values]) => [workspaceId, Object.fromEntries(Object.entries(values).filter(([groupId]) => groupId !== selectedId))])));
+    }
     setDeleteOpen(false); back(); notify(text.deleted);
   };
   const visibleUsers = users.filter(user => `${fullName(user)} ${user.email} ${clientName(user.clientId)}`.toLowerCase().includes(search.toLowerCase()));

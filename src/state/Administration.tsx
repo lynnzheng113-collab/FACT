@@ -1,9 +1,10 @@
 import { createContext, useContext, useState, type ReactNode } from "react";
+import { type WorkspacePermissionStore } from "./permissions";
 import { copy } from "../constants/copy";
 
 export type ClientRecord = { id: string; name: string; number: string; status: string; domain: string };
 export type MatterRecord = { id: string; name: string; number: string; clientId: string; clientName: string; clientNumber: string; status: string; keywords: string; notes: string };
-export type WorkspaceRecord = { id: string; name: string; matterId: string; matterName: string; clientName: string; artifactId: string; template: string; status: string; pinned: boolean };
+export type WorkspaceRecord = { id: string; name: string; matterId: string; matterName: string; clientName: string; artifactId: string; template: string; status: string; pinned: boolean; adminGroupId?: string };
 export type UserRecord = {
   id: string; firstName: string; lastName: string; email: string; type: string; clientId: string;
   access: boolean; disableOn: string; trustedIPs: string; changeSettings: boolean;
@@ -19,7 +20,8 @@ function useAdministrationState() {
   const [workspaces, setWorkspaces] = useState<WorkspaceRecord[]>(() => copy.workspaceManagement.workspaces.map(item => ({ ...item })));
   const [users, setUsers] = useState<UserRecord[]>([]);
   const [groups, setGroups] = useState<GroupRecord[]>([]);
-  return { clients, setClients, matters, setMatters, workspaces, setWorkspaces, users, setUsers, groups, setGroups };
+  const [permissions, setPermissions] = useState<WorkspacePermissionStore>({});
+  return { permissions, setPermissions, clients, setClients, matters, setMatters, workspaces, setWorkspaces, users, setUsers, groups, setGroups };
 }
 
 const AdministrationContext = createContext<ReturnType<typeof useAdministrationState> | null>(null);

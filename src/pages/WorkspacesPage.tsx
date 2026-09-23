@@ -4,6 +4,7 @@ import { copy } from "../constants/copy";
 import { Badge, Button, Field, Modal, PageHeader, Panel } from "../components/UI";
 
 import { useAdministration, type ClientRecord, type MatterRecord, type WorkspaceRecord } from "../state/Administration";
+import { WorkspaceAdvanced } from "../components/WorkspaceAdvanced";
 import { WorkspacePermissions } from "../components/WorkspacePermissions";
 
 type TabId = "clients" | "matters" | "workspaces";
@@ -16,6 +17,7 @@ export function WorkspacesPage({ notify, navigateHome }: { notify: (message: str
   const text = copy.workspaceManagement;
   const [tab, setTab] = useState<TabId>("workspaces");
   const { clients, setClients, matters, setMatters, workspaces, setWorkspaces } = useAdministration();
+  const [detailTab, setDetailTab] = useState("information");
   const [permissionsOpen, setPermissionsOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<string>(text.workspaces[1].id);
   const [createOpen, setCreateOpen] = useState(false);
@@ -167,7 +169,9 @@ export function WorkspacesPage({ notify, navigateHome }: { notify: (message: str
         {!selectedId && <div className="empty-detail"><Icon size={24} /><span>{text.selectRecord}</span></div>}
         {selectedClient && <DetailGrid items={[[text.name, selectedClient.name], [text.clientNumber, selectedClient.number], [text.status, selectedClient.status], [text.clientDomainStatus, selectedClient.domain], [text.createdBy, text.history.actor], [text.createdOn, text.history.created]]} />}
         {selectedMatter && <DetailGrid items={[[text.name, selectedMatter.name], [text.matterNumber, selectedMatter.number], [text.status, selectedMatter.status], [text.client, selectedMatter.clientName], [text.keywords, selectedMatter.keywords || text.notProvided], [text.notes, selectedMatter.notes || text.notProvided], [text.lastModifiedBy, text.history.actor], [text.lastModifiedOn, text.history.modified]]} />}
-        {selectedWorkspace && <DetailGrid items={[[text.name, selectedWorkspace.name], [text.status, selectedWorkspace.status], [text.client, selectedWorkspace.clientName], [text.matter, selectedWorkspace.matterName], [text.caseArtifactId, selectedWorkspace.artifactId], [text.templateWorkspace, selectedWorkspace.template], [text.lastModifiedBy, text.history.actor], [text.lastModifiedOn, text.history.modified]]} />}
+        {selectedWorkspace && <div className="tabs" role="tablist">{[{ id: "information", label: copy.permissionManagement.workspaceInfo }, { id: "advanced", label: copy.permissionManagement.advanced }].map(item => <button type="button" role="tab" aria-selected={detailTab === item.id} className={detailTab === item.id ? "is-active" : ""} key={item.id} onClick={() => setDetailTab(item.id)}>{item.label}</button>)}</div>}
+        {selectedWorkspace && detailTab === "advanced" && <WorkspaceAdvanced key={selectedWorkspace.id} workspace={selectedWorkspace} notify={notify} />}
+        {selectedWorkspace && detailTab === "information" && <DetailGrid items={[[text.name, selectedWorkspace.name], [text.status, selectedWorkspace.status], [text.client, selectedWorkspace.clientName], [text.matter, selectedWorkspace.matterName], [text.caseArtifactId, selectedWorkspace.artifactId], [text.templateWorkspace, selectedWorkspace.template], [text.lastModifiedBy, text.history.actor], [text.lastModifiedOn, text.history.modified]]} />}
       </Panel>
 
       {selectedWorkspace && <WorkspacePermissions open={permissionsOpen} workspace={selectedWorkspace} onClose={() => setPermissionsOpen(false)} notify={notify} />}

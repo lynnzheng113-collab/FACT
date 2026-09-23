@@ -72,6 +72,12 @@
   --size-admin-label: 260px;
   --size-transfer-column: 280px;
   --size-admin-search: 440px;
+  --size-permission-modal: 1180px;
+  --size-permission-nav: 168px;
+  --size-permission-details: 280px;
+  --size-permission-matrix: 650px;
+  --size-permission-preview-nav: 110px;
+  --size-permission-empty: 420px;
 
   --font-family: "Segoe UI", "Microsoft YaHei UI", "Microsoft YaHei", Arial, sans-serif;
   --font-size-xs: 11px;
