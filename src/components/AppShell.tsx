@@ -23,6 +23,7 @@ import { Badge, Drawer, IconButton } from "./UI";
 const iconMap: Record<PageId, typeof Home> = {
   workspaces: FolderCog,
   users: Users,
+  fields: FolderCog,
   home: Home,
   processing: FolderCog,
   documents: Files,

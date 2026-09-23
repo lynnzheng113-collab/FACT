@@ -1,6 +1,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { AdministrationProvider } from "./state/Administration";
 import { UsersPage } from "./pages/UsersPage";
+import { FieldsPage } from "./pages/FieldsPage";
 import { AppShell } from "./components/AppShell";
 import { Toast } from "./components/UI";
 import { copy, type PageId } from "./constants/copy";
@@ -44,6 +45,7 @@ function PrototypeApp() {
   const content = {
     workspaces: <WorkspacesPage notify={setToast} navigateHome={() => navigate("home")} />,
     users: <UsersPage notify={setToast} />,
+    fields: <FieldsPage notify={setToast} />,
     home: <HomePage navigate={navigate} />,
     processing: <ProcessingPage notify={setToast} />,
     documents: <DocumentsPage navigate={navigate} notify={setToast} />,

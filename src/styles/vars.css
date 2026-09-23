@@ -69,6 +69,10 @@
   --size-redaction-long: 286px;
   --size-content-min: 980px;
   --size-admin-list: 300px;
+  --size-field-form: 780px;
+  --size-field-order: 120px;
+  --size-field-actions: 460px;
+  --size-field-mobile-name: 120px;
   --size-admin-label: 260px;
   --size-transfer-column: 280px;
   --size-admin-search: 440px;

@@ -1,0 +1,31 @@
+.fields-admin { min-width: var(--space-0); }
+.fields-admin .panel + .panel { margin-top: var(--space-4); }
+.fields-admin .tabs { flex-wrap: wrap; }
+.field-form { max-width: var(--size-field-form); margin: var(--space-0) auto; }
+.field-order, .field-row-actions, .field-choice-footer { display: flex; align-items: center; flex-wrap: wrap; gap: var(--space-2); }
+.field-order input { width: var(--size-field-order); }
+.field-row-actions .button { padding: var(--space-1) var(--space-2); }
+.fields-admin .modal__footer { position: sticky; bottom: var(--space-0); }
+.field-choice-filter { padding: var(--space-3) var(--space-4); background: var(--color-surface-strong); }
+.field-choice-input { min-height: var(--size-transfer-column); }
+.field-choice-name { display: inline-flex; align-items: center; white-space: nowrap; }
+.field-choice-indent { display: inline-block; width: var(--space-6); flex-shrink: 0; }
+.field-choice-branch { color: var(--color-ink-subtle); padding-right: var(--space-2); }
+.field-choice-footer { padding: var(--space-3) var(--space-4); color: var(--color-ink-muted); font-size: var(--font-size-sm); }
+.field-choice-footer > span:last-child { margin-left: auto; }
+.field-settings { padding: var(--space-4); }
+.field-links { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-2); }
+.field-choices td:first-child, .field-choices th:first-child { width: var(--space-9); }
+.field-choices td:last-child { width: var(--size-field-actions); }
+.fields-admin .detail-grid { grid-template-columns: minmax(var(--space-0), 1fr); }
+.fields-admin .detail-grid div { grid-template-columns: minmax(var(--space-0), var(--size-admin-label)) minmax(var(--space-0), 1fr); }
+@media (max-width: 760px) {
+  .fields-admin .detail-grid div { grid-template-columns: minmax(var(--space-0), 1fr); }
+  .field-row-actions { flex-direction: column; align-items: flex-start; }
+  .field-choices td:last-child { width: auto; }
+  .field-choices table { table-layout: fixed; width: 100%; }
+  .field-choices th:nth-child(2) { width: var(--size-field-mobile-name); }
+  .field-choices td, .field-choices th { padding: var(--space-2); white-space: normal; }
+  .field-choice-name { display: block; white-space: normal; overflow-wrap: anywhere; }
+  .field-row-actions .button { white-space: normal; text-align: left; }
+}
