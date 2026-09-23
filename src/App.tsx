@@ -10,9 +10,10 @@ import { ProductionPage } from "./pages/ProductionPage";
 import { RedactionPage } from "./pages/RedactionPage";
 import { ReviewPage } from "./pages/ReviewPage";
 import { TasksPage } from "./pages/TasksPage";
+import { WorkspacesPage } from "./pages/WorkspacesPage";
 
 export default function App() {
-  const [page, setPage] = useState<PageId>("home");
+  const [page, setPage] = useState<PageId>("workspaces");
   const [scopeOpen, setScopeOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
@@ -35,6 +36,7 @@ export default function App() {
   };
 
   const content = {
+    workspaces: <WorkspacesPage notify={setToast} navigateHome={() => navigate("home")} />,
     home: <HomePage navigate={navigate} />,
     processing: <ProcessingPage notify={setToast} />,
     documents: <DocumentsPage navigate={navigate} notify={setToast} />,

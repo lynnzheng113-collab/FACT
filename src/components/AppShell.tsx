@@ -20,6 +20,7 @@ import { copy, type PageId } from "../constants/copy";
 import { Badge, Drawer, IconButton } from "./UI";
 
 const iconMap: Record<PageId, typeof Home> = {
+  workspaces: FolderCog,
   home: Home,
   processing: FolderCog,
   documents: Files,
@@ -86,7 +87,7 @@ export function AppShell({
 
       <div className="app-shell__main">
         <header className="topbar">
-          <button type="button" className="workspace-switcher" onClick={() => onPageChange("home")}>
+          <button type="button" className="workspace-switcher" onClick={() => onPageChange("workspaces")}>
             <span className="workspace-switcher__client">{copy.workspace.client}</span>
             <strong>{copy.workspace.name}</strong>
             <ChevronDown size={16} aria-hidden="true" />

@@ -2,6 +2,12 @@
 
 ## 打开原型
 
+最简单的方式：双击项目根目录的 `preview.cmd`。它会启动本地服务并打开固定预览地址：
+
+`http://127.0.0.1:5173/`
+
+也可以手动运行：
+
 开发模式：
 
 ```powershell
@@ -24,6 +30,11 @@ npm.cmd run build
 - 全局导航和弹层：`src/components/`
 - 组件样式：`src/styles/app.css`
 
+更完整的维护说明：
+
+- 文案与版本：`docs/CONTENT_AND_VERSIONING.md`
+- 交互地图：`docs/INTERACTION_MAP.md`
+
 修改后运行 `npm.cmd run build`，确认 TypeScript 和生产构建通过。
 
 ## 当前范围
@@ -32,6 +43,12 @@ npm.cmd run build
 
 这是前端演示状态，没有连接真实后端，也没有在真实 RelativityOne 租户中验证精确按钮位置和权限组合。
 
+## 预览与协作
+
+- 本地预览链接只在启动服务的电脑上有效。
+- 合作方的稳定链接需要公司 GitLab 管理员启用 GitLab Pages；启用后从项目的 `Deploy → Pages` 获取地址。
+- 当前项目是私有项目，合作方需要先被加入 GitLab 项目成员。
+
 ## 撤回
 
-当前 `D:\Relativity` 不是 Git 仓库。本次所有新增内容都在本目录；若需要撤回整次交付，可先将本目录移动到备份位置。以后初始化 Git 后，你说“提交”，即可按约定提交当前修改。
+本目录是 FACT 原型的 Git 仓库。若需要撤回某一轮改动，优先使用该轮提交的 `git revert <commit>`；未提交的修改可用 `git diff` 检查后再处理。按项目约定，只有你明确说“提交”时才创建 Git commit。
