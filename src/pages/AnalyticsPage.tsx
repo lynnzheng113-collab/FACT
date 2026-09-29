@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { AlertCircle, GitBranch, Languages, Network, Play, RefreshCw, Users } from "lucide-react";
-import { copy } from "../constants/copy";
+import { copy, type PageId } from "../constants/copy";
+import { SearchTermReport } from "./SearchTermReport";
 import { Badge, Button, PageHeader, Panel, Progress, Tabs } from "../components/UI";
 
-export function AnalyticsPage({ notify }: { notify: (message: string) => void }) {
-  const [tab, setTab] = useState<string>(copy.analytics.indexes);
+export function AnalyticsPage({ notify, navigate }: { notify: (message: string) => void; navigate: (page: PageId) => void }) {
+  const [tab, setTab] = useState<string>(copy.modules.dtsearch);
   const [running, setRunning] = useState(false);
 
   const runIndex = () => {
@@ -16,18 +17,21 @@ export function AnalyticsPage({ notify }: { notify: (message: string) => void })
     <div className="page">
       <PageHeader title={copy.analytics.title} subtitle={copy.analytics.subtitle} ids={copy.analytics.ids} />
       <Panel className="analytics-index">
-        <Tabs items={[copy.analytics.indexes, copy.analytics.structured, copy.analytics.communication]} active={tab} onChange={setTab} />
+        <Tabs items={[copy.modules.dtsearch, copy.modules.report, copy.analytics.structured, copy.analytics.communication]} active={tab} onChange={setTab} />
+        {tab === copy.modules.dtsearch && <>
         <div className="index-card">
           <div className="index-card__main">
             <span className="index-card__icon"><Network size={23} /></span>
             <div><div><h2>{copy.analytics.indexName}</h2><Badge tone={running ? "info" : "success"}>{running ? copy.analytics.running : copy.analytics.indexStatus}</Badge></div><strong>{copy.analytics.indexCoverage}</strong><small>{copy.analytics.indexUpdated}</small></div>
           </div>
-          <div className="index-card__actions"><Button icon={<RefreshCw size={16} />} onClick={runIndex}>{copy.analytics.incremental}</Button><Button>{copy.analytics.rebuild}</Button></div>
+          <div className="index-card__actions"><Button icon={<RefreshCw size={16} />} onClick={runIndex}>{copy.analytics.incremental}</Button><Button onClick={runIndex}>{copy.analytics.rebuild}</Button></div>
         </div>
         {running && <div className="running-banner"><RefreshCw className="spin" size={18} /><span><strong>{copy.analytics.running}</strong><small>{copy.analytics.runningDetail}</small></span><Progress value={copy.analytics.runningProgress} tone="info" /></div>}
+        </>}
+        {tab === copy.modules.report && <SearchTermReport navigate={navigate} />}
       </Panel>
 
-      <Panel title={copy.analytics.analysisSets} actions={<Button variant="primary" icon={<Play size={16} />} onClick={() => notify(copy.toasts.generic)}>{copy.analytics.newAnalysis}</Button>} className="table-panel">
+      {tab !== copy.modules.report && <><Panel title={copy.analytics.analysisSets} actions={<Button variant="primary" icon={<Play size={16} />} onClick={() => notify(copy.toasts.generic)}>{copy.analytics.newAnalysis}</Button>} className="table-panel">
         <div className="table-scroll">
           <table><thead><tr>{copy.analytics.columns.map((column) => <th key={column}>{column}</th>)}</tr></thead><tbody>{copy.analytics.rows.map((row) => <tr key={row.name}><td><strong>{row.name}</strong></td><td>{row.type}</td><td>{row.scope}</td><td><Badge tone={row.tone}>{row.status}</Badge></td><td>{row.result}</td><td>{row.updated}</td></tr>)}</tbody></table>
         </div>
@@ -45,6 +49,7 @@ export function AnalyticsPage({ notify }: { notify: (message: string) => void })
           </div>
         </Panel>
       </div>
+      </>}
       <div className="boundary-note"><AlertCircle size={18} /><span>{copy.analytics.boundary}</span></div>
     </div>
   );

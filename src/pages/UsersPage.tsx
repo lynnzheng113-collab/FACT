@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { Plus, Search, Users } from "lucide-react";
 import { copy } from "../constants/copy";
 import { useAdministration, type GroupRecord, type UserRecord } from "../state/Administration";
@@ -20,8 +20,9 @@ const validIP = (value: string) => {
   return parts.length === 4 && parts.every(part => /^\d{1,3}$/.test(part) && Number(part) <= 255);
 };
 
-export function UsersPage({ notify }: { notify: (message: string) => void }) {
+export function UsersPage({ notify, status }: { notify: (message: string) => void; status?: ReactNode }) {
   const { clients, users, setUsers, groups, setGroups, workspaces, setWorkspaces, setPermissions } = useAdministration();
+  const [statusOpen, setStatusOpen] = useState(false);
   const [entity, setEntity] = useState<Entity>("users");
   const [view, setView] = useState<"list" | "form" | "detail">("list");
   const [selectedId, setSelectedId] = useState("");
@@ -94,9 +95,10 @@ export function UsersPage({ notify }: { notify: (message: string) => void }) {
   const visibleGroups = groups.filter(group => `${group.name} ${clientName(group.clientId)}`.toLowerCase().includes(search.toLowerCase()));
   const detail = (items: Array<[string, string]>) => <dl className="detail-grid">{items.map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value || common.notProvided}</dd></div>)}</dl>;
   const workspaceTable = <Panel title={common.allWorkspaces} className="table-panel"><div className="table-scroll"><table><thead><tr>{text.columns.workspaces.map(label => <th key={label}>{label}</th>)}</tr></thead><tbody>{linkedWorkspaces.map(workspace => <tr key={workspace.id}><td>{workspace.name}</td><td>{workspace.clientName}</td><td>{workspace.matterName}</td><td>{workspace.status}</td></tr>)}{!linkedWorkspaces.length && <tr><td colSpan={4} className="admin-empty">{text.noData}</td></tr>}</tbody></table></div></Panel>;
+  if (statusOpen) return <div className="page users-admin"><PageHeader title={text.title} subtitle={text.subtitle} ids={text.ids} priorities={[]} /><Tabs items={[text.users, text.groups, copy.userStatus.title]} active={copy.userStatus.title} onChange={label => { setStatusOpen(label === copy.userStatus.title); if (label !== copy.userStatus.title) { setEntity(label === text.users ? "users" : "groups"); back(); } }} />{status}</div>;
   return <div className="page users-admin">
     <PageHeader title={text.title} subtitle={text.subtitle} ids={text.ids} priorities={[]} />
-    <Tabs items={[text.users, text.groups]} active={text[entity]} onChange={label => { setEntity(label === text.users ? "users" : "groups"); back(); setSearch(""); setSelectedId(""); }} />
+    <Tabs items={[text.users, text.groups, copy.userStatus.title]} active={text[entity]} onChange={label => { if (label === copy.userStatus.title) { setStatusOpen(true); return; } setEntity(label === text.users ? "users" : "groups"); back(); setSearch(""); setSelectedId(""); }} />
     {view === "list" && <>
       <div className="admin-toolbar"><Button variant="primary" icon={<Plus size={17} />} onClick={openNew}>{entity === "users" ? text.newUser : text.newGroup}</Button><strong>{entity === "users" ? text.allUsers : text.allGroups}</strong><label className="admin-search"><Search size={16} /><input aria-label={entity === "users" ? text.searchUsers : text.searchGroups} placeholder={entity === "users" ? text.searchUsers : text.searchGroups} value={search} onChange={e => setSearch(e.target.value)} /></label></div>
       <Panel className="table-panel admin-list"><div className="table-scroll"><table><thead><tr>{text.columns[entity].map(label => <th key={label}>{label}</th>)}</tr></thead><tbody>

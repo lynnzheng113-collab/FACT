@@ -74,3 +74,15 @@ npm.cmd run build
 ```
 
 验证通过后双击项目根目录的 `preview.cmd`，或在浏览器打开 `http://127.0.0.1:5173/`。
+
+当前工程：原版。本地修改与提交不自动同步另一版本；目录及隔离约定详见根目录 README.md 与 AGENTS.md。
+
+
+### v0.7 · 2026-09-29
+
+- 新增双语登录页，并按管理员与用户／律师角色区分登录后的导航和工作区前后范围。
+- 管理员工作区外提供用户与组、User Status、Workspaces、Audit 和任务中心；进入工作区后提供概览、Review Setup（字段、布局、高亮）、Processing、Documents（Folders、Saved Searches）、Search & Analytics（dtSearch、Search Term Report）、Redact、Production 和其他。
+- 用户／律师保留工作区选择、Documents 和 Review Batches；原有文档列表、Viewer、遮盖、制作、权限、字段和布局细节继续复用。
+- 字段、布局、高亮、Saved Search、批次领取和遮盖校验状态按工作区隔离；验证通过 `npm.cmd run check`、`npm.cmd run build` 及浏览器回归脚本。
+
+- 产品仅在电脑使用：取消本轮新增的手机样式，以桌面浏览器验收；保持原有页面细节。

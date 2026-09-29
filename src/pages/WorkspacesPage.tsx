@@ -13,7 +13,7 @@ type MatterFormValue = { name: string; number: string; status: string; clientId:
 
 const IconByTab = { clients: Building2, matters: BriefcaseBusiness, workspaces: FolderKanban } as const;
 
-export function WorkspacesPage({ notify, navigateHome }: { notify: (message: string) => void; navigateHome: () => void }) {
+export function WorkspacesPage({ notify, navigateHome }: { notify: (message: string) => void; navigateHome: (workspaceId: string) => void }) {
   const text = copy.workspaceManagement;
   const [tab, setTab] = useState<TabId>("workspaces");
   const { clients, setClients, matters, setMatters, workspaces, setWorkspaces } = useAdministration();
@@ -164,7 +164,7 @@ export function WorkspacesPage({ notify, navigateHome }: { notify: (message: str
       <Panel
         title={text.details}
         className="entity-detail"
-        actions={selectedId ? <><Button variant="secondary" onClick={() => selectedWorkspace ? setPermissionsOpen(true) : notify(text.permissionsDemo)}>{selectedWorkspace ? copy.userManagement.manageWorkspacePermissions : text.editPermissions}</Button><Button variant="quiet" onClick={() => notify(text.auditDemo)}>{text.viewAudit}</Button>{selectedWorkspace && <Button variant="primary" onClick={navigateHome}>{text.openWorkspace}</Button>}</> : undefined}
+        actions={selectedId ? <><Button variant="secondary" onClick={() => selectedWorkspace ? setPermissionsOpen(true) : notify(text.permissionsDemo)}>{selectedWorkspace ? copy.userManagement.manageWorkspacePermissions : text.editPermissions}</Button><Button variant="quiet" onClick={() => notify(text.auditDemo)}>{text.viewAudit}</Button>{selectedWorkspace && <Button variant="primary" onClick={() => navigateHome(selectedWorkspace.id)}>{text.openWorkspace}</Button>}</> : undefined}
       >
         {!selectedId && <div className="empty-detail"><Icon size={24} /><span>{text.selectRecord}</span></div>}
         {selectedClient && <DetailGrid items={[[text.name, selectedClient.name], [text.clientNumber, selectedClient.number], [text.status, selectedClient.status], [text.clientDomainStatus, selectedClient.domain], [text.createdBy, text.history.actor], [text.createdOn, text.history.created]]} />}

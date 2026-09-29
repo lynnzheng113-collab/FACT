@@ -18,9 +18,12 @@ import {
   Users,
 } from "lucide-react";
 import { copy, type PageId } from "../constants/copy";
+import { navigationFor, activeModule, type Role } from "../state/navigation";
+import type { WorkspaceRecord } from "../state/Administration";
 import { Badge, Drawer, IconButton } from "./UI";
 
 const iconMap: Record<PageId, typeof Home> = {
+  audit: ClipboardCheck, reviewSetup: FolderCog, other: Menu, batches: ClipboardCheck,
   workspaces: FolderCog,
   users: Users,
   fields: FolderCog,
@@ -36,6 +39,7 @@ const iconMap: Record<PageId, typeof Home> = {
 
 export function AppShell({
   page,
+  role, workspace, onLeave, onLogout, reviewOrigin,
   onPageChange,
   children,
   scopeOpen,
@@ -48,6 +52,7 @@ export function AppShell({
   setUserOpen,
 }: {
   page: PageId;
+  role: Role; workspace?: WorkspaceRecord; onLeave: () => void; onLogout: () => void; reviewOrigin: PageId;
   onPageChange: (page: PageId) => void;
   children: ReactNode;
   scopeOpen: boolean;
@@ -62,17 +67,17 @@ export function AppShell({
   return (
     <div className="app-shell">
       <aside className="sidebar">
-        <button type="button" className="brand-mark" aria-label={copy.brand.name} onClick={() => onPageChange("home")}>
+        <button type="button" className="brand-mark" aria-label={copy.brand.name} onClick={() => workspace ? onPageChange(role === "admin" ? "home" : "documents") : onPageChange("workspaces")}>
           {copy.brand.mark}
         </button>
         <nav className="sidebar__nav" aria-label={copy.brand.shortName}>
-          {copy.navigation.map((item) => {
+          {navigationFor(role, Boolean(workspace)).map((item) => {
             const Icon = iconMap[item.id];
             return (
               <button
                 type="button"
                 key={item.id}
-                className={page === item.id ? "is-active" : ""}
+                className={(role === "reviewer" && (page === "batches" || page === "review" && reviewOrigin === "batches") ? "batches" : activeModule(page, reviewOrigin)) === item.id ? "is-active" : ""}
                 aria-label={item.label}
                 title={item.label}
                 onClick={() => onPageChange(item.id)}
@@ -83,28 +88,28 @@ export function AppShell({
             );
           })}
         </nav>
-        <IconButton label={copy.common.openMenu} onClick={() => setScopeOpen(true)}>
+        {role === "admin" && <IconButton label={copy.common.openMenu} onClick={() => setScopeOpen(true)}>
           <Menu size={20} />
-        </IconButton>
+        </IconButton>}
       </aside>
 
       <div className="app-shell__main">
         <header className="topbar">
-          <button type="button" className="workspace-switcher" onClick={() => onPageChange("workspaces")}>
-            <span className="workspace-switcher__client">{copy.workspace.client}</span>
-            <strong>{copy.workspace.name}</strong>
+          <button type="button" className="workspace-switcher" title={copy.access.leave} onClick={onLeave}>
+            <span className="workspace-switcher__client">{workspace?.clientName ?? (role === "admin" ? copy.access.platform : copy.access.selection)}</span>
+            <strong>{workspace?.name ?? copy.workspace.allWorkspaces}</strong>
             <ChevronDown size={16} aria-hidden="true" />
           </button>
           <div className="topbar__tools">
-            <button type="button" className="global-search" onClick={() => onPageChange("documents")}>
+            {workspace && <button type="button" className="global-search" onClick={() => onPageChange("documents")}>
               <Search size={16} aria-hidden="true" />
               <span>{copy.common.search}</span>
-            </button>
-            <button type="button" className="scope-button" onClick={() => setScopeOpen(true)}>
+            </button>}
+            {role === "admin" && <button type="button" className="scope-button" onClick={() => setScopeOpen(true)}>
               <FileSearch size={17} aria-hidden="true" />
               <span>{copy.common.scope}</span>
               <Badge tone="info">{copy.scope.totalNumber}</Badge>
-            </button>
+            </button>}
             <IconButton label={copy.common.notifications} onClick={() => setNotificationsOpen(!notificationsOpen)} active={notificationsOpen}>
               <Bell size={19} />
               <span className="notification-dot" />
@@ -114,7 +119,7 @@ export function AppShell({
             </IconButton>
             <button type="button" className="user-button" onClick={() => setUserOpen(!userOpen)}>
               <User size={18} aria-hidden="true" />
-              <span>{copy.workspace.user}</span>
+              <span>{copy.access.accounts[role].name}</span>
               <ChevronDown size={14} aria-hidden="true" />
             </button>
           </div>
@@ -144,12 +149,14 @@ export function AppShell({
           {userOpen && (
             <div className="popover popover--user">
               <h2>{copy.overlays.userTitle}</h2>
-              <p>{copy.workspace.role}</p>
-              {copy.overlays.userItems.map((item) => <button type="button" key={item} onClick={() => setUserOpen(false)}>{item}</button>)}
+              <p>{copy.access.roles[role]}</p>
+              {copy.overlays.userItems.slice(0, -1).map((item) => <button type="button" key={item} onClick={() => setUserOpen(false)}>{item}</button>)}
+              <button type="button" onClick={onLogout}>{copy.access.signOut}</button>
             </div>
           )}
         </header>
 
+        <div className="scope-context"><span>{copy.access.roles[role]}</span><span>{workspace ? copy.access.workspaceScope : copy.access.platformScope}</span>{workspace && <button type="button" onClick={onLeave}>{copy.access.leave}</button>}</div>
         <main className="page-canvas">{children}</main>
         <footer className="prototype-footer">
           <span>{copy.meta.prototype}</span>

@@ -13,10 +13,18 @@ import {
   ZoomIn,
   ZoomOut,
 } from "lucide-react";
+import { useAdministration } from "../state/Administration";
 import { copy } from "../constants/copy";
 import { Badge, Button, CheckRow, Field, IconButton, PageHeader, Tabs } from "../components/UI";
 
-export function ReviewPage({ notify }: { notify: (message: string) => void }) {
+export function ReviewPage({ notify, onReturn }: { notify: (message: string) => void; onReturn: () => void }) {
+  const { highlights } = useAdministration();
+  const highlight = (text: string) => {
+    const terms = highlights.terms.split(/\r?\n/).map(term => term.trim()).filter(Boolean).sort((a, b) => b.length - a.length);
+    if (!highlights.enabled || !terms.length) return text;
+    const pattern = new RegExp(`(${terms.map(term => term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|")})`, "gi");
+    return text.split(pattern).map((part, index) => index % 2 ? <mark key={index} className="paper__highlight">{part}</mark> : part);
+  };
   const [activeDoc, setActiveDoc] = useState(0);
   const [viewerTab, setViewerTab] = useState<string>(copy.review.viewerTabs[0]);
   const [responsive, setResponsive] = useState<string>("");
@@ -55,7 +63,7 @@ export function ReviewPage({ notify }: { notify: (message: string) => void }) {
       <div className="queue-strip">
         <span><strong>{copy.review.queue}</strong><Badge tone="success">{copy.review.queueStatus}</Badge></span>
         <span>{copy.review.queueProgress}</span>
-        <Button>{copy.review.returnQueue}</Button>
+        <Button onClick={onReturn}>{copy.review.returnQueue}</Button>
       </div>
 
       <div className="review-workbench">
@@ -90,10 +98,10 @@ export function ReviewPage({ notify }: { notify: (message: string) => void }) {
           <div className="viewer__canvas">
             <article className="paper" style={{ transform: `scale(${zoom / 100})` }}>
               <header><span>{copy.review.paperConfidential}</span><h3>{copy.review.paperTitle}</h3><h4>{copy.review.paperSubtitle}</h4></header>
-              <p>{copy.review.paperIntro}</p>
+              <p>{highlight(copy.review.paperIntro)}</p>
               <h5>{copy.review.paperSection}</h5>
-              <p>{copy.review.paperBody}</p>
-              <p className="paper__highlight">{copy.review.paperBody}</p>
+              <p>{highlight(copy.review.paperBody)}</p>
+              <p>{highlight(copy.review.paperBody)}</p>
               <footer>{copy.review.paperConfidential}</footer>
             </article>
           </div>

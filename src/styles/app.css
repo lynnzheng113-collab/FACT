@@ -1759,3 +1759,39 @@ textarea {
   .toast { bottom: calc(var(--size-topbar) + var(--space-3)); left: var(--space-3); right: var(--space-3); width: auto; }
   .prototype-footer { padding-bottom: var(--size-topbar); }
 }
+.login-page { align-items: stretch; background: var(--color-canvas); display: grid; grid-template-columns: minmax(var(--space-0), 1.15fr) minmax(var(--size-login-column), 0.85fr); min-height: 100vh; }
+.login-intro { background: var(--color-primary); color: var(--color-surface); display: flex; flex-direction: column; justify-content: center; padding: var(--space-10); }
+.login-intro h1 { font-size: clamp(var(--size-login-title-min), var(--size-login-title-fluid), var(--size-login-title-max)); line-height: var(--line-height-tight); margin: var(--space-4) var(--space-0); max-width: var(--size-login-intro); }
+.login-intro p { max-width: var(--size-login-intro); }
+.login-brand { align-items: center; background: var(--color-brand); display: flex; font-size: var(--font-size-2xl); font-weight: var(--weight-bold); height: var(--size-login-brand); justify-content: center; width: var(--size-login-brand); }
+.login-flow { border-left: var(--size-login-accent) solid var(--color-brand); margin-top: var(--space-8); padding: var(--space-3) var(--space-4); }
+.login-card { align-self: center; background: var(--color-surface); box-shadow: var(--shadow-menu); display: flex; flex-direction: column; gap: var(--space-4); justify-self: center; max-width: var(--size-login-card); padding: var(--space-8); width: calc(100% - var(--space-8)); }
+.login-card h2 { font-size: var(--font-size-2xl); }
+.login-card > .button { width: 100%; }
+.login-roles { display: grid; gap: var(--space-3); }
+.login-roles label { align-items: flex-start; border: var(--size-border) solid var(--color-border); display: flex; gap: var(--space-3); padding: var(--space-3); }
+.login-roles label.is-active { background: var(--color-primary-soft); border-color: var(--color-primary); }
+.login-roles input { margin-top: var(--space-1); }
+.login-roles label > span { display: flex; flex-direction: column; gap: var(--space-1); }
+.login-roles small, .login-note { color: var(--color-ink-muted); font-size: var(--font-size-sm); }
+.scope-context { align-items: center; background: var(--color-surface-alt); border-bottom: var(--size-border) solid var(--color-border-soft); display: flex; gap: var(--space-3); min-height: var(--size-scope-context); padding: var(--space-1) var(--space-5); }
+.scope-context span { color: var(--color-ink-muted); font-size: var(--font-size-xs); }
+.scope-context span:first-child { color: var(--color-primary); font-weight: var(--weight-medium); }
+.scope-context button { color: var(--color-primary); font-size: var(--font-size-xs); margin-left: auto; }
+.module-filter, .module-toolbar input { border: var(--size-border) solid var(--color-border); min-height: var(--size-control); padding: var(--space-2) var(--space-3); }
+.module-filter { margin-bottom: var(--space-4); max-width: var(--size-admin-search); width: 100%; }
+.module-toolbar { align-items: center; display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.workspace-cards { display: grid; gap: var(--space-4); grid-template-columns: repeat(auto-fit, minmax(var(--size-workspace-card), 1fr)); }
+.workspace-cards .panel { display: flex; flex-direction: column; }
+.workspace-cards .panel__body { display: flex; flex: 1; flex-direction: column; gap: var(--space-4); }
+.workspace-cards .panel__body .button { margin-top: auto; }
+.module-form { display: flex; flex-direction: column; gap: var(--space-4); max-width: var(--size-field-form); }
+.module-form textarea { min-height: var(--size-module-textarea); }
+.term-report { display: flex; flex-direction: column; gap: var(--space-3); padding: var(--space-4) var(--space-0); }
+.term-report p { color: var(--color-ink-muted); max-width: var(--size-report-intro); }
+.term-report textarea { min-height: var(--size-report-textarea); padding: var(--space-2); width: 100%; }
+.term-report .table-scroll { margin-top: var(--space-2); }
+
+.login-roles input[type="radio"] { flex: 0 0 var(--size-icon); height: var(--size-icon); min-height: var(--space-0); padding: var(--space-0); width: var(--size-icon); }
+.login-roles svg { flex: 0 0 var(--size-icon-lg); }
+.login-roles label > span { min-width: var(--space-0); }

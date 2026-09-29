@@ -3,15 +3,22 @@ import { ChevronDown, FileSpreadsheet, FileText, Filter, Lock, Mail, Plus, Save,
 import { copy, type PageId } from "../constants/copy";
 import { Badge, Button, CheckRow, Field, Modal, PageHeader, Toggle } from "../components/UI";
 
+import { useAdministration } from "../state/Administration";
+
 const documentIcon = (type: string) => type.includes("Email") ? Mail : type.includes("Excel") ? FileSpreadsheet : FileText;
 
 export function DocumentsPage({ navigate, notify }: { navigate: (page: PageId) => void; notify: (message: string) => void }) {
-  const [query, setQuery] = useState<string>(copy.documents.searchValue);
-  const [includeFamily, setIncludeFamily] = useState(true);
+  const { savedSearches, setSavedSearches, documentView, setDocumentView } = useAdministration();
+  const { query, includeFamily, folder, reportTerm } = documentView;
+  const setQuery = (query: string) => setDocumentView(current => ({ ...current, query }));
+  const setIncludeFamily = (includeFamily: boolean) => setDocumentView(current => ({ ...current, includeFamily }));
+  const [searchName, setSearchName] = useState<string>(copy.documents.savedSearchNameValue);
+  const [saveError, setSaveError] = useState(false);
+  const [folderSearch, setFolderSearch] = useState("");
   const [autoRun, setAutoRun] = useState(false);
   const [saveOpen, setSaveOpen] = useState(false);
   const [selected, setSelected] = useState<string[]>([]);
-  const docs = useMemo(() => includeFamily ? copy.documents.docs : copy.documents.docs.filter((doc) => doc.direct), [includeFamily]);
+  const docs = useMemo(() => copy.documents.docs.filter(doc => (includeFamily || doc.direct) && (reportTerm === null || doc.file.toLowerCase().includes(reportTerm.toLowerCase())) && (folder === 0 || (folder === 1 ? doc.responsive === copy.documents.docs[2].responsive : folder === 2 ? !doc.type.includes("Email") : folder === 3 ? doc.confidential === copy.documents.docs[0].confidential : doc.responsive === copy.documents.docs[0].responsive))), [includeFamily, folder, reportTerm]);
 
   const openDoc = (id: string, locked: boolean) => {
     if (locked) {
@@ -29,11 +36,12 @@ export function DocumentsPage({ navigate, notify }: { navigate: (page: PageId) =
         <aside className="search-panel">
           <div className="search-panel__section">
             <button type="button" className="search-panel__title"><ChevronDown size={15} />{copy.documents.folders}</button>
-            <input aria-label={copy.common.search} placeholder={copy.common.search} />
+            <input aria-label={copy.common.search} placeholder={copy.common.search} value={folderSearch} onChange={event => setFolderSearch(event.target.value)} />
             <div className="folder-list">
-              {copy.documents.folderItems.map((folder, index) => <button type="button" className={index === 0 ? "is-active" : ""} key={folder}>{folder}</button>)}
+              {copy.documents.folderItems.map((label, index) => label.toLowerCase().includes(folderSearch.toLowerCase()) && <button type="button" className={index === folder ? "is-active" : ""} key={label} onClick={() => setDocumentView(current => ({ ...current, folder: index, reportTerm: null }))}>{label}</button>)}
             </div>
           </div>
+          <div className="search-panel__section"><h2 className="search-panel__title">{copy.documents.savedSearches}</h2><div className="folder-list">{savedSearches.length ? savedSearches.map(search => <button type="button" key={search.id} onClick={() => setDocumentView({ query: search.query, folder: search.folder, includeFamily: search.includeFamily, reportTerm: null })}>{search.name}</button>) : <p>{copy.modules.savedEmpty}</p>}</div></div>
           <div className="search-panel__section search-panel__conditions">
             <div className="search-panel__heading"><button type="button" className="search-panel__title"><ChevronDown size={15} />{copy.documents.conditions}</button><Button icon={<Plus size={15} />}>{copy.documents.addCondition}</Button></div>
             <div className="condition-card">
@@ -51,12 +59,12 @@ export function DocumentsPage({ navigate, notify }: { navigate: (page: PageId) =
           <div className="document-toolbar">
             <select aria-label={copy.documents.allDocuments} defaultValue={copy.documents.allDocuments}><option>{copy.documents.allDocuments}</option></select>
             <div className="document-toolbar__search"><Search size={16} /><input value={query} onChange={(event) => setQuery(event.target.value)} /></div>
-            <Button onClick={() => setSaveOpen(true)} icon={<Save size={16} />}>{copy.documents.saveSearch}</Button>
+            <Button onClick={() => { setSaveError(false); setSaveOpen(true); }} icon={<Save size={16} />}>{copy.documents.saveSearch}</Button>
             <Button disabled={selected.length === 0}>{copy.documents.bulkEdit}</Button>
           </div>
           <div className="index-coverage"><span />{copy.documents.indexCoverage}</div>
           <div className="results-summary">
-            <span>{copy.documents.resultCount}</span>
+            <span>{copy.modules.results}{copy.fieldManagement.separator}{docs.length}</span>
             <CheckRow label={copy.documents.includeFamily} checked={includeFamily} onChange={() => setIncludeFamily(!includeFamily)} />
           </div>
           <div className="table-scroll document-table">
@@ -77,15 +85,17 @@ export function DocumentsPage({ navigate, notify }: { navigate: (page: PageId) =
                     </tr>
                   );
                 })}
+                {!docs.length && <tr><td colSpan={copy.documents.columns.length}>{copy.modules.noMatches}</td></tr>}
               </tbody>
             </table>
           </div>
-          <div className="table-footer"><span>{copy.documents.resultCount}</span><span>{copy.common.rowsPerPage}</span></div>
+          <div className="table-footer"><span>{copy.modules.results}{copy.fieldManagement.separator}{docs.length}</span><span>{copy.common.rowsPerPage}</span></div>
         </section>
       </div>
 
-      <Modal open={saveOpen} title={copy.documents.saveSearch} onClose={() => setSaveOpen(false)} footer={<><Button onClick={() => setSaveOpen(false)}>{copy.common.cancel}</Button><Button variant="primary" onClick={() => { setSaveOpen(false); notify(copy.documents.saveSearchSuccess); }}>{copy.common.save}</Button></>}>
-        <Field label={copy.documents.savedSearchName} required><input defaultValue={copy.documents.savedSearchNameValue} /></Field>
+      <Modal open={saveOpen} title={copy.documents.saveSearch} onClose={() => setSaveOpen(false)} footer={<><Button onClick={() => setSaveOpen(false)}>{copy.common.cancel}</Button><Button variant="primary" onClick={() => { if (!searchName.trim()) return setSaveError(true); setSavedSearches(current => [...current, { id: crypto.randomUUID(), name: searchName.trim(), query, includeFamily, folder }]); setSaveOpen(false); notify(copy.documents.saveSearchSuccess); }}>{copy.common.save}</Button></>}>
+        {saveError && <p role="alert">{copy.modules.invalidSearch}</p>}
+        <Field label={copy.documents.savedSearchName} required><input aria-label={copy.documents.savedSearchName} value={searchName} onChange={event => setSearchName(event.target.value)} /></Field>
         <Field label={copy.documents.conditions}><div className="read-only-summary"><Filter size={16} /><span>{copy.documents.conditionFieldValue} · {copy.documents.conditionOperatorValue} · {query}</span></div></Field>
         <CheckRow label={copy.documents.includeFamily} checked={includeFamily} onChange={() => setIncludeFamily(!includeFamily)} />
       </Modal>

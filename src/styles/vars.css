@@ -42,6 +42,19 @@
   --space-9: 48px;
   --space-10: 64px;
 
+  --size-login-column: 360px;
+  --size-login-title-min: 28px;
+  --size-login-title-fluid: 4vw;
+  --size-login-title-max: 48px;
+  --size-login-intro: 680px;
+  --size-login-brand: 56px;
+  --size-login-accent: 3px;
+  --size-login-card: 480px;
+  --size-scope-context: 32px;
+  --size-workspace-card: 280px;
+  --size-module-textarea: 120px;
+  --size-report-intro: 900px;
+  --size-report-textarea: 96px;
   --size-border: 1px;
   --size-focus: 2px;
   --size-radius-sm: 3px;
