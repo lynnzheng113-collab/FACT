@@ -2003,19 +2003,51 @@ textarea {
 .processing-additional-grid > div { background: var(--color-surface-alt); border: var(--size-border) solid var(--color-border-soft); border-radius: var(--size-radius-sm); display: flex; flex-direction: column; gap: var(--space-1); padding: var(--space-3); }
 .processing-additional-grid span { color: var(--color-ink-muted); font-size: var(--font-size-xs); }
 .processing-additional-grid strong { color: var(--color-ink-strong); font-size: var(--font-size-sm); overflow-wrap: anywhere; }
-.processing-error-table table { min-width: 1800px; }
+.processing-error-table table { min-width: var(--size-processing-error-table); }
 .processing-error-table td, .processing-error-table th { white-space: nowrap; }
 .processing-error-table td:nth-child(3), .processing-error-table td:nth-child(4), .processing-error-table td:nth-child(9) { white-space: normal; }
-.processing-error-table td:first-child { min-width: 170px; }
+.processing-error-table td:first-child { min-width: var(--size-processing-error-id); }
 .processing-error-table td:first-child small { color: var(--color-ink-muted); }
 .processing-exception-filters { align-items: center; display: flex; flex-wrap: wrap; gap: var(--space-2); margin-bottom: var(--space-4); }
 .processing-exception-filters strong { color: var(--color-ink-strong); margin-right: var(--space-2); }
-.processing-exception-filters select { min-width: 190px; }
+.processing-exception-filters select { min-width: var(--size-processing-filter); }
+.processing-exception-filters > select, .processing-exception-filters > input { width: auto; flex: 1; min-width: var(--size-processing-filter); }
+.processing-files-page .panel__actions > select { width: auto; }
 .processing-exception-actions { align-items: center; display: flex; flex-wrap: wrap; gap: var(--space-2); justify-content: flex-end; margin-top: var(--space-4); }
 .processing-exception-actions > span { color: var(--color-ink-muted); font-size: var(--font-size-sm); margin-right: auto; }
 .processing-error-detail { display: flex; flex-direction: column; gap: var(--space-3); }
 .processing-error-detail > div:first-child { align-items: center; display: flex; gap: var(--space-3); justify-content: space-between; }
-.processing-error-detail textarea { min-height: 150px; width: 100%; }
+.processing-error-detail textarea { min-height: var(--size-processing-trace); width: 100%; }
+.processing-reference { background: var(--color-surface-alt); border: var(--size-border) solid var(--color-border-soft); padding: var(--space-3); margin: var(--space-3) var(--space-0); }
+.processing-reference summary { cursor: pointer; color: var(--color-ink-muted); }
+.processing-reference p, .processing-reference a { margin-top: var(--space-2); }
+.processing-reference a { color: var(--color-primary); display: inline-block; margin-right: var(--space-4); }
+.processing-files-widgets { display: grid; grid-template-columns: repeat(4, minmax(var(--space-0), 1fr)); gap: var(--space-3); margin: var(--space-3) var(--space-0); }
+.processing-files-widgets > div { border: var(--size-border) solid var(--color-border-soft); padding: var(--space-3); display: flex; flex-direction: column; gap: var(--space-2); }
+.processing-files-widgets p { display: flex; justify-content: space-between; gap: var(--space-3); font-size: var(--font-size-sm); }
+.processing-files-page .processing-error-table td:first-child { min-width: var(--space-0); }
+.processing-files-page .processing-error-table td { max-width: var(--size-admin-search); overflow-wrap: anywhere; }
+.processing-error-detail dd { margin-left: var(--space-0); overflow-wrap: anywhere; }
+.processing-support-form { display: flex; flex-direction: column; gap: var(--space-3); }
+.processing-support-form textarea { min-height: var(--size-processing-trace); }
+.processing-password-mask { -webkit-text-security: disc; }
+.processing-form-error { color: var(--color-danger); }
+.processing-support-section { margin-top: var(--space-5); }
+.processing-support-section h3 { margin-bottom: var(--space-3); }
+.processing-support-section td { overflow-wrap: anywhere; }
+.processing-support-choice { display: flex; align-items: center; gap: var(--space-3); margin: var(--space-3) var(--space-0); padding: var(--space-3); border: var(--size-border) solid var(--color-border-soft); }
+.processing-support-choice span { display: flex; flex-direction: column; gap: var(--space-1); }
+.processing-support-choice input { width: auto; }
+.processing-support-page input[type="checkbox"], .modal .processing-support-choice input[type="checkbox"] { min-height: var(--space-0); padding: var(--space-0); height: var(--size-icon); width: var(--size-icon); flex: 0 0 var(--size-icon); }
+.processing-report-selector { display: grid; grid-template-columns: minmax(var(--space-0), 1.25fr) minmax(var(--space-0), 1fr); gap: var(--space-5); }
+.processing-report-selector select { min-height: var(--size-processing-report-list); }
+.processing-report-selector option { padding: var(--space-2); }
+.processing-replacement-counts { display: grid; grid-template-columns: repeat(3, minmax(var(--space-0), 1fr)); gap: var(--space-3); }
+.processing-replacement-counts > div { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); padding: var(--space-3); border: var(--size-border) solid var(--color-border-soft); }
+.processing-system-notice { padding: var(--space-4); background: var(--color-primary-soft); border: var(--size-border) solid var(--color-primary-border); }
+.processing-system-notice p { margin-top: var(--space-2); }
+.processing-replacement-log table { min-width: var(--size-processing-replacement-log); }
+.processing-replacement-log th, .processing-replacement-log td { white-space: nowrap; }
 .processing-error-meta { display: grid; gap: var(--space-3); grid-template-columns: repeat(3, minmax(0, 1fr)); margin: var(--space-2) var(--space-0); }
 .processing-error-meta div { background: var(--color-surface-alt); border: var(--size-border) solid var(--color-border-soft); border-radius: var(--size-radius-sm); padding: var(--space-3); }
 .processing-error-meta dt { color: var(--color-ink-muted); font-size: var(--font-size-xs); }

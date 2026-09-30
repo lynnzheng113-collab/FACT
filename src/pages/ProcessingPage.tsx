@@ -1,9 +1,10 @@
 import { useState, type ReactNode } from "react";
 import { AlertTriangle, ArrowLeft, BarChart3, ChevronRight, Database, FileText, HelpCircle, KeyRound, Layers3, PackageSearch, Plus, RefreshCw, Replace, Save, Search, Settings2 } from "lucide-react";
+import { ProcessingSupportProvider, useProcessingFileState, PasswordBankPage, ReportsPage, ReplacementFilesPage } from "./ProcessingSupportPages";
 import { copy } from "../constants/copy";
 import { Badge, Button, CheckRow, Field, Modal, PageHeader, Panel, Tabs, Toggle } from "../components/UI";
 
-type ProcessingView = "directory" | "sets" | "set-detail" | "profile" | "sources" | "password" | "inventory" | "reports" | "errors" | "files" | "replacement";
+type ProcessingView = "directory" | "sets" | "set-detail" | "profile" | "sources" | "password" | "inventory" | "reports" | "errors" | "files" | "file-exceptions" | "replacement" | "inventory-report" | "discovery-report";
 type ModuleId = Exclude<ProcessingView, "directory" | "set-detail">;
 
 function SettingRadioGroup({ name, options, value, onChange }: { name: string; options: readonly string[]; value: string; onChange: (value: string) => void }) {
@@ -125,7 +126,7 @@ function ProcessingSetDetail({ setId, onBack, onOpenModule, notify }: { setId: s
     </Panel>
     <Panel className="processing-set-console" title={s.processFiles}>
       <div className="processing-set-console__buttons"><Button variant="primary" onClick={runInventory}>{s.inventoryFiles}</Button><Button onClick={() => notify(s.actionSaved)}>{s.filterFiles}</Button><Button variant="primary" onClick={runDiscover}>{s.discoverFiles}</Button><Button disabled>{s.retryFileExceptions}</Button><Button variant="primary" onClick={runPublish}>{s.publishFiles}</Button></div>
-      <div className="processing-set-console__links"><div><strong>{s.reports}</strong><button type="button" onClick={() => notify(s.inventoryReport)}>{s.inventoryReport}</button><button type="button" onClick={() => notify(s.discoveryReport)}>{s.discoveryReport}</button><button type="button" onClick={() => notify(s.allReports)}>{s.allReports}</button></div><div><strong>{s.exceptions}</strong><button type="button" onClick={() => onOpenModule("errors")}>{s.jobErrors}</button><button type="button" onClick={() => onOpenModule("files")}>{s.fileExceptions}</button></div></div>
+      <div className="processing-set-console__links"><div><strong>{s.reports}</strong><button type="button" onClick={() => onOpenModule("inventory-report")}>{s.inventoryReport}</button><button type="button" onClick={() => onOpenModule("discovery-report")}>{s.discoveryReport}</button><button type="button" onClick={() => onOpenModule("reports")}>{s.allReports}</button></div><div><strong>{s.exceptions}</strong><button type="button" onClick={() => onOpenModule("errors")}>{s.jobErrors}</button><button type="button" onClick={() => onOpenModule("file-exceptions")}>{s.fileExceptions}</button></div></div>
     </Panel>
     <Panel className="processing-data-source-panel"><Tabs items={[s.dataSource, s.jobErrors]} active={dataSourceTab} onChange={setDataSourceTab} />{dataSourceTab === s.dataSource ? <><div className="panel__actions processing-table-actions"><Button variant="primary" icon={<Plus size={16} />} onClick={() => setDataSourceForm(true)}>{s.createDataSource}</Button><Button disabled>{s.deleteDataSource}</Button></div><div className="table-scroll"><table><thead><tr>{s.dataSourceColumns.map(column => <th key={column}>{column}</th>)}</tr></thead><tbody>{s.dataSourcesView.rows.map((row, index) => <tr key={row.id}><td><Badge tone={index === 2 && !publishDone ? "warning" : publishDone ? "success" : inventoryDone ? "info" : "neutral"}>{publishDone ? s.publishResultStatus : discoverDone ? s.discoverResultStatus : inventoryDone ? s.inventoryResultStatus : s.stageNotStarted}</Badge></td><td>{publishDone ? s.publishPercent : index === 2 ? s.partialPercent : currentPercent}</td><td><button className="table-link" type="button" onClick={() => setDataSourceForm(true)}>{row.source}</button></td><td>{row.custodian}</td><td>{custodianPrefix}</td><td>{timeZone}</td><td>{ocrLanguages.split("\n").map(language => <span className="processing-table-line" key={language}>{language}</span>)}</td></tr>)}</tbody></table></div></> : <div className="processing-empty-state"><AlertTriangle size={22} aria-hidden="true" /><p>{t.exceptionRows[0].impact}</p><Button icon={<RefreshCw size={16} />} onClick={() => notify(t.retrySuccess)}>{copy.common.retry}</Button></div>}</Panel>
     {dataSourceForm && <Panel title={s.dataSource} className="processing-source-form-panel"><div className="processing-source-form"><section><h3>{s.data}</h3><p className="admin-note">{s.sourceLocationHint}</p><Field label={s.sourcePath} required><div className="processing-field-with-action"><input value={sourcePath} onChange={event => setSourcePath(event.target.value)} /><Button onClick={() => setSourcePickerOpen(true)}>{s.browse}</Button></div></Field><Field label={s.custodian} required><div className="processing-field-with-action"><input value={custodian} onChange={event => setCustodian(event.target.value)} /><Button onClick={() => setCustodianPickerOpen(true)}>{s.select}</Button><button type="button" className="processing-settings__link" onClick={() => { setCustodianFormOpen(true); setCustodianPickerOpen(false); }}>{s.add}</button><button type="button" className="processing-settings__link" onClick={() => setCustodian("")}>{s.clear}</button></div></Field><Field label={s.destinationFolder} required><div className="processing-field-with-action"><input value={destination} onChange={event => setDestination(event.target.value)} /><Button onClick={() => setDestinationPickerOpen(true)}>{s.select}</Button><button type="button" className="processing-settings__link" onClick={() => setDestination("")}>{s.clear}</button></div></Field></section><section><h3>{s.custodian} {s.advancedOptions}</h3><Field label={s.timeZone} required><div className="processing-field-with-action"><select value={timeZone} onChange={event => setTimeZone(event.target.value)}>{s.timezoneOptions.map(option => <option key={option}>{option}</option>)}</select><Button onClick={() => notify(s.select)}>{s.select}</Button><button type="button" className="processing-settings__link" onClick={() => setTimeZone("")}>{s.clear}</button></div></Field><Field label={s.ocrLanguages} required><div className="processing-field-with-action"><textarea value={ocrLanguages} onChange={event => setOcrLanguages(event.target.value)} /><Button onClick={() => notify(s.select)}>{s.select}</Button><button type="button" className="processing-settings__link" onClick={() => notify(s.add)}>{s.add}</button><button type="button" className="processing-settings__link" onClick={() => setOcrLanguages("")}>{s.clear}</button></div></Field><Field label={s.numberingPrefix} required><input value={custodianPrefix} onChange={event => setCustodianPrefix(event.target.value)} /></Field></section><section><h3>{s.advancedOptions}</h3><div className="processing-basic-grid"><Field label={s.sourceName}><input /></Field><Field label={s.order} required><input defaultValue={s.orderValue} /></Field></div></section></div><div className="processing-source-form__actions"><Button onClick={() => setDataSourceForm(false)}>{copy.common.cancel}</Button><Button variant="primary" onClick={saveDataSource}>{s.createDataSource}</Button></div></Panel>}
@@ -156,52 +157,120 @@ function JobErrorsPage({ onBack, notify }: { onBack: () => void; notify: (messag
   const [activeView, setActiveView] = useState<string>(t.current);
   const [retrying, setRetrying] = useState<string[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const rows = activeView === t.current ? t.rows.filter(row => !retrying.includes(row.id) || row.status !== t.statusLabels.retried) : t.rows;
+  const [phase, setPhase] = useState("");
+  const [scenario, setScenario] = useState("");
+  const rows = t.rows.filter(row => (activeView === t.all || row.state !== "retried") && (!phase || row.phase === phase) && (!scenario || row.scenario === scenario));
   const selected = t.rows.find(row => row.id === selectedId);
-  const statusFor = (row: typeof t.rows[number]) => retrying.includes(row.id) ? t.statusLabels.inProgress : row.status;
-  const toneFor = (row: typeof t.rows[number]) => retrying.includes(row.id) ? "info" : row.tone;
+  const stateFor = (row: typeof t.rows[number]) => retrying.includes(row.id) ? "progress" : row.state;
+  const toneFor = (row: typeof t.rows[number]) => stateFor(row) === "progress" ? "info" : row.state === "ready" ? "warning" : row.state === "unresolvable" ? "danger" : "neutral";
+  const eligible = rows.filter(row => stateFor(row) === "ready");
+  const retry = (ids: string[]) => { setRetrying(current => [...new Set([...current, ...ids])]); notify(t.retryNotice); };
   return <div className="page processing-module-page processing-error-page">
     <div className="module-toolbar"><Button onClick={onBack} icon={<ArrowLeft size={16} />}>{copy.processing.backToDirectory}</Button></div>
     <PageHeader title={t.title} subtitle={t.subtitle} ids={copy.processing.ids} />
+    <details className="processing-reference"><summary>{t.sourceLabel}</summary><p>{t.coverage}</p><a href={t.sourceUrl} target="_blank" rel="noreferrer">{t.reference}</a></details>
     <Tabs items={[t.current, t.all]} active={activeView} onChange={setActiveView} />
-    <Panel title={activeView} actions={<Button onClick={() => notify(t.retryNotice)}>{t.retry}</Button>}>
-      <div className="table-scroll processing-error-table"><table><thead><tr>{t.columns.map(column => <th key={column}>{column}</th>)}</tr></thead><tbody>{rows.map(row => <tr key={row.id}><td><button type="button" className="table-link" onClick={() => setSelectedId(row.id)}>{row.id}</button></td><td><Badge tone={toneFor(row)}>{statusFor(row)}</Badge></td><td>{row.message}</td><td>{row.custodian}</td><td>{row.set}</td><td>{row.source}</td><td>{row.created}</td><td>{row.republish}</td><td>{row.notes}</td></tr>)}{!rows.length && <tr><td colSpan={t.columns.length} className="admin-empty">{t.noData}</td></tr>}</tbody></table></div>
+    <Panel title={activeView} actions={<Button disabled={!eligible.length} onClick={() => retry(eligible.map(row => row.id))}>{t.retry}</Button>}>
+      <div className="processing-exception-filters">
+        <select value={phase} aria-label={t.phase} onChange={e => setPhase(e.target.value)}><option value="">{t.allPhases}</option>{[...new Set(t.rows.map(row => row.phase))].map(value => <option key={value}>{value}</option>)}</select>
+        <select value={scenario} aria-label={t.scenario} onChange={e => setScenario(e.target.value)}><option value="">{t.allScenarios}</option>{[...new Set(t.rows.map(row => row.scenario))].map(value => <option key={value}>{value}</option>)}</select>
+      </div>
+      <div className="table-scroll processing-error-table"><table><thead><tr>{t.columns.map(column => <th key={column}>{column}</th>)}</tr></thead><tbody>{rows.map(row => <tr key={row.id}>
+        <td><button type="button" className="table-link" onClick={() => setSelectedId(row.id)}>{row.id}</button></td><td><Badge tone={toneFor(row)}>{t.statusLabels[stateFor(row)]}</Badge></td><td>{row.scenario}</td><td>{row.phase}</td><td>{row.message}</td><td>{row.custodian}</td><td>{row.set}</td><td>{row.source}</td><td>{row.created}</td><td>{row.republish ? t.yes : t.no}</td><td>{row.notes}</td>
+      </tr>)}{!rows.length && <tr><td colSpan={t.columns.length}>{t.noData}</td></tr>}</tbody></table></div>
     </Panel>
     <Modal open={Boolean(selected)} title={t.details} onClose={() => setSelectedId(null)} footer={<Button onClick={() => setSelectedId(null)}>{copy.common.close}</Button>}>
-      {selected && <div className="processing-error-detail"><div><strong>{selected.id}</strong><Badge tone={toneFor(selected)}>{statusFor(selected)}</Badge></div><p>{selected.message}</p><Field label={t.advanced}><textarea readOnly value={t.stackTrace} /></Field>{selected.retryable && !retrying.includes(selected.id) && <Button variant="primary" onClick={() => { setRetrying(current => [...current, selected.id]); notify(t.retryNotice); }}>{t.retry}</Button>}{!selected.retryable && <p className="admin-note">{selected.notes}</p>}</div>}
+      {selected && <div className="processing-error-detail"><div><strong>{selected.id}</strong><Badge tone={toneFor(selected)}>{t.statusLabels[stateFor(selected)]}</Badge></div><strong>{selected.scenario}</strong><p>{selected.message}</p><p>{selected.notes}</p><Field label={t.advanced}><textarea readOnly value={selected.advanced} /></Field><p>{t.reference}: {selected.reference}</p>{stateFor(selected) === "ready" && <Button variant="primary" onClick={() => retry([selected.id])}>{t.retry}</Button>}</div>}
     </Modal>
   </div>;
 }
 
-function FileExceptionsPage({ onBack, notify }: { onBack: () => void; notify: (message: string) => void }) {
+function FilesPage({ onBack, notify, onReplace, exceptionsInitially = false }: { onBack: () => void; notify: (message: string) => void; onReplace: () => void; exceptionsInitially?: boolean }) {
   const t = copy.processing.sets.fileExceptionsView;
-  const [activeView, setActiveView] = useState<string>(t.current);
+  type FileRow = typeof t.rows[number];
+  type FileState = keyof typeof t.statusLabels;
+  type Filter = { name: string; view: string; query: string; phase: string; category: string; custodian: string };
+  const [activeView, setActiveView] = useState<string>(exceptionsInitially ? t.current : t.allFiles);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  const [ignoredIds, setIgnoredIds] = useState<string[]>(t.rows.filter(row => row.status === t.statusLabels.ignored).map(row => row.id));
-  const [resolvingIds, setResolvingIds] = useState<string[]>([]);
-  const [phase, setPhase] = useState<string>(t.phaseOptions[0]);
-  const [category, setCategory] = useState<string>(t.categoryOptions[0]);
-  const [custodian, setCustodian] = useState<string>(t.custodianOptions[0]);
+  const { fileStates: states, setFileStates: setStates } = useProcessingFileState();
+  const [events, setEvents] = useState<Record<string, { state: FileState; time: string }[]>>({});
+  const [phase, setPhase] = useState("");
+  const [category, setCategory] = useState("");
+  const [custodian, setCustodian] = useState("");
+  const [query, setQuery] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const rows = t.rows.filter(row => (activeView === t.current ? !ignoredIds.includes(row.id) : true) && (phase === t.phaseOptions[0] || row.phase === phase) && (category === t.categoryOptions[0] || row.category === category) && (custodian === t.custodianOptions[0] || row.custodian === custodian));
+  const [detailTab, setDetailTab] = useState<string>(t.properties);
+  const [dashboard, setDashboard] = useState<string>(t.dashboards[0]);
+  const [filterName, setFilterName] = useState("");
+  const [savedFilters, setSavedFilters] = useState<Filter[]>([]);
+  const stateFor = (row: FileRow): FileState => states[row.id] ?? row.status;
+  const toneFor = (row: FileRow) => stateFor(row) === "resolved" ? "success" : stateFor(row) === "resolving" ? "info" : stateFor(row) === "open" ? (row.severity === "error" ? "danger" : "warning") : "neutral";
+  const exceptionView = activeView === t.current || activeView === t.all;
+  const deletedView = activeView === t.deleted;
+  const baseRows = t.rows.filter(row => deletedView ? row.deleted : !row.deleted && (activeView === t.current ? stateFor(row) === "open" : activeView === t.all ? row.status !== "none" : true));
+  const rows = baseRows.filter(row => (!phase || row.phase === phase) && (!category || (category === "unspecified" ? row.status !== "none" && !row.category : row.category === category)) && (!custodian || row.custodian === custodian) && (!query || `${row.name} ${row.id}`.toLowerCase().includes(query.toLowerCase())));
   const selected = t.rows.find(row => row.id === selectedId);
-  const statusFor = (row: typeof t.rows[number]) => resolvingIds.includes(row.id) ? t.statusLabels.resolving : ignoredIds.includes(row.id) ? t.statusLabels.ignored : row.status;
-  const toggleSelected = (id: string) => setSelectedIds(current => current.includes(id) ? current.filter(item => item !== id) : [...current, id]);
-  const selectedRows = t.rows.filter(row => selectedIds.includes(row.id));
-  return <div className="page processing-module-page processing-error-page">
-    <div className="module-toolbar"><Button onClick={onBack} icon={<ArrowLeft size={16} />}>{copy.processing.backToDirectory}</Button></div>
+  const selectedRows = rows.filter(row => selectedIds.includes(row.id));
+  const unresolved = selectedRows.filter(row => stateFor(row) === "open");
+  const ignored = selectedRows.filter(row => stateFor(row) === "ignored");
+  const downloadable = unresolved.filter(row => !row.deleted);
+  const publishable = selectedRows.filter(row => row.dedupe !== "duplicate" && !row.deleted && !row.container && row.published);
+  const changeView = (view: string) => { setActiveView(view); setSelectedIds([]); setPhase(""); setCategory(""); };
+  const updateState = (targets: readonly FileRow[], next: FileState, message: string) => {
+    const time = new Date().toISOString();
+    setStates(current => ({ ...current, ...Object.fromEntries(targets.map(row => [row.id, next])) }));
+    setEvents(current => { const result = { ...current }; targets.forEach(row => { result[row.id] = [...(result[row.id] ?? []), { state: next, time }]; }); return result; });
+    setSelectedIds([]); notify(message);
+  };
+  const exportCSV = () => {
+    const exportRows = (selectedRows.length ? selectedRows : rows).map(row => [row.id, row.name, row.category, row.phase, t.statusLabels[stateFor(row)], row.custodian, row.source, row.message]);
+    const header = [t.fileId, t.fileColumns[0], t.category, t.phase, t.columns[5], t.custodian, t.fileColumns[4], t.columns[2]];
+    const csv = [header, ...exportRows].map(row => row.map(value => `"${value.replaceAll('"', '""')}"`).join(",")).join("\r\n");
+    const url = URL.createObjectURL(new Blob(["\uFEFF", csv], { type: "text/csv;charset=utf-8" }));
+    const anchor = document.createElement("a"); anchor.href = url; anchor.download = t.exportName; anchor.click(); window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+  };
+  const openDetails = (row: FileRow) => { setSelectedId(row.id); setDetailTab(exceptionView ? t.exceptions : t.properties); };
+  const categoryLabel = (row: FileRow) => row.category || (row.status === "none" ? t.dash : t.unspecified);
+  const categoryInfo = selected ? t.categories.find(category => category.name === selected.category) : undefined;
+  const columns = exceptionView ? t.columns : deletedView ? t.deletedColumns : t.fileColumns;
+  const widgetGroups = dashboard === t.dashboards[2] ? [t.category, t.fileTypes] : dashboard === t.dashboards[1] ? [t.custodian, t.fileColumns[4], t.fileTypes] : [];
+  const groupCounts = (key: string) => {
+    const result: Record<string, number> = {};
+    rows.forEach(row => { const value = key === t.category ? (row.status === "none" ? "" : categoryLabel(row)) : key === t.custodian ? row.custodian : key === t.fileColumns[4] ? row.source : row.extension; if (value) result[value] = (result[value] ?? 0) + 1; });
+    return Object.entries(result);
+  };
+  return <div className="page processing-module-page processing-files-page">
+    <div className="module-toolbar"><Button onClick={onBack} icon={<ArrowLeft size={16} />}>{exceptionsInitially ? t.backToSet : copy.processing.backToDirectory}</Button></div>
     <PageHeader title={t.title} subtitle={t.subtitle} ids={copy.processing.ids} />
-    <Tabs items={[t.current, t.all]} active={activeView} onChange={setActiveView} />
-    <Panel title={activeView}>
-      <div className="processing-exception-filters"><strong>{t.filters}</strong><select value={phase} onChange={event => setPhase(event.target.value)} aria-label={t.phase}>{t.phaseOptions.map(option => <option key={option}>{option}</option>)}</select><select value={category} onChange={event => setCategory(event.target.value)} aria-label={t.category}>{t.categoryOptions.map(option => <option key={option}>{option}</option>)}</select><select value={custodian} onChange={event => setCustodian(event.target.value)} aria-label={t.custodian}>{t.custodianOptions.map(option => <option key={option}>{option}</option>)}</select></div>
-      <div className="table-scroll processing-error-table"><table><thead><tr><th><input type="checkbox" aria-label={copy.common.all} checked={rows.length > 0 && rows.every(row => selectedIds.includes(row.id))} onChange={() => setSelectedIds(rows.every(row => selectedIds.includes(row.id)) ? selectedIds.filter(id => !rows.some(row => row.id === id)) : [...new Set([...selectedIds, ...rows.map(row => row.id)])])} /></th>{t.columns.map(column => <th key={column}>{column}</th>)}</tr></thead><tbody>{rows.map(row => <tr key={row.id}><td><input type="checkbox" checked={selectedIds.includes(row.id)} onChange={() => toggleSelected(row.id)} aria-label={row.name} /></td><td><button type="button" className="table-link" onClick={() => setSelectedId(row.id)}>{row.name}</button><small className="processing-table-line">{row.id}</small></td><td><Badge tone={row.tone}>{row.level}</Badge></td><td>{row.message}</td><td>{row.phase}</td><td>{row.category}</td><td>{statusFor(row)}</td><td>{row.custodian}</td><td>{row.set}</td></tr>)}{!rows.length && <tr><td colSpan={t.columns.length + 1} className="admin-empty">{t.noData}</td></tr>}</tbody></table></div>
-      <div className="processing-exception-actions"><span>{t.selected} {selectedRows.length}</span><Button onClick={() => notify(t.export)}>{t.export}</Button><Button disabled={!selectedRows.length} onClick={() => { setResolvingIds(current => [...new Set([...current, ...selectedRows.filter(row => !ignoredIds.includes(row.id)).map(row => row.id)])]); notify(t.retryNotice); }}>{t.retry}</Button><Button disabled={!selectedRows.length} onClick={() => { setIgnoredIds(current => [...new Set([...current, ...selectedIds])]); setSelectedIds([]); notify(t.ignoreNotice); }}>{t.ignore}</Button><Button disabled={!selectedRows.some(row => ignoredIds.includes(row.id))} onClick={() => { setIgnoredIds(current => current.filter(id => !selectedIds.includes(id))); notify(t.undoNotice); }}>{t.undoIgnore}</Button><Button disabled={!selectedRows.length} onClick={() => notify(t.downloadNotice)}>{t.download}</Button><Button disabled={!selectedRows.length} onClick={() => notify(t.replaceNotice)}>{t.replace}</Button><Button disabled={!selectedRows.length} onClick={() => notify(t.republishNotice)}>{t.republish}</Button></div>
+    <Tabs items={[t.allFiles, t.current, t.all, t.deleted]} active={activeView} onChange={changeView} />
+    <Panel title={activeView} actions={<><select aria-label={t.dashboard} value={dashboard} onChange={e => setDashboard(e.target.value)}>{t.dashboards.map(value => <option key={value}>{value}</option>)}</select><Button onClick={onReplace}>{t.replace}</Button></>}>
+      <div className="processing-exception-filters">
+        <input aria-label={t.search} placeholder={t.search} value={query} onChange={e => { setQuery(e.target.value); setSelectedIds([]); }} />
+        <select value={custodian} onChange={e => { setCustodian(e.target.value); setSelectedIds([]); }} aria-label={t.custodian}>{t.custodianOptions.map((value, i) => <option value={i === 0 ? "" : value} key={value}>{value}</option>)}</select>
+        {(exceptionView || deletedView) && <><select value={phase} onChange={e => { setPhase(e.target.value); setSelectedIds([]); }} aria-label={t.phase}>{t.phaseOptions.map((value, i) => <option key={value} value={i === 0 ? "" : value}>{value}</option>)}</select><select value={category} onChange={e => { setCategory(e.target.value); setSelectedIds([]); }} aria-label={t.category}><option value="">{t.allCategories}</option>{t.categories.map(item => <option value={item.name} key={item.name}>{item.name} / {item.translation}</option>)}<option value="unspecified">{t.unspecified}</option></select></>}
+        <Button onClick={() => { setQuery(""); setPhase(""); setCategory(""); setCustodian(""); setSelectedIds([]); }}>{t.clear}</Button>
+      </div>
+      {dashboard !== t.dashboards[0] && <div className="processing-files-widgets"><div><strong>{t.containers}</strong><span>{rows.filter(row => row.container).length}</span></div>{widgetGroups.map(key => <div key={key}><strong>{key}</strong>{groupCounts(key).map(([value, count]) => <p key={value}><span>{value}</span><b>{count}</b></p>)}</div>)}</div>}
+      <p className="admin-note">{t.simulation} · {t.count}: {rows.length}</p>
+      <div className="table-scroll processing-error-table"><table><thead><tr><th><input type="checkbox" aria-label={copy.common.all} checked={rows.length > 0 && rows.every(row => selectedIds.includes(row.id))} onChange={e => setSelectedIds(e.target.checked ? rows.map(row => row.id) : [])} /></th>{columns.map(column => <th key={column}>{column}</th>)}</tr></thead><tbody>{rows.map(row => <tr key={row.id}>
+        <td><input type="checkbox" aria-label={row.name} checked={selectedIds.includes(row.id)} onChange={() => setSelectedIds(current => current.includes(row.id) ? current.filter(id => id !== row.id) : [...current, row.id])} /></td>
+        {deletedView && <td>{row.logicalId}</td>}
+        <td><button type="button" className="table-link" onClick={() => openDetails(row)}>{row.name}</button><small className="processing-table-line">{row.id}</small></td>
+        {exceptionView ? <><td><Badge tone={row.severity === "error" ? "danger" : "warning"}>{t.severityLabels[row.severity]}</Badge></td><td>{row.message}</td><td>{row.phase}</td><td>{categoryLabel(row)}</td><td><Badge tone={toneFor(row)}>{t.statusLabels[stateFor(row)]}</Badge></td><td>{row.custodian}</td><td>{row.set}</td></> : deletedView ? <><td>{row.custodian}</td><td>{row.source}</td><td>{row.deleted ? t.yes : t.no}</td><td>{row.published ? t.yes : t.no}</td><td>{row.message || t.dash}{row.status !== "none" && <Badge tone={toneFor(row)}>{t.statusLabels[stateFor(row)]}</Badge>}</td></> : <><td>{row.type}</td><td>{row.extension}</td><td>{row.custodian}</td><td>{row.source}</td><td>{t.dedupeLabels[row.dedupe]}</td><td>{row.level}</td><td>{row.size}</td><td>{row.published ? t.yes : t.no}</td><td>{row.senderDomain}</td><td>{row.sortDate}</td><td>{row.path}</td></>}
+      </tr>)}{!rows.length && <tr><td colSpan={columns.length + 1} className="admin-empty">{t.noData}</td></tr>}</tbody></table></div>
+      <div className="processing-exception-actions"><span>{t.selected} {selectedRows.length}</span><Button onClick={exportCSV}>{t.export}</Button><Button disabled={!unresolved.length} onClick={() => updateState(unresolved, "resolving", t.retryNotice)}>{t.retry}</Button>{!deletedView && <><Button disabled={!unresolved.length} onClick={() => updateState(unresolved, "ignored", t.ignoreNotice)}>{t.ignore}</Button><Button disabled={!ignored.length} onClick={() => updateState(ignored, "open", t.undoNotice)}>{t.undoIgnore}</Button><Button disabled={!downloadable.length} onClick={() => notify(t.downloadNotice)}>{t.download}</Button><Button disabled={!publishable.length} onClick={() => notify(t.republishNotice)}>{t.republish}</Button></>}</div>
+      <details className="processing-reference"><summary>{t.savedFilters}</summary><div className="processing-exception-filters"><input aria-label={t.filterName} placeholder={t.filterName} value={filterName} onChange={e => setFilterName(e.target.value)} /><Button disabled={!filterName.trim()} onClick={() => { setSavedFilters(current => [...current.filter(item => item.name !== filterName.trim()), { name: filterName.trim(), view: activeView, query, phase, category, custodian }]); setFilterName(""); notify(t.savedNotice); }}>{t.saveFilters}</Button></div>{savedFilters.length ? savedFilters.map(filter => <Button key={filter.name} onClick={() => { setActiveView(filter.view); setQuery(filter.query); setPhase(filter.phase); setCategory(filter.category); setCustodian(filter.custodian); setSelectedIds([]); }}>{filter.name}</Button>) : <p>{t.noFilters}</p>}</details>
     </Panel>
-    <Modal open={Boolean(selected)} title={selected ? selected.name : t.title} onClose={() => setSelectedId(null)} footer={<Button onClick={() => setSelectedId(null)}>{copy.common.close}</Button>}>
-      {selected && <div className="processing-error-detail"><div><strong>{selected.name}</strong><Badge tone={selected.tone}>{statusFor(selected)}</Badge></div><p>{selected.message}</p><dl className="processing-error-meta"><div><dt>{t.phase}</dt><dd>{selected.phase}</dd></div><div><dt>{t.category}</dt><dd>{selected.category}</dd></div><div><dt>{t.custodian}</dt><dd>{selected.custodian}</dd></div></dl><p className="admin-note">{selected.status} · {selected.set}</p></div>}
+    <Modal open={Boolean(selected)} title={selected?.name ?? t.details} onClose={() => setSelectedId(null)} footer={<Button onClick={() => setSelectedId(null)}>{copy.common.close}</Button>}>
+      {selected && <div className="processing-error-detail"><Tabs items={[t.properties, t.exceptions]} active={detailTab} onChange={setDetailTab} />{detailTab === t.properties ? <dl className="processing-error-meta">{[[t.fileId, selected.id], [t.storageId, selected.storageId], [t.logicalId, selected.logicalId], [t.custodian, selected.custodian], [t.fileColumns[4], selected.source], [t.fileColumns[11], selected.path]].map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}</dl> : selected.status === "none" ? <p>{t.noException}</p> : <>
+        <strong>{t.summary}</strong><Badge tone={toneFor(selected)}>{t.statusLabels[stateFor(selected)]}</Badge>{stateFor(selected) === "open" || stateFor(selected) === "resolving" ? <p>{categoryLabel(selected)} · {selected.phase}</p> : <p>{t.noActive}</p>}
+        <p>{selected.message}</p><strong>{t.guidance}</strong><p>{selected.guidance}</p><p>{t.consoleRetry}: {categoryInfo?.consoleRetry === true ? t.yes : categoryInfo?.consoleRetry === false ? t.no : t.notListed}</p><p>{t.reference}: {selected.reference}</p>
+        <strong>{t.history}</strong><ul><li>{selected.occurred} · {t.statusLabels[selected.status]} · {selected.phase} · {categoryLabel(selected)} · {selected.message}</li>{(events[selected.id] ?? []).map((event, index) => <li key={`${event.time}-${index}`}>{event.time} · {t.statusLabels[event.state]}</li>)}</ul>
+      </>}</div>}
     </Modal>
   </div>;
 }
+
 
 function ProcessingProfilePage({ onBack, notify }: { onBack: () => void; notify: (message: string) => void }) {
   const t = copy.processing.settings;
@@ -254,6 +323,10 @@ function ModulePlaceholder({ view, onBack }: { view: ModuleId; onBack: () => voi
 }
 
 export function ProcessingPage({ notify }: { notify: (message: string) => void }) {
+  return <ProcessingSupportProvider><ProcessingContent notify={notify} /></ProcessingSupportProvider>;
+}
+
+function ProcessingContent({ notify }: { notify: (message: string) => void }) {
   const [view, setView] = useState<ProcessingView>("directory");
   const [selectedSet, setSelectedSet] = useState<string>(copy.processing.rows[1].id);
   if (view === "directory") return <Directory onOpen={next => setView(next)} />;
@@ -261,8 +334,12 @@ export function ProcessingPage({ notify }: { notify: (message: string) => void }
   if (view === "set-detail") return <ProcessingSetDetail setId={selectedSet} onBack={() => setView("sets")} onOpenModule={next => setView(next)} notify={notify} />;
   if (view === "sources") return <ProcessingDataSourcesPage onBack={() => setView("directory")} />;
   if (view === "errors") return <JobErrorsPage onBack={() => setView("directory")} notify={notify} />;
-  if (view === "files") return <FileExceptionsPage onBack={() => setView("directory")} notify={notify} />;
+  if (view === "files") return <FilesPage onReplace={() => setView("replacement")} onBack={() => setView("directory")} notify={notify} />;
+  if (view === "file-exceptions") return <FilesPage onReplace={() => setView("replacement")} exceptionsInitially onBack={() => setView("set-detail")} notify={notify} />;
   if (view === "profile") return <ProcessingProfilePage onBack={() => setView("directory")} notify={notify} />;
+  if (view === "password") return <PasswordBankPage onBack={() => setView("directory")} notify={notify} />;
+  if (view === "reports" || view === "inventory-report" || view === "discovery-report") return <ReportsPage onBack={() => setView("directory")} notify={notify} initialReport={view === "discovery-report" ? "discovered-custodian" : "inventory-summary"} />;
+  if (view === "replacement") return <ReplacementFilesPage onBack={() => setView("directory")} notify={notify} />;
   return <ModulePlaceholder view={view} onBack={() => setView("directory")} />;
 }
 

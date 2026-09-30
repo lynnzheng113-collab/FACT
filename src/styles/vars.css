@@ -103,6 +103,12 @@
   --size-permission-preview-nav: 110px;
   --size-permission-empty: 420px;
 
+  --size-processing-error-table: 1800px;
+  --size-processing-error-id: 170px;
+  --size-processing-filter: 190px;
+  --size-processing-trace: 150px;
+  --size-processing-report-list: 480px;
+  --size-processing-replacement-log: 1500px;
   --font-family: "Segoe UI", "Microsoft YaHei UI", "Microsoft YaHei", Arial, sans-serif;
   --font-size-xs: 11px;
   --font-size-sm: 12px;

@@ -3,7 +3,7 @@ export const copy = {
     title: "证据审阅平台原型 | Evidence Review Platform Prototype",
     prototype: "交互原型 / Interactive prototype",
     synthetic: "演示数据 / Synthetic data",
-    version: "v0.7 · 2026-09-29",
+    version: "v0.9 · 2026-09-30",
   },
   brand: {
     mark: "T",
@@ -890,65 +890,2352 @@ export const copy = {
         noData: "暂无处理数据源。 / No processing data sources.",
       },
       jobErrorsView: {
-        title: "作业错误 / Job Errors",
-        subtitle: "查看影响整个处理作业的错误；可重试错误需要先解决后才能继续。 / Review errors affecting a processing job; resolve retryable errors before continuing.",
-        current: "当前作业错误 / Current Job Errors",
-        all: "全部作业错误 / All Job Errors",
-        columns: ["错误标识 / Error Identifier", "错误状态 / Error Status", "消息 / Message", "保管人 / Custodian", "处理集 / Processing Set", "数据源 / Data Source", "创建时间 / Created On", "需要重新发布 / Republish Required", "备注 / Notes"],
-        rows: [
-          { id: "ERR-2026-0918-004", status: "Ready to Retry / 可重试", message: "File storage connection was interrupted during publish.", custodian: "Johnson, Howard", set: "Processing Set 004", source: "Johnson, Howard - 1101979", created: "2026-09-30 12:04", republish: "是 / Yes", notes: "恢复存储连接后重试。 / Retry after storage access is restored.", tone: "warning", retryable: true },
-          { id: "ERR-2026-0918-003", status: "Unresolvable / 不可重试", message: "Discovery job could not complete because the source path was unavailable.", custodian: "Jones, Tom", set: "Processing Set 004", source: "Jones, Tom - 1101977", created: "2026-09-30 09:48", republish: "否 / No", notes: "创建新的处理集并重新发现。 / Create a new processing set and rediscover.", tone: "danger", retryable: false },
-          { id: "ERR-2026-0917-011", status: "Retried / 已重试", message: "Publish job exceeded the configured timeout.", custodian: "Allen, Phillip", set: "Mega processing set", source: "Allen, Phillip - 1095903", created: "2026-09-29 17:20", republish: "是 / Yes", notes: "已完成一次重试。 / One retry completed.", tone: "neutral", retryable: false },
+        "title": "作业错误 / Job Errors",
+        "subtitle": "影响整个处理作业的错误；按阶段查看原因及处理方式。 / Job-level failures, phases and remediation.",
+        "current": "当前作业错误 / Current Job Errors",
+        "all": "全部作业错误 / All Job Errors",
+        "columns": [
+          "错误标识 / Error Identifier",
+          "错误状态 / Error Status",
+          "场景 / Scenario",
+          "阶段 / Phase",
+          "消息 / Message",
+          "保管人 / Custodian",
+          "处理集 / Processing Set",
+          "数据源 / Data Source",
+          "创建时间 / Created On",
+          "需要重新发布 / Republish Required",
+          "处理建议 / Guidance"
         ],
-        stackTrace: "Processing.Engine.PublishException: source connection timed out\n at PublishWorker.SubmitAsync()\n at ProcessingQueue.ExecuteJob()",
-        details: "错误详情 / Job Error Details",
-        advanced: "高级 / Advanced",
-        statusLabels: {
-          retried: "Retried / 已重试",
-          inProgress: "In Progress / 进行中",
+        "rows": [
+          {
+            "id": "ERR-2026-0930-001",
+            "scenario": "处理许可证过期 / Expired processing license",
+            "phase": "Inventory",
+            "message": "Processing license has expired. / 处理许可证已过期。",
+            "notes": "更新许可证，在原处理集重新运行 Inventory。 / Renew the license and rerun Inventory on the same set.",
+            "reference": "§19.4.1, p.209",
+            "state": "unresolvable",
+            "custodian": "Johnson, Howard",
+            "set": "Processing Set 004",
+            "source": "Johnson, Howard - 1101979",
+            "created": "2026-09-30 08:00 UTC",
+            "republish": false,
+            "advanced": "Synthetic example / 模拟示例\nRelativity.Processing.Error.Phase: Inventory\nMessage: Processing license has expired. / 处理许可证已过期。"
+          },
+          {
+            "id": "ERR-2026-0930-002",
+            "scenario": "处理许可证无效 / Invalid processing license",
+            "phase": "Inventory",
+            "message": "Processing license is invalid. / 处理许可证无效。",
+            "notes": "由管理员修正许可证后重新运行 Inventory。 / Correct the license, then rerun Inventory.",
+            "reference": "§19.4.1, p.209",
+            "state": "unresolvable",
+            "custodian": "Jones, Tom",
+            "set": "Processing Set 004",
+            "source": "Jones, Tom - 1101977",
+            "created": "2026-09-30 08:00 UTC",
+            "republish": false,
+            "advanced": "Synthetic example / 模拟示例\nRelativity.Processing.Error.Phase: Inventory\nMessage: Processing license is invalid. / 处理许可证无效。"
+          },
+          {
+            "id": "ERR-2026-0930-003",
+            "scenario": "DeNIST 表为空 / Empty DeNIST table",
+            "phase": "Inventory",
+            "message": "DeNIST is enabled but the DeNIST table is empty. / 已启用 DeNIST，但表为空。",
+            "notes": "补齐 DeNIST 数据或修正配置后重新运行 Inventory。 / Populate DeNIST data or correct settings and rerun Inventory.",
+            "reference": "§19.4.1, p.209",
+            "state": "unresolvable",
+            "custodian": "Allen, Phillip",
+            "set": "Mega processing set",
+            "source": "Allen, Phillip - 1095903",
+            "created": "2026-09-30 08:00 UTC",
+            "republish": false,
+            "advanced": "Synthetic example / 模拟示例\nRelativity.Processing.Error.Phase: Inventory\nMessage: DeNIST is enabled but the DeNIST table is empty. / 已启用 DeNIST，但表为空。"
+          },
+          {
+            "id": "ERR-2026-0930-004",
+            "scenario": "缺少 Processing webAPI 路径 / Missing webAPI path",
+            "phase": "Inventory",
+            "message": "No processing webAPI path is configured. / 实例未配置 Processing webAPI 路径。",
+            "notes": "由管理员修正实例配置后重新运行 Inventory。 / Correct instance configuration and rerun Inventory.",
+            "reference": "§19.4.1, p.209",
+            "state": "unresolvable",
+            "custodian": "Johnson, Howard",
+            "set": "Processing Set 004",
+            "source": "Johnson, Howard - 1101979",
+            "created": "2026-09-30 08:00 UTC",
+            "republish": false,
+            "advanced": "Synthetic example / 模拟示例\nRelativity.Processing.Error.Phase: Inventory\nMessage: No processing webAPI path is configured. / 实例未配置 Processing webAPI 路径。"
+          },
+          {
+            "id": "ERR-2026-0930-005",
+            "scenario": "发现／展开阶段错误 / Discovery expansion error",
+            "phase": "Discover",
+            "message": "Source expansion stopped before all files were discovered. / 文件展开中断，尚未发现全部文件。",
+            "notes": "排查原因；不可重试时新建处理集并重新 Discover。 / Investigate; create a new set and rediscover if unresolvable.",
+            "reference": "§20.3.1, p.216; §25.6.2.2, p.308",
+            "state": "unresolvable",
+            "custodian": "Jones, Tom",
+            "set": "Processing Set 004",
+            "source": "Jones, Tom - 1101977",
+            "created": "2026-09-30 08:00 UTC",
+            "republish": false,
+            "advanced": "Synthetic example / 模拟示例\nRelativity.Processing.Error.Phase: Discover\nMessage: Source expansion stopped before all files were discovered. / 文件展开中断，尚未发现全部文件。"
+          },
+          {
+            "id": "ERR-2026-0930-006",
+            "scenario": "文本提取作业错误 / Text-extraction job error",
+            "phase": "Text Extraction",
+            "message": "Text extraction job interrupted by an environment failure. / 环境故障导致文本提取作业中断。",
+            "notes": "修复原因后在同一处理集重试；持续失败则新建处理集。 / Fix the cause and retry in the same set; rediscover in a new set if unresolved.",
+            "reference": "§25.6.2.2, p.308",
+            "state": "ready",
+            "custodian": "Allen, Phillip",
+            "set": "Mega processing set",
+            "source": "Allen, Phillip - 1095903",
+            "created": "2026-09-30 08:00 UTC",
+            "republish": false,
+            "advanced": "Synthetic example / 模拟示例\nRelativity.Processing.Error.Phase: Text Extraction\nMessage: Text extraction job interrupted by an environment failure. / 环境故障导致文本提取作业中断。"
+          },
+          {
+            "id": "ERR-2026-0930-007",
+            "scenario": "发布时存储连接中断 / Publish storage connection failure",
+            "phase": "Publish",
+            "message": "File storage became inaccessible during publish. / 发布时无法访问文件存储。",
+            "notes": "恢复网络／存储后在原处理集重试。 / Restore network/storage access and retry in the same set.",
+            "reference": "§25 introduction, pp.282–283; §25.6.2.3, p.308",
+            "state": "ready",
+            "custodian": "Johnson, Howard",
+            "set": "Processing Set 004",
+            "source": "Johnson, Howard - 1101979",
+            "created": "2026-09-30 08:00 UTC",
+            "republish": true,
+            "advanced": "Synthetic example / 模拟示例\nRelativity.Processing.Error.Phase: Publish\nMessage: File storage became inaccessible during publish. / 发布时无法访问文件存储。"
+          },
+          {
+            "id": "ERR-2026-0930-008",
+            "scenario": "去重元数据覆盖错误 / Deduplication overlay error",
+            "phase": "Publish",
+            "message": "Error occurred while trying to overlay de-duplication details. / 覆盖去重信息时发生错误。",
+            "notes": "解决发布错误，或重新发布该数据源文档。 / Resolve the publish error or republish documents from this data source.",
+            "reference": "§17.5.7, pp.178–179",
+            "state": "ready",
+            "custodian": "Jones, Tom",
+            "set": "Processing Set 004",
+            "source": "Jones, Tom - 1101977",
+            "created": "2026-09-30 08:00 UTC",
+            "republish": true,
+            "advanced": "Synthetic example / 模拟示例\nRelativity.Processing.Error.Phase: Publish\nMessage: Error occurred while trying to overlay de-duplication details. / 覆盖去重信息时发生错误。"
+          },
+          {
+            "id": "ERR-HISTORY-retried",
+            "scenario": "发布时存储连接中断 / Publish storage connection failure",
+            "phase": "Publish",
+            "message": "File storage became inaccessible during publish. / 发布时无法访问文件存储。",
+            "notes": "历史状态示例；不是新的错误类别。 / Historical status example, not a separate error category.",
+            "reference": "§24.4.2.1, p.279",
+            "state": "retried",
+            "custodian": "Johnson, Howard",
+            "set": "Processing Set 004",
+            "source": "Johnson, Howard - 1101979",
+            "created": "2026-09-30 08:00 UTC",
+            "republish": true,
+            "advanced": "Synthetic example / 模拟示例\nRelativity.Processing.Error.Phase: Publish\nMessage: File storage became inaccessible during publish. / 发布时无法访问文件存储。"
+          },
+          {
+            "id": "ERR-HISTORY-progress",
+            "scenario": "发布时存储连接中断 / Publish storage connection failure",
+            "phase": "Publish",
+            "message": "File storage became inaccessible during publish. / 发布时无法访问文件存储。",
+            "notes": "历史状态示例；不是新的错误类别。 / Historical status example, not a separate error category.",
+            "reference": "§24.4.2.1, p.279",
+            "state": "progress",
+            "custodian": "Johnson, Howard",
+            "set": "Processing Set 004",
+            "source": "Johnson, Howard - 1101979",
+            "created": "2026-09-30 08:00 UTC",
+            "republish": true,
+            "advanced": "Synthetic example / 模拟示例\nRelativity.Processing.Error.Phase: Publish\nMessage: File storage became inaccessible during publish. / 发布时无法访问文件存储。"
+          }
+        ],
+        "details": "错误详情 / Job Error Details",
+        "advanced": "高级信息（模拟） / Advanced (synthetic)",
+        "retry": "重试可重试作业 / Retry Ready Jobs",
+        "retryNotice": "系统提示：所选可重试作业状态变为 In Progress；此处为交互演示。 / System: eligible jobs changed to In Progress in this simulation.",
+        "noData": "无匹配作业错误 / No matching job errors",
+        "phase": "阶段 / Phase",
+        "scenario": "场景 / Scenario",
+        "allPhases": "全部阶段 / All phases",
+        "allScenarios": "全部场景 / All scenarios",
+        "statusLabels": {
+          "unresolvable": "Unresolvable / 不可重试",
+          "ready": "Ready to Retry / 可重试",
+          "retried": "Retried / 已重试",
+          "progress": "In Progress / 进行中"
         },
-        retry: "重试作业错误 / Retry Job Error",
-        retryNotice: "作业错误已重试，状态更新为进行中。 / Job error retry started; status is now In Progress.",
-        noData: "暂无作业错误。 / No job errors.",
+        "coverage": "覆盖手册明确列出的 8 个阶段／场景，另有 2 条历史状态示例。手册未提供完整作业错误码分类表；场景名称和消息为演示用归纳，不是官方错误码。 / Covers 8 documented phase/scenario cases plus 2 historical status examples; the manual does not define a complete job-error taxonomy. Scenario names and messages are illustrative.",
+        "reference": "手册依据 / Manual reference",
+        "sourceUrl": "https://help.relativity.com/RelativityOne/Content/Relativity/Processing/Processing_error_overview.htm",
+        "sourceLabel": "Processing User Guide · §§17.5.7, 19.4.1, 24–25",
+        "yes": "是 / Yes",
+        "no": "否 / No"
       },
       fileExceptionsView: {
-        title: "文件异常 / File Exceptions",
-        subtitle: "处理单个文件的异常；可按阶段、类别和保管人筛选，并执行重试或忽略。 / Resolve file-level exceptions with filters and retry or ignore actions.",
-        current: "当前文件异常 / Current Files with Exceptions",
-        all: "全部文件异常 / All Files with Exceptions",
-        columns: ["文件名 / File Name", "异常级别 / Exception Level", "异常消息 / Exception Message", "异常阶段 / Exception Phase", "异常类别 / Exception Category", "状态 / Exception Status", "Custodian", "处理集 / Processing Set"],
-        rows: [
-          { id: "FILE-20031", name: "mailbox-export.pst", level: "Warning / 警告", message: "Password protected container; password not found.", phase: "Discover", category: "Password Protected Container", status: "Not Resolved / 未解决", custodian: "Johnson, Howard", set: "Processing Set 004", tone: "warning" },
-          { id: "FILE-20044", name: "contract-scan-041.pdf", level: "Error / 错误", message: "Missing extracted text.", phase: "Text Extraction", category: "Missing Extracted Text", status: "Not Resolved / 未解决", custodian: "Jones, Tom", set: "Processing Set 004", tone: "danger" },
-          { id: "FILE-20108", name: "archive-2019.zip", level: "Warning / 警告", message: "Corrupt container; extracted files may be incomplete.", phase: "Discover", category: "Corrupt Container", status: "Ignored / 已忽略", custodian: "Allen, Phillip", set: "Mega processing set", tone: "neutral" },
+        "title": "文件 / Files",
+        "backToSet": "返回处理集 / Back to Processing Set",
+        "subtitle": "查看已发现文件、元数据、异常及删除记录。 / Inspect discovered files, metadata, exceptions and deletions.",
+        "fileId": "文件 ID / File ID",
+        "storageId": "存储 ID / Storage ID",
+        "logicalId": "逻辑 ID / Logical ID",
+        "allFiles": "全部文件 / All Files",
+        "current": "当前文件异常 / Current Files with Exceptions",
+        "all": "全部文件异常 / All Files with Exceptions",
+        "deleted": "已删除文件 / Deleted Files",
+        "columns": [
+          "文件名 / File Name",
+          "异常级别 / Exception Level",
+          "异常消息 / Exception Message",
+          "异常阶段 / Exception Phase",
+          "异常类别 / Exception Category",
+          "状态 / Exception Status",
+          "保管人 / Custodian",
+          "处理集 / Processing Set"
         ],
-        filters: "筛选 / Filters",
-        phase: "异常阶段 / Exception phase",
-        category: "异常类别 / Exception category",
-        custodian: "保管人 / Custodian",
-        phaseOptions: ["全部阶段 / All phases", "Discover", "Text Extraction", "Publish"],
-        categoryOptions: ["全部类别 / All categories", "Password Protected Container", "Missing Extracted Text", "Corrupt Container"],
-        custodianOptions: ["全部保管人 / All custodians", "Johnson, Howard", "Jones, Tom", "Allen, Phillip"],
-        export: "导出 CSV / Export CSV",
-        retry: "重试异常 / Retry Exceptions",
-        ignore: "忽略异常 / Ignore Exceptions",
-        undoIgnore: "撤销忽略 / Undo Ignore",
-        download: "下载 / Download",
-        replace: "替换文件 / Replace",
-        republish: "重新发布 / Republish",
-        selected: "已选择 / Selected",
-        statusLabels: {
-          ignored: "Ignored / 已忽略",
-          resolving: "Resolving / 处理中",
+        "fileColumns": [
+          "文件名 / File Name",
+          "文件类型 / File Type",
+          "扩展名 / Extension",
+          "保管人 / Custodian",
+          "数据源 / Data Source",
+          "去重状态 / Dedupe Status",
+          "层级 / Level",
+          "大小 KB / Size KB",
+          "已发布 / Is Published",
+          "发件人域 / Sender Domain",
+          "排序日期 / Sort Date",
+          "虚拟路径 / Virtual Path"
+        ],
+        "deletedColumns": [
+          "逻辑 ID / Logical ID",
+          "文件名 / File Name",
+          "保管人 / Custodian",
+          "数据源 / Data Source",
+          "处理删除 / Processing Deletion?",
+          "已发布 / Is Published?",
+          "异常消息 / Error Message"
+        ],
+        "rows": [
+          {
+            "id": "FILE-20031",
+            "logicalId": "LOG-20031",
+            "storageId": "STO-20031",
+            "name": "unclassified.dat",
+            "type": "DAT",
+            "extension": ".dat",
+            "custodian": "Johnson, Howard",
+            "set": "Processing Set 004",
+            "source": "Johnson, Howard - 1101979",
+            "size": "248",
+            "level": "0",
+            "senderDomain": "—",
+            "sortDate": "2026-09-29",
+            "path": "/Collection/Johnson, Howard/unclassified.dat",
+            "published": false,
+            "deleted": false,
+            "dedupe": "",
+            "container": false,
+            "category": "(Not Set)",
+            "phase": "Discover",
+            "message": "未返回异常类别；需查看详细消息。 / No category was assigned; inspect the exception details.",
+            "guidance": "检查详情并联系支持确认原因。 / Inspect details and contact support.",
+            "status": "open",
+            "severity": "warning",
+            "reference": "§24.4.1.1, pp.274–275; §25.5.1.2, pp.288–289",
+            "occurred": "2026-09-30 08:00 UTC"
+          },
+          {
+            "id": "FILE-20032",
+            "logicalId": "LOG-20032",
+            "storageId": "STO-20032",
+            "name": "archive-2019.zip",
+            "type": "ZIP",
+            "extension": ".zip",
+            "custodian": "Jones, Tom",
+            "set": "Processing Set 004",
+            "source": "Jones, Tom - 1101977",
+            "size": "248",
+            "level": "0",
+            "senderDomain": "—",
+            "sortDate": "2026-09-29",
+            "path": "/Collection/Jones, Tom/archive-2019.zip",
+            "published": false,
+            "deleted": false,
+            "dedupe": "",
+            "container": true,
+            "category": "Corrupt Container",
+            "phase": "Discover",
+            "message": "ZIP 目录损坏，无法展开内容。 / Corrupt ZIP directory prevents file expansion.",
+            "guidance": "离线修复或解压；将提取文件放入新处理集。 / Repair offline or extract into a new processing set.",
+            "status": "open",
+            "severity": "warning",
+            "reference": "§24.4.1.1, pp.274–275; §25.5.1.2, pp.288–289",
+            "occurred": "2026-09-30 08:00 UTC"
+          },
+          {
+            "id": "FILE-20033",
+            "logicalId": "LOG-20033",
+            "storageId": "STO-20033",
+            "name": "damaged-contract.docx",
+            "type": "DOCX",
+            "extension": ".docx",
+            "custodian": "Allen, Phillip",
+            "set": "Mega processing set",
+            "source": "Allen, Phillip - 1095903",
+            "size": "248",
+            "level": "0",
+            "senderDomain": "—",
+            "sortDate": "2026-09-29",
+            "path": "/Collection/Allen, Phillip/damaged-contract.docx",
+            "published": false,
+            "deleted": false,
+            "dedupe": "",
+            "container": false,
+            "category": "Corrupt File / Corrupt Item",
+            "phase": "Discover",
+            "message": "文档内部结构损坏。 / Internal document structure is corrupt.",
+            "guidance": "下载并修复文件，再替换和重试。 / Repair the downloaded file, replace and retry.",
+            "status": "open",
+            "severity": "warning",
+            "reference": "§24.4.1.1, pp.274–275; §25.5.1.2, pp.288–289",
+            "occurred": "2026-09-30 08:00 UTC"
+          },
+          {
+            "id": "FILE-20034",
+            "logicalId": "LOG-20034",
+            "storageId": "STO-20034",
+            "name": "empty-notes.txt",
+            "type": "TXT",
+            "extension": ".txt",
+            "custodian": "Johnson, Howard",
+            "set": "Processing Set 004",
+            "source": "Johnson, Howard - 1101979",
+            "size": "0",
+            "level": "0",
+            "senderDomain": "—",
+            "sortDate": "2026-09-29",
+            "path": "/Collection/Johnson, Howard/empty-notes.txt",
+            "published": false,
+            "deleted": false,
+            "dedupe": "",
+            "container": false,
+            "category": "Empty File",
+            "phase": "Discover",
+            "message": "文件为 0 字节，没有可提取内容。 / The file is zero bytes with no content.",
+            "guidance": "确认采集完整性并重新取得原文件。 / Verify collection integrity and obtain a complete original.",
+            "status": "open",
+            "severity": "warning",
+            "reference": "§24.4.1.1, pp.274–275; §25.5.1.2, pp.288–289",
+            "occurred": "2026-09-30 08:00 UTC"
+          },
+          {
+            "id": "FILE-20035",
+            "logicalId": "LOG-20035",
+            "storageId": "STO-20035",
+            "name": "invoice.pdf",
+            "type": "PDF",
+            "extension": ".pdf",
+            "custodian": "Jones, Tom",
+            "set": "Processing Set 004",
+            "source": "Jones, Tom - 1101977",
+            "size": "248",
+            "level": "0",
+            "senderDomain": "—",
+            "sortDate": "2026-09-29",
+            "path": "/Collection/Jones, Tom/invoice.pdf",
+            "published": false,
+            "deleted": false,
+            "dedupe": "",
+            "container": false,
+            "category": "Environmental",
+            "phase": "Text Extraction",
+            "message": "处理环境暂时不可用，文本提取中断。 / A temporary processing environment failure interrupted text extraction.",
+            "guidance": "修复环境后重试。 / Restore the environment and retry.",
+            "status": "open",
+            "severity": "warning",
+            "reference": "§24.4.1.1, pp.274–275; §25.5.1.2, pp.288–289",
+            "occurred": "2026-09-30 08:00 UTC"
+          },
+          {
+            "id": "FILE-20036",
+            "logicalId": "LOG-20036",
+            "storageId": "STO-20036",
+            "name": "budget.xlsx",
+            "type": "XLSX",
+            "extension": ".xlsx",
+            "custodian": "Allen, Phillip",
+            "set": "Mega processing set",
+            "source": "Allen, Phillip - 1095903",
+            "size": "248",
+            "level": "0",
+            "senderDomain": "—",
+            "sortDate": "2026-09-29",
+            "path": "/Collection/Allen, Phillip/budget.xlsx",
+            "published": false,
+            "deleted": false,
+            "dedupe": "",
+            "container": false,
+            "category": "File Read-Write Error",
+            "phase": "Discover",
+            "message": "读取文件时发生文件系统错误。 / A file system error occurred while reading the file.",
+            "guidance": "确认存储访问与权限后重试。 / Restore storage access and permissions, then retry.",
+            "status": "open",
+            "severity": "warning",
+            "reference": "§24.4.1.1, pp.274–275; §25.5.1.2, pp.288–289",
+            "occurred": "2026-09-30 08:00 UTC"
+          },
+          {
+            "id": "FILE-20037",
+            "logicalId": "LOG-20037",
+            "storageId": "STO-20037",
+            "name": "meeting.eml",
+            "type": "EML",
+            "extension": ".eml",
+            "custodian": "Johnson, Howard",
+            "set": "Processing Set 004",
+            "source": "Johnson, Howard - 1101979",
+            "size": "248",
+            "level": "0",
+            "senderDomain": "example.com",
+            "sortDate": "2026-09-29",
+            "path": "/Collection/Johnson, Howard/meeting.eml",
+            "published": false,
+            "deleted": false,
+            "dedupe": "",
+            "container": false,
+            "category": "Missing Attachment",
+            "phase": "Discover",
+            "message": "无法提取邮件中的 budget.xlsx 附件。 / Could not extract the budget.xlsx attachment.",
+            "guidance": "重试附件提取；必要时检查原邮件。 / Retry extraction and investigate the original email.",
+            "status": "open",
+            "severity": "warning",
+            "reference": "§24.4.1.1, pp.274–275; §25.5.1.2, pp.288–289",
+            "occurred": "2026-09-30 08:00 UTC"
+          },
+          {
+            "id": "FILE-20038",
+            "logicalId": "LOG-20038",
+            "storageId": "STO-20038",
+            "name": "contract-scan-041.pdf",
+            "type": "PDF",
+            "extension": ".pdf",
+            "custodian": "Jones, Tom",
+            "set": "Processing Set 004",
+            "source": "Jones, Tom - 1101977",
+            "size": "248",
+            "level": "0",
+            "senderDomain": "—",
+            "sortDate": "2026-09-29",
+            "path": "/Collection/Jones, Tom/contract-scan-041.pdf",
+            "published": false,
+            "deleted": false,
+            "dedupe": "",
+            "container": false,
+            "category": "Missing Extracted Text",
+            "phase": "Text Extraction",
+            "message": "第 2 页 OCR 失败，提取文本不完整。 / OCR failed on page 2; extracted text is incomplete.",
+            "guidance": "检查 OCR 配置后重试；解决后发布或重新发布。 / Check OCR settings and retry, then publish or republish.",
+            "status": "open",
+            "severity": "warning",
+            "reference": "§24.4.1.1, pp.274–275; §25.5.1.2, pp.288–289",
+            "occurred": "2026-09-30 08:00 UTC"
+          },
+          {
+            "id": "FILE-20039",
+            "logicalId": "LOG-20039",
+            "storageId": "STO-20039",
+            "name": "sent-email.msg",
+            "type": "MSG",
+            "extension": ".msg",
+            "custodian": "Allen, Phillip",
+            "set": "Mega processing set",
+            "source": "Allen, Phillip - 1095903",
+            "size": "248",
+            "level": "0",
+            "senderDomain": "example.com",
+            "sortDate": "2026-09-29",
+            "path": "/Collection/Allen, Phillip/sent-email.msg",
+            "published": false,
+            "deleted": false,
+            "dedupe": "",
+            "container": false,
+            "category": "Missing File Metadata",
+            "phase": "Discover",
+            "message": "未能提取邮件发送时间。 / The sent timestamp could not be extracted.",
+            "guidance": "检查原文件并重试元数据提取。 / Inspect the source file and retry metadata extraction.",
+            "status": "open",
+            "severity": "warning",
+            "reference": "§24.4.1.1, pp.274–275; §25.5.1.2, pp.288–289",
+            "occurred": "2026-09-30 08:00 UTC"
+          },
+          {
+            "id": "FILE-20040",
+            "logicalId": "LOG-20040",
+            "storageId": "STO-20040",
+            "name": "encrypted-archive.zip",
+            "type": "ZIP",
+            "extension": ".zip",
+            "custodian": "Johnson, Howard",
+            "set": "Processing Set 004",
+            "source": "Johnson, Howard - 1101979",
+            "size": "248",
+            "level": "0",
+            "senderDomain": "—",
+            "sortDate": "2026-09-29",
+            "path": "/Collection/Johnson, Howard/encrypted-archive.zip",
+            "published": false,
+            "deleted": false,
+            "dedupe": "",
+            "container": true,
+            "category": "Password Protected Container",
+            "phase": "Discover",
+            "message": "无法找到容器密码。 / No matching container password was found.",
+            "guidance": "先将密码或密钥加入 Password Bank，再重试。 / Add the password or key to Password Bank before retrying.",
+            "status": "open",
+            "severity": "warning",
+            "reference": "§24.4.1.1, pp.274–275; §25.5.1.2, pp.288–289",
+            "occurred": "2026-09-30 08:00 UTC"
+          },
+          {
+            "id": "FILE-20041",
+            "logicalId": "LOG-20041",
+            "storageId": "STO-20041",
+            "name": "protected-agreement.pdf",
+            "type": "PDF",
+            "extension": ".pdf",
+            "custodian": "Jones, Tom",
+            "set": "Processing Set 004",
+            "source": "Jones, Tom - 1101977",
+            "size": "248",
+            "level": "0",
+            "senderDomain": "—",
+            "sortDate": "2026-09-29",
+            "path": "/Collection/Jones, Tom/protected-agreement.pdf",
+            "published": false,
+            "deleted": false,
+            "dedupe": "",
+            "container": false,
+            "category": "Password Protected File",
+            "phase": "Discover",
+            "message": "PDF 已加密，无法读取文本。 / PDF encryption prevents text extraction.",
+            "guidance": "先补充 Password Bank，再重试。 / Update Password Bank, then retry.",
+            "status": "open",
+            "severity": "warning",
+            "reference": "§24.4.1.1, pp.274–275; §25.5.1.2, pp.288–289",
+            "occurred": "2026-09-30 08:00 UTC"
+          },
+          {
+            "id": "FILE-20042",
+            "logicalId": "LOG-20042",
+            "storageId": "STO-20042",
+            "name": "unknown-format.bin",
+            "type": "BIN",
+            "extension": ".bin",
+            "custodian": "Allen, Phillip",
+            "set": "Mega processing set",
+            "source": "Allen, Phillip - 1095903",
+            "size": "248",
+            "level": "0",
+            "senderDomain": "—",
+            "sortDate": "2026-09-29",
+            "path": "/Collection/Allen, Phillip/unknown-format.bin",
+            "published": false,
+            "deleted": false,
+            "dedupe": "",
+            "container": false,
+            "category": "Unidentified File Type",
+            "phase": "Discover",
+            "message": "无法确定文件类型。 / The file type could not be determined.",
+            "guidance": "检查文件头和来源，确认真实格式。 / Inspect the file header and source to identify the format.",
+            "status": "open",
+            "severity": "warning",
+            "reference": "§24.4.1.1, pp.274–275; §25.5.1.2, pp.288–289",
+            "occurred": "2026-09-30 08:00 UTC"
+          },
+          {
+            "id": "FILE-20043",
+            "logicalId": "LOG-20043",
+            "storageId": "STO-20043",
+            "name": "unknown-failure.msg",
+            "type": "MSG",
+            "extension": ".msg",
+            "custodian": "Johnson, Howard",
+            "set": "Processing Set 004",
+            "source": "Johnson, Howard - 1101979",
+            "size": "248",
+            "level": "0",
+            "senderDomain": "example.com",
+            "sortDate": "2026-09-29",
+            "path": "/Collection/Johnson, Howard/unknown-failure.msg",
+            "published": false,
+            "deleted": false,
+            "dedupe": "",
+            "container": false,
+            "category": "Unknown",
+            "phase": "Discover",
+            "message": "发现过程中出现无法确定根因的问题。 / Discovery failed for an undetermined reason.",
+            "guidance": "先重试；持续失败时调查原文件并联系支持。 / Retry, then investigate the source and contact support if it persists.",
+            "status": "open",
+            "severity": "warning",
+            "reference": "§24.4.1.1, pp.274–275; §25.5.1.2, pp.288–289",
+            "occurred": "2026-09-30 08:00 UTC"
+          },
+          {
+            "id": "FILE-20044",
+            "logicalId": "LOG-20044",
+            "storageId": "STO-20044",
+            "name": "legacy-project.custom",
+            "type": "CUSTOM",
+            "extension": ".custom",
+            "custodian": "Jones, Tom",
+            "set": "Processing Set 004",
+            "source": "Jones, Tom - 1101977",
+            "size": "248",
+            "level": "0",
+            "senderDomain": "—",
+            "sortDate": "2026-09-29",
+            "path": "/Collection/Jones, Tom/legacy-project.custom",
+            "published": false,
+            "deleted": false,
+            "dedupe": "",
+            "container": false,
+            "category": "Unsupported",
+            "phase": "Discover",
+            "message": "不支持此格式的元数据和文本提取。 / Metadata and text extraction are unsupported for this format.",
+            "guidance": "可发布原文件，但查看器可能无法打开；必要时外部转换。 / Native may be published but unavailable in the viewer; convert externally if needed.",
+            "status": "open",
+            "severity": "warning",
+            "reference": "§24.4.1.1, pp.274–275; §25.5.1.2, pp.288–289",
+            "occurred": "2026-09-30 08:00 UTC"
+          },
+          {
+            "id": "FILE-20045",
+            "logicalId": "LOG-20045",
+            "storageId": "STO-20045",
+            "name": "optional-field.eml",
+            "type": "EML",
+            "extension": ".eml",
+            "custodian": "Allen, Phillip",
+            "set": "Mega processing set",
+            "source": "Allen, Phillip - 1095903",
+            "size": "248",
+            "level": "0",
+            "senderDomain": "example.com",
+            "sortDate": "2026-09-29",
+            "path": "/Collection/Allen, Phillip/optional-field.eml",
+            "published": true,
+            "deleted": false,
+            "dedupe": "",
+            "container": false,
+            "category": "",
+            "phase": "Publish",
+            "message": "可选字段超长：Email From 300 字符，字段限长 250。文件已发布，该字段未写入。 / Optional Email From has 300 characters; limit is 250. File published without this metadata.",
+            "guidance": "将可编辑字段限长增至 350 后重试。 / Increase the editable field limit to 350 and retry.",
+            "status": "open",
+            "severity": "warning",
+            "reference": "§25.5.5, p.292",
+            "occurred": "2026-09-30 08:00 UTC",
+            "categoryNote": "手册仅描述场景，未指定类别 / Scenario documented; category unspecified"
+          },
+          {
+            "id": "FILE-20046",
+            "logicalId": "LOG-20046",
+            "storageId": "STO-20046",
+            "name": "required-field.msg",
+            "type": "MSG",
+            "extension": ".msg",
+            "custodian": "Johnson, Howard",
+            "set": "Processing Set 004",
+            "source": "Johnson, Howard - 1101979",
+            "size": "248",
+            "level": "0",
+            "senderDomain": "example.com",
+            "sortDate": "2026-09-29",
+            "path": "/Collection/Johnson, Howard/required-field.msg",
+            "published": false,
+            "deleted": false,
+            "dedupe": "",
+            "container": false,
+            "category": "",
+            "phase": "Publish",
+            "message": "必需字段超长：Container Name 超过 255 字符，文件未发布。 / Required Container Name exceeds 255 characters; file withheld.",
+            "guidance": "系统映射的固定长度字段不能扩容；缩短容器名后重试。 / Shorten the container name; the system-mapped fixed-length field cannot be expanded.",
+            "status": "open",
+            "severity": "error",
+            "reference": "§25.5.5, p.292",
+            "occurred": "2026-09-30 08:00 UTC",
+            "categoryNote": "手册仅描述场景，未指定类别 / Scenario documented; category unspecified"
+          },
+          {
+            "id": "FILE-20047",
+            "logicalId": "LOG-20047",
+            "storageId": "STO-20047",
+            "name": "email-timeout.eml",
+            "type": "EML",
+            "extension": ".eml",
+            "custodian": "Jones, Tom",
+            "set": "Processing Set 004",
+            "source": "Jones, Tom - 1101977",
+            "size": "248",
+            "level": "0",
+            "senderDomain": "example.com",
+            "sortDate": "2026-09-29",
+            "path": "/Collection/Jones, Tom/email-timeout.eml",
+            "published": false,
+            "deleted": false,
+            "dedupe": "",
+            "container": false,
+            "category": "",
+            "phase": "Discover",
+            "message": "邮件处理超过默认 20 分钟限制。 / Processing exceeded the default 20-minute email limit.",
+            "guidance": "重试；持续失败时换用新的文件副本并联系支持。 / Retry; if persistent, obtain a new copy and contact support.",
+            "status": "open",
+            "severity": "warning",
+            "reference": "§25.5.6, p.293",
+            "occurred": "2026-09-30 08:00 UTC",
+            "categoryNote": "手册仅描述场景，未指定类别 / Scenario documented; category unspecified"
+          },
+          {
+            "id": "FILE-20048",
+            "logicalId": "LOG-20048",
+            "storageId": "STO-20048",
+            "name": "00000000301D96839118.MSG",
+            "type": "MSG",
+            "extension": ".MSG",
+            "custodian": "Allen, Phillip",
+            "set": "Mega processing set",
+            "source": "Allen, Phillip - 1095903",
+            "size": "248",
+            "level": "0",
+            "senderDomain": "—",
+            "sortDate": "2026-09-29",
+            "path": "/Collection/Allen, Phillip/00000000301D96839118.MSG",
+            "published": false,
+            "deleted": false,
+            "dedupe": "",
+            "container": false,
+            "category": "",
+            "phase": "Discover",
+            "message": "PST 内邮件已发现，但可能损坏。 / Message extracted from PST and discovered, but may be corrupt.",
+            "guidance": "按 Entry ID 定位邮件，修复或替换后重试。 / Locate by Entry ID, repair or replace, then retry.",
+            "status": "open",
+            "severity": "warning",
+            "reference": "§25.5.7, p.294",
+            "occurred": "2026-09-30 08:00 UTC",
+            "categoryNote": "手册仅描述场景，未指定类别 / Scenario documented; category unspecified"
+          },
+          {
+            "id": "FILE-20049",
+            "logicalId": "LOG-20049",
+            "storageId": "STO-20049",
+            "name": "mailbox-with-missing-message.pst",
+            "type": "PST",
+            "extension": ".pst",
+            "custodian": "Johnson, Howard",
+            "set": "Processing Set 004",
+            "source": "Johnson, Howard - 1101979",
+            "size": "248",
+            "level": "0",
+            "senderDomain": "—",
+            "sortDate": "2026-09-29",
+            "path": "/Collection/Johnson, Howard/mailbox-with-missing-message.pst",
+            "published": false,
+            "deleted": false,
+            "dedupe": "",
+            "container": true,
+            "category": "",
+            "phase": "Discover",
+            "message": "PST 中某邮件及其附件未被提取或发现。 / A message and its attachments were not extracted or discovered.",
+            "guidance": "先重试；持续失败则用更小容器或独立文件处理。 / Retry; if persistent, use a smaller container or a loose file.",
+            "status": "open",
+            "severity": "warning",
+            "reference": "§25.5.7, p.294",
+            "occurred": "2026-09-30 08:00 UTC",
+            "categoryNote": "手册仅描述场景，未指定类别 / Scenario documented; category unspecified"
+          },
+          {
+            "id": "FILE-20050",
+            "logicalId": "LOG-20050",
+            "storageId": "STO-20050",
+            "name": "repaired-invoice.pdf",
+            "type": "PDF",
+            "extension": ".pdf",
+            "custodian": "Jones, Tom",
+            "set": "Processing Set 004",
+            "source": "Jones, Tom - 1101977",
+            "size": "248",
+            "level": "0",
+            "senderDomain": "—",
+            "sortDate": "2026-09-29",
+            "path": "/Collection/Jones, Tom/repaired-invoice.pdf",
+            "published": true,
+            "deleted": false,
+            "dedupe": "unique",
+            "container": false,
+            "category": "Missing Extracted Text",
+            "phase": "Text Extraction",
+            "message": "原 OCR 异常已修复。 / Previous OCR exception resolved.",
+            "guidance": "已重新发布，同步文本与异常状态。 / Republished to synchronize text and status.",
+            "status": "resolved",
+            "severity": "warning",
+            "reference": "§21.1.2, pp.224–225",
+            "occurred": "2026-09-30 08:00 UTC"
+          },
+          {
+            "id": "FILE-20051",
+            "logicalId": "LOG-20051",
+            "storageId": "STO-20051",
+            "name": "ignored-archive.zip",
+            "type": "ZIP",
+            "extension": ".zip",
+            "custodian": "Allen, Phillip",
+            "set": "Mega processing set",
+            "source": "Allen, Phillip - 1095903",
+            "size": "248",
+            "level": "0",
+            "senderDomain": "—",
+            "sortDate": "2026-09-29",
+            "path": "/Collection/Allen, Phillip/ignored-archive.zip",
+            "published": false,
+            "deleted": false,
+            "dedupe": "",
+            "container": true,
+            "category": "Corrupt Container",
+            "phase": "Discover",
+            "message": "容器损坏，调查后选择忽略。 / Corrupt container ignored after investigation.",
+            "guidance": "历史记录保留，可撤销忽略。 / History is retained; ignore can be undone.",
+            "status": "ignored",
+            "severity": "warning",
+            "reference": "§21.1.2, pp.224–225",
+            "occurred": "2026-09-30 08:00 UTC"
+          },
+          {
+            "id": "FILE-20052",
+            "logicalId": "LOG-20052",
+            "storageId": "STO-20052",
+            "name": "retrying-budget.xlsx",
+            "type": "XLSX",
+            "extension": ".xlsx",
+            "custodian": "Johnson, Howard",
+            "set": "Processing Set 004",
+            "source": "Johnson, Howard - 1101979",
+            "size": "248",
+            "level": "0",
+            "senderDomain": "—",
+            "sortDate": "2026-09-29",
+            "path": "/Collection/Johnson, Howard/retrying-budget.xlsx",
+            "published": false,
+            "deleted": false,
+            "dedupe": "",
+            "container": false,
+            "category": "File Read-Write Error",
+            "phase": "Discover",
+            "message": "正在重试文件读取。 / File read retry is running.",
+            "guidance": "等待重试结果。 / Wait for the retry result.",
+            "status": "resolving",
+            "severity": "warning",
+            "reference": "§21.1.2, pp.224–225",
+            "occurred": "2026-09-30 08:00 UTC"
+          },
+          {
+            "id": "FILE-20053",
+            "logicalId": "LOG-20053",
+            "storageId": "STO-20053",
+            "name": "primary-email.eml",
+            "type": "EML",
+            "extension": ".eml",
+            "custodian": "Jones, Tom",
+            "set": "Processing Set 004",
+            "source": "Jones, Tom - 1101977",
+            "size": "248",
+            "level": "0",
+            "senderDomain": "example.com",
+            "sortDate": "2026-09-29",
+            "path": "/Collection/Jones, Tom/primary-email.eml",
+            "published": true,
+            "deleted": false,
+            "dedupe": "primary",
+            "container": false,
+            "category": "",
+            "phase": "",
+            "message": "",
+            "guidance": "",
+            "status": "none",
+            "severity": "warning",
+            "reference": "§21.1.2, pp.224–225",
+            "occurred": "2026-09-30 08:00 UTC"
+          },
+          {
+            "id": "FILE-20054",
+            "logicalId": "LOG-20054",
+            "storageId": "STO-20054",
+            "name": "duplicate-email.eml",
+            "type": "EML",
+            "extension": ".eml",
+            "custodian": "Allen, Phillip",
+            "set": "Mega processing set",
+            "source": "Allen, Phillip - 1095903",
+            "size": "248",
+            "level": "0",
+            "senderDomain": "example.com",
+            "sortDate": "2026-09-29",
+            "path": "/Collection/Allen, Phillip/duplicate-email.eml",
+            "published": false,
+            "deleted": false,
+            "dedupe": "duplicate",
+            "container": false,
+            "category": "",
+            "phase": "",
+            "message": "",
+            "guidance": "",
+            "status": "none",
+            "severity": "warning",
+            "reference": "§21.1.2, pp.224–225",
+            "occurred": "2026-09-30 08:00 UTC"
+          },
+          {
+            "id": "FILE-20055",
+            "logicalId": "LOG-20055",
+            "storageId": "STO-20055",
+            "name": "unique-contract.pdf",
+            "type": "PDF",
+            "extension": ".pdf",
+            "custodian": "Johnson, Howard",
+            "set": "Processing Set 004",
+            "source": "Johnson, Howard - 1101979",
+            "size": "248",
+            "level": "0",
+            "senderDomain": "—",
+            "sortDate": "2026-09-29",
+            "path": "/Collection/Johnson, Howard/unique-contract.pdf",
+            "published": true,
+            "deleted": false,
+            "dedupe": "unique",
+            "container": false,
+            "category": "",
+            "phase": "",
+            "message": "",
+            "guidance": "",
+            "status": "none",
+            "severity": "warning",
+            "reference": "§21.1.2, pp.224–225",
+            "occurred": "2026-09-30 08:00 UTC"
+          },
+          {
+            "id": "FILE-20056",
+            "logicalId": "LOG-20056",
+            "storageId": "STO-20056",
+            "name": "discovered-not-published.docx",
+            "type": "DOCX",
+            "extension": ".docx",
+            "custodian": "Jones, Tom",
+            "set": "Processing Set 004",
+            "source": "Jones, Tom - 1101977",
+            "size": "248",
+            "level": "0",
+            "senderDomain": "—",
+            "sortDate": "2026-09-29",
+            "path": "/Collection/Jones, Tom/discovered-not-published.docx",
+            "published": false,
+            "deleted": false,
+            "dedupe": "",
+            "container": false,
+            "category": "",
+            "phase": "",
+            "message": "",
+            "guidance": "",
+            "status": "none",
+            "severity": "warning",
+            "reference": "§21.1.2, pp.224–225",
+            "occurred": "2026-09-30 08:00 UTC"
+          },
+          {
+            "id": "FILE-20057",
+            "logicalId": "LOG-20057",
+            "storageId": "STO-20057",
+            "name": "expanded-container.zip",
+            "type": "ZIP",
+            "extension": ".zip",
+            "custodian": "Allen, Phillip",
+            "set": "Mega processing set",
+            "source": "Allen, Phillip - 1095903",
+            "size": "248",
+            "level": "0",
+            "senderDomain": "—",
+            "sortDate": "2026-09-29",
+            "path": "/Collection/Allen, Phillip/expanded-container.zip",
+            "published": false,
+            "deleted": false,
+            "dedupe": "",
+            "container": true,
+            "category": "",
+            "phase": "",
+            "message": "",
+            "guidance": "",
+            "status": "none",
+            "severity": "warning",
+            "reference": "§21.1.2, pp.224–225",
+            "occurred": "2026-09-30 08:00 UTC"
+          },
+          {
+            "id": "FILE-20058",
+            "logicalId": "LOG-20058",
+            "storageId": "STO-20058",
+            "name": "deleted-contract.pdf",
+            "type": "PDF",
+            "extension": ".pdf",
+            "custodian": "Johnson, Howard",
+            "set": "Processing Set 004",
+            "source": "Johnson, Howard - 1101979",
+            "size": "248",
+            "level": "0",
+            "senderDomain": "—",
+            "sortDate": "2026-09-29",
+            "path": "/Collection/Johnson, Howard/deleted-contract.pdf",
+            "published": false,
+            "deleted": true,
+            "dedupe": "",
+            "container": false,
+            "category": "",
+            "phase": "",
+            "message": "",
+            "guidance": "已删除，不再参与去重、普通重试或重新发布。 / Deleted; excluded from dedupe, normal retry and republish.",
+            "status": "none",
+            "severity": "warning",
+            "reference": "§21.1.4, pp.226–227",
+            "occurred": "2026-09-30 08:00 UTC"
+          },
+          {
+            "id": "FILE-20059",
+            "logicalId": "LOG-20059",
+            "storageId": "STO-20059",
+            "name": "delete-cleanup-pending.msg",
+            "type": "MSG",
+            "extension": ".msg",
+            "custodian": "Jones, Tom",
+            "set": "Processing Set 004",
+            "source": "Jones, Tom - 1101977",
+            "size": "248",
+            "level": "0",
+            "senderDomain": "example.com",
+            "sortDate": "2026-09-29",
+            "path": "/Collection/Jones, Tom/delete-cleanup-pending.msg",
+            "published": false,
+            "deleted": true,
+            "dedupe": "",
+            "container": false,
+            "category": "Environmental",
+            "phase": "Delete",
+            "message": "删除后的清理操作未完成。 / Post-deletion cleanup failed.",
+            "guidance": "仅重试删除异常，不重新发布该文件。 / Retry the delete exception only; do not republish.",
+            "status": "open",
+            "severity": "warning",
+            "reference": "§21.3, p.235",
+            "occurred": "2026-09-30 08:00 UTC"
+          }
+        ],
+        "categories": [
+          {
+            "name": "(Not Set)",
+            "translation": "未设置类别",
+            "consoleRetry": null
+          },
+          {
+            "name": "Corrupt Container",
+            "translation": "容器损坏",
+            "consoleRetry": false
+          },
+          {
+            "name": "Corrupt File / Corrupt Item",
+            "translation": "文件或条目损坏",
+            "consoleRetry": false
+          },
+          {
+            "name": "Empty File",
+            "translation": "空文件",
+            "consoleRetry": null
+          },
+          {
+            "name": "Environmental",
+            "translation": "环境问题",
+            "consoleRetry": true
+          },
+          {
+            "name": "File Read-Write Error",
+            "translation": "文件读写错误",
+            "consoleRetry": true
+          },
+          {
+            "name": "Missing Attachment",
+            "translation": "缺少附件",
+            "consoleRetry": true
+          },
+          {
+            "name": "Missing Extracted Text",
+            "translation": "缺少提取文本",
+            "consoleRetry": true
+          },
+          {
+            "name": "Missing File Metadata",
+            "translation": "缺少文件元数据",
+            "consoleRetry": true
+          },
+          {
+            "name": "Password Protected Container",
+            "translation": "密码保护容器",
+            "consoleRetry": false
+          },
+          {
+            "name": "Password Protected File",
+            "translation": "密码保护文件",
+            "consoleRetry": false
+          },
+          {
+            "name": "Unidentified File Type",
+            "translation": "无法识别文件类型",
+            "consoleRetry": null
+          },
+          {
+            "name": "Unknown",
+            "translation": "未知原因",
+            "consoleRetry": true
+          },
+          {
+            "name": "Unsupported",
+            "translation": "不支持的文件",
+            "consoleRetry": false
+          }
+        ],
+        "filters": "筛选 / Filters",
+        "phase": "异常阶段 / Exception Phase",
+        "category": "异常类别 / Exception Category",
+        "custodian": "保管人 / Custodian",
+        "phaseOptions": [
+          "全部阶段 / All phases",
+          "Discover",
+          "Text Extraction",
+          "Publish",
+          "Delete"
+        ],
+        "allCategories": "全部类别 / All categories",
+        "unspecified": "场景未指定类别 / Category unspecified for scenario",
+        "custodianOptions": [
+          "全部保管人 / All custodians",
+          "Johnson, Howard",
+          "Jones, Tom",
+          "Allen, Phillip"
+        ],
+        "export": "导出 CSV / Export CSV",
+        "exportName": "processing-files.csv",
+        "retry": "重试异常 / Retry Exceptions",
+        "ignore": "忽略异常 / Ignore Exceptions",
+        "undoIgnore": "撤销忽略 / Undo Ignore",
+        "download": "下载 / Download",
+        "replace": "替换文件 / Replace",
+        "republish": "重新发布 / Republish",
+        "selected": "已选择 / Selected",
+        "count": "记录数 / Records",
+        "search": "搜索文件名或 ID / Search file name or ID",
+        "clear": "清除筛选 / Clear filters",
+        "saveFilters": "保存筛选 / Save Filters",
+        "savedFilters": "已保存筛选 / Saved Filters",
+        "filterName": "筛选名称 / Filter name",
+        "savedNotice": "筛选已保存在当前 Files 页面；离开页面后重置。 / Filter saved for this Files visit; reset when leaving.",
+        "noFilters": "暂无保存的筛选 / No saved filters",
+        "statusLabels": {
+          "none": "—",
+          "open": "Not Resolved / 未解决",
+          "resolving": "Resolving / 处理中",
+          "resolved": "Resolved / 已解决",
+          "ignored": "Ignored / 已忽略"
         },
-        retryNotice: "已将可重试文件加入重试处理，状态更新为 Resolving。 / Retry started for eligible files; status is now Resolving.",
-        ignoreNotice: "已忽略所选文件异常。 / Selected file exceptions were ignored.",
-        undoNotice: "已撤销忽略，文件回到当前异常列表。 / Ignore was undone; the file returned to the current exceptions list.",
-        downloadNotice: "已准备文件下载包。 / File download package is ready.",
-        replaceNotice: "已打开替换文件流程。 / Replacement file workflow opened.",
-        republishNotice: "已提交重新发布。 / Republish submitted.",
-        noData: "暂无文件异常。 / No file exceptions.",
+        "dedupeLabels": {
+          "primary": "Primary / 主文件",
+          "duplicate": "Duplicate / 重复文件",
+          "unique": "Unique / 唯一文件",
+          "": "—"
+        },
+        "severityLabels": {
+          "warning": "Warning / 警告",
+          "error": "Error / 错误"
+        },
+        "retryNotice": "系统提示：未解决异常已进入 Resolving；重试不自动发布。 / System: unresolved exceptions are now Resolving; retry does not auto-publish.",
+        "ignoreNotice": "所选未解决异常已忽略，保留历史记录。 / Open exceptions ignored; history retained.",
+        "undoNotice": "已撤销忽略，状态恢复为 Not Resolved。 / Ignore undone; status restored to Not Resolved.",
+        "downloadNotice": "原型说明：正式系统下载所选未解决异常的原文件；本演示不包含原文件。 / Prototype: production downloads selected original files; no originals are attached to this demo.",
+        "replaceNotice": "原型说明：修复原文件后使用 Replace 上传 ZIP（每包不超过 1 GB），按 Storage ID 匹配，再 Replace & Retry；最后重新发布。 / Prototype: upload a repaired ZIP up to 1 GB, match Storage IDs, Replace & Retry, then republish.",
+        "republishNotice": "原型说明：重新发布所选已发布且未删除、非容器、非重复文件，并包含其完整 family。 / Prototype: republish eligible published files and their full families.",
+        "noData": "暂无匹配文件 / No matching files",
+        "details": "文件详情 / File Details",
+        "properties": "文件属性 / File Properties",
+        "exceptions": "处理异常 / Processing Exceptions",
+        "summary": "当前异常摘要 / Active Exception Summary",
+        "history": "异常历史（UTC） / Exception History (UTC)",
+        "noException": "此文件没有异常记录。 / This file has no exception history.",
+        "noActive": "当前没有未解决异常。 / No unresolved exception remains.",
+        "guidance": "处理建议 / Remediation",
+        "reference": "手册依据 / Manual reference",
+        "consoleRetry": "处理集 Retry 按钮默认包含 / Included in set Retry button",
+        "yes": "是 / Yes",
+        "no": "否 / No",
+        "notListed": "手册重试表未列明 / Not specified in retry table",
+        "dash": "—",
+        "dashboard": "仪表板 / Dashboard",
+        "dashboards": [
+          "无仪表板 / No Dashboard Widgets",
+          "全部已发现文件 / All Discovered Files",
+          "异常 / Errors",
+          "容器文件 / Container Files"
+        ],
+        "containers": "容器文件 / Container Files",
+        "allCount": "已发现文件 / Discovered Files",
+        "publishedCount": "已发布 / Published",
+        "openCount": "未解决异常 / Not Resolved",
+        "fileTypes": "文件扩展名 / File Extensions",
+        "coverage": "示例覆盖手册分类表全部 14 类；另含字段超长、邮件超时、PST 邮件提取等 5 个专项场景及已解决／已忽略／处理中历史样例。专项场景未被手册指定类别时单独标注，不虚构官方分类。 / All 14 documented categories, 5 additional documented scenarios and historical status samples; unspecified categories are explicitly marked.",
+        "viewHelp": "All Files 不含已删除文件；Current 仅显示 Not Resolved；All Exceptions 保留异常历史；Deleted Files 单列删除记录。 / All Files excludes deleted files; Current shows only Not Resolved; All Exceptions retains history; Deleted Files lists deletions.",
+        "sourceUrl": "https://help.relativity.com/RelativityOne/Content/Relativity/Processing/Processing_error_overview.htm",
+        "resolutionUrl": "https://help.relativity.com/RelativityOne/Content/Relativity/Processing/Processing_error_resolution.htm",
+        "filesUrl": "https://help.relativity.com/RelativityOne/Content/Relativity/Processing/Files_tab.htm",
+        "sourceLabel": "手册 §§21, 24–25 / Manual §§21, 24–25",
+        "simulation": "全部记录为模拟示例 / All records are synthetic examples",
+        "retryHelp": "类别表中的 Yes/No 仅对应处理集 Retry 按钮的默认范围；Files 的 Retry Exceptions 可对 Not Resolved 文件显式重试。损坏或密码问题应先人工修复。 / Category Yes/No describes the set Retry button only; Files allows explicit retry of Not Resolved files after remediation.",
+        "historyActions": {
+          "resolving": "已启动重试 / Retry started",
+          "ignored": "已忽略 / Ignored",
+          "open": "已撤销忽略 / Ignore undone"
+        }
       },
+    },
+    passwordBank: {
+      "title": "密码库 | 处理 / Password Bank | Processing",
+      "subtitle": "为加密文件添加密码、身份文件或证书。 / Add passwords, identity files or certificates for encrypted files.",
+      "new": "新建 / New",
+      "edit": "编辑 / Edit",
+      "delete": "删除 / Delete",
+      "audit": "查看审计 / View Audit",
+      "entries": "密码条目 / Password Entries",
+      "type": "类型 / Type",
+      "description": "描述 / Description",
+      "passwords": "密码 / Password(s)",
+      "upload": "上传文件 / Upload file",
+      "custodian": "保管人 / Custodian",
+      "none": "未指定 / Not selected",
+      "show": "显示密码 / Show passwords",
+      "hide": "隐藏密码 / Hide passwords",
+      "lineHint": "每行一个密码；同一行会被视为一个密码。 / Enter one password per line.",
+      "uploadHint": "仅选择文件，在浏览器内演示，不上传到服务器。 / Local selection only; no server upload.",
+      "required": "请提供所选类型要求的密码或有效附件。 / Provide the required password or a valid attachment.",
+      "passwordHint": "普通密码条目必须至少填写一个密码。 / At least one password is required.",
+      "lotusHint": "需要 User.ID 文件；解密需匹配密码。可关联 Custodian，关联密码优先。 / Requires User.ID and a matching password; custodian-linked passwords take priority.",
+      "emailHint": "需要一个 .pfx 或 .p12 证书；受密码保护时需填写密码。 / Requires one .pfx or .p12 certificate and its password if protected.",
+      "ad1Hint": "需要一个 .pfx、.p12、.pem 或 .key 文件。 / Requires one .pfx, .p12, .pem or .key file.",
+      "types": [
+        {
+          "id": "passwords",
+          "label": "密码 / Passwords",
+          "accept": ""
+        },
+        {
+          "id": "lotus",
+          "label": "Lotus Notes",
+          "accept": ".id"
+        },
+        {
+          "id": "email",
+          "label": "邮件加密证书 / Email encryption certificate",
+          "accept": ".pfx,.p12"
+        },
+        {
+          "id": "ad1",
+          "label": "AD1 加密证书 / AD1 Encryption Certificate",
+          "accept": ".pfx,.p12,.pem,.key"
+        }
+      ],
+      "columns": [
+        "描述 / Description",
+        "类型 / Type",
+        "密码数量 / Password count",
+        "附件 / File",
+        "保管人 / Custodian"
+      ],
+      "rows": [
+        {
+          "id": "PW-001",
+          "type": "passwords",
+          "description": "项目文件密码 / Project passwords",
+          "passwords": [
+            "Demo-2026!",
+            "Archive-Demo!"
+          ],
+          "file": "",
+          "custodian": ""
+        },
+        {
+          "id": "PW-002",
+          "type": "lotus",
+          "description": "Johnson 的 Notes 身份 / Johnson Notes ID",
+          "passwords": [
+            "Notes-Demo!"
+          ],
+          "file": "User.ID",
+          "custodian": "Johnson, Howard"
+        },
+        {
+          "id": "PW-003",
+          "type": "email",
+          "description": "归档邮件证书 / Archived email certificate",
+          "passwords": [
+            "Mail-Demo!"
+          ],
+          "file": "email-demo.pfx",
+          "custodian": ""
+        },
+        {
+          "id": "PW-004",
+          "type": "ad1",
+          "description": "AD1 取证包证书 / AD1 evidence certificate",
+          "passwords": [],
+          "file": "evidence-demo.pem",
+          "custodian": ""
+        }
+      ],
+      "saved": "系统提示：密码条目已保存至演示会话。正式处理时密码库会交给处理引擎；已有文件异常需手动重试，保存不会自动重新处理。 / System: entry saved in this demo session. Production sends the bank to the engine; existing exceptions require an explicit retry.",
+      "deleteTitle": "删除密码条目 / Delete Password Entries",
+      "deleteHint": "已成功用于解密的密码可能仍用于这些文件的 hash 重复项；删除条目不会取消已提交的作业。 / Previously used passwords may still apply to hash duplicates; deletion does not cancel submitted jobs.",
+      "deleted": "系统提示：所选条目已从当前演示密码库删除。 / System: selected entries removed from the demo bank.",
+      "empty": "暂无密码条目 / No entries",
+      "dash": "—",
+      "auditColumns": [
+        "时间 / Time",
+        "动作 / Action",
+        "描述 / Description"
+      ],
+      "auditRows": [
+        [
+          "2026-09-30 08:00 UTC",
+          "Run / 运行",
+          "Processing Set 004：密码库已发送至处理引擎（示例） / Password bank sent to processing engine (sample)"
+        ]
+      ],
+      "createAction": "Create / 新建",
+      "updateAction": "Update / 更新",
+      "deleteAction": "Delete / 删除",
+      "demo": "示例凭据，仅保留于当前演示会话。 / Sample credentials retained only in this demo session."
+    },
+    reportsPage: {
+      "title": "处理报告 / Processing Reports",
+      "subtitle": "选择报告类型及适用处理集，查看处理结果。 / Select a report and eligible processing sets.",
+      "selectReport": "选择报告 / Select Report",
+      "selectSet": "选择处理集 / Select Processing Set",
+      "generate": "生成报告 / Generate Report",
+      "new": "新报告 / New Report",
+      "export": "导出 CSV / Export CSV",
+      "exportName": "processing-report.csv",
+      "history": "历史 / History",
+      "historyColumns": [
+        "时间 / Time",
+        "报告 / Report",
+        "处理集 / Processing Sets"
+      ],
+      "empty": "暂无生成记录 / No generated reports",
+      "noSets": "没有适用于此报告的处理集。 / No eligible processing sets.",
+      "sample": "报告示例 / Sample Report",
+      "scope": "处理集 / Processing Sets",
+      "scopeColumns": [
+        "Processing Set",
+        "保管人 / Custodian",
+        "源路径 / Source Path"
+      ],
+      "generated": "系统提示：已生成示例报告并记录 History。正式系统按所选处理集统计。 / System: sample report generated and recorded in History; production aggregates selected sets.",
+      "sets": [
+        {
+          "id": "set-published",
+          "name": "Processing Set 004",
+          "stage": 3,
+          "label": "已发布 / Published",
+          "custodian": "Johnson, Howard",
+          "path": "/Collection/Johnson"
+        },
+        {
+          "id": "set-discovered",
+          "name": "Mega processing set",
+          "stage": 2,
+          "label": "已发现 / Discovered",
+          "custodian": "Allen, Phillip",
+          "path": "/Collection/Allen"
+        },
+        {
+          "id": "set-inventory",
+          "name": "Inventory batch 005",
+          "stage": 1,
+          "label": "已盘点 / Inventoried",
+          "custodian": "Jones, Tom",
+          "path": "/Collection/Jones"
+        },
+        {
+          "id": "set-canceled",
+          "name": "Canceled batch 006",
+          "stage": 0,
+          "label": "已取消 / Canceled",
+          "custodian": "Jones, Tom",
+          "path": "/Collection/Canceled"
+        }
+      ],
+      "eligibility": "列表仅显示适用于所选报告的处理集；已取消处理集不参与报告。 / Only eligible sets are shown; canceled sets are excluded.",
+      "reports": [
+        {
+          "id": "migration",
+          "title": "数据迁移 / Data Migration",
+          "minStage": 3,
+          "sections": [
+            {
+              "title": "迁移统计 / Summary Statistics",
+              "columns": [
+                "保管人 / Custodian",
+                "起始文件 / Starting Files",
+                "排除 / Excluded",
+                "已发布 / Published",
+                "工作区文档 / In Workspace"
+              ],
+              "rows": [
+                [
+                  "{custodian}",
+                  "100",
+                  "20",
+                  "80",
+                  "79"
+                ]
+              ]
+            },
+            {
+              "title": "排除文件 / Excluded Files",
+              "columns": [
+                "保管人 / Custodian",
+                "DeNIST",
+                "容器 / Containers",
+                "重复 / Duplicates",
+                "嵌入图 / Embedded Images",
+                "发布错误 / Publishing Errors",
+                "合计 / Total"
+              ],
+              "rows": [
+                [
+                  "{custodian}",
+                  "5",
+                  "2",
+                  "10",
+                  "2",
+                  "1",
+                  "20"
+                ]
+              ]
+            }
+          ],
+          "note": ""
+        },
+        {
+          "id": "master",
+          "title": "主文档替换摘要 / Master Document Replacement Summary",
+          "minStage": 3,
+          "sections": [
+            {
+              "title": "已删除主文档 / Deleted Master Documents",
+              "columns": [
+                "Control Number",
+                "File ID",
+                "保管人 / Custodian",
+                "Published Control Number",
+                "Published Custodian"
+              ],
+              "rows": [
+                [
+                  "REL-000041",
+                  "20071",
+                  "{custodian}",
+                  "REL-000099",
+                  "{custodian}"
+                ]
+              ]
+            },
+            {
+              "title": "替换主文档 / Replacements Master Documents",
+              "columns": [
+                "Control Number",
+                "File ID",
+                "保管人 / Custodian",
+                "Deleted Control Number",
+                "Deleted Custodian"
+              ],
+              "rows": [
+                [
+                  "REL-000099",
+                  "20103",
+                  "{custodian}",
+                  "REL-000041",
+                  "{custodian}"
+                ]
+              ]
+            }
+          ],
+          "note": "显示发布后删除引起的去重主文档替换。 / Post-publish deletion and deduplication replacements."
+        },
+        {
+          "id": "discovery-exclusion",
+          "title": "发现排除结果 / Discovery Exclusion Results",
+          "minStage": 2,
+          "sections": [
+            {
+              "title": "Discover 筛选设置 / Discover Filter Settings",
+              "columns": [
+                "Filter Type",
+                "File Extensions"
+              ],
+              "rows": [
+                [
+                  "排除 / Exclude",
+                  ".tmp;.log"
+                ]
+              ]
+            },
+            {
+              "title": "排除文件 / Excluded Files",
+              "columns": [
+                "File Type",
+                "File Size (GB)",
+                "Excluded File Count"
+              ],
+              "rows": [
+                [
+                  "TXT",
+                  "0.002",
+                  "5"
+                ]
+              ]
+            }
+          ],
+          "note": ""
+        },
+        {
+          "id": "discovered-custodian",
+          "title": "按保管人统计已发现文件 / Discovered Files by Custodian",
+          "minStage": 2,
+          "sections": [
+            {
+              "title": "已发现文件 / Discovered Files",
+              "columns": [
+                "保管人 / Custodian",
+                "Discovered Files"
+              ],
+              "rows": [
+                [
+                  "{custodian}",
+                  "98"
+                ]
+              ]
+            },
+            {
+              "title": "可处理 / Processable",
+              "columns": [
+                "文件扩展名 / File Extension",
+                "文件数 / File Count"
+              ],
+              "rows": [
+                [
+                  ".pdf",
+                  "96"
+                ]
+              ]
+            },
+            {
+              "title": "可处理 / Processable · 按保管人 / By Custodian",
+              "columns": [
+                "保管人 / Custodian",
+                "文件扩展名 / File Extension",
+                "文件数 / File Count"
+              ],
+              "rows": [
+                [
+                  "{custodian}",
+                  ".pdf",
+                  "96"
+                ]
+              ]
+            },
+            {
+              "title": "不可处理 / Unprocessable",
+              "columns": [
+                "文件扩展名 / File Extension",
+                "文件数 / File Count"
+              ],
+              "rows": [
+                [
+                  ".custom",
+                  "2"
+                ]
+              ]
+            },
+            {
+              "title": "不可处理 / Unprocessable · 按保管人 / By Custodian",
+              "columns": [
+                "保管人 / Custodian",
+                "文件扩展名 / File Extension",
+                "文件数 / File Count"
+              ],
+              "rows": [
+                [
+                  "{custodian}",
+                  ".custom",
+                  "2"
+                ]
+              ]
+            }
+          ],
+          "note": "文件数不包含容器。 / File counts exclude containers."
+        },
+        {
+          "id": "discovered-type",
+          "title": "按文件类型统计已发现文件 / Discovered Files by File Type",
+          "minStage": 2,
+          "sections": [
+            {
+              "title": "已发现文件 / Discovered Files",
+              "columns": [
+                "保管人 / Custodian",
+                "Discovered Files"
+              ],
+              "rows": [
+                [
+                  "{custodian}",
+                  "98"
+                ]
+              ]
+            },
+            {
+              "title": "可处理 / Processable",
+              "columns": [
+                "文件扩展名 / File Extension",
+                "文件数 / File Count"
+              ],
+              "rows": [
+                [
+                  ".pdf",
+                  "96"
+                ]
+              ]
+            },
+            {
+              "title": "可处理 / Processable · 按文件类型 / By File Type",
+              "columns": [
+                "文件扩展名 / File Extension",
+                "保管人 / Custodian",
+                "文件数 / File Count"
+              ],
+              "rows": [
+                [
+                  ".pdf",
+                  "{custodian}",
+                  "96"
+                ]
+              ]
+            },
+            {
+              "title": "不可处理 / Unprocessable",
+              "columns": [
+                "文件扩展名 / File Extension",
+                "文件数 / File Count"
+              ],
+              "rows": [
+                [
+                  ".custom",
+                  "2"
+                ]
+              ]
+            },
+            {
+              "title": "不可处理 / Unprocessable · 按文件类型 / By File Type",
+              "columns": [
+                "文件扩展名 / File Extension",
+                "保管人 / Custodian",
+                "文件数 / File Count"
+              ],
+              "rows": [
+                [
+                  ".custom",
+                  "{custodian}",
+                  "2"
+                ]
+              ]
+            }
+          ],
+          "note": "文件数不包含容器。 / File counts exclude containers."
+        },
+        {
+          "id": "document-exception",
+          "title": "文档异常 / Document Exception",
+          "minStage": 2,
+          "sections": [
+            {
+              "title": "发现阶段文档错误 / Document Level Errors - Discovery",
+              "columns": [
+                "Error Message",
+                "Count"
+              ],
+              "rows": [
+                [
+                  "Missing Extracted Text",
+                  "3"
+                ],
+                [
+                  "Password Protected File",
+                  "2"
+                ],
+                [
+                  "总异常 / Total",
+                  "5"
+                ],
+                [
+                  "不同文档 / Distinct Documents",
+                  "4"
+                ]
+              ]
+            },
+            {
+              "title": "发布阶段文档错误 / Document Level Errors - Publishing",
+              "columns": [
+                "Error Message",
+                "Count"
+              ],
+              "rows": [
+                [
+                  "Required field length exceeded",
+                  "1"
+                ],
+                [
+                  "总异常 / Total",
+                  "1"
+                ],
+                [
+                  "不同文档 / Distinct Documents",
+                  "1"
+                ]
+              ]
+            }
+          ],
+          "note": "同一文件可有多条异常。 / A file may have multiple exceptions."
+        },
+        {
+          "id": "file-size",
+          "title": "文件大小摘要 / File Size Summary",
+          "minStage": 3,
+          "sections": [
+            {
+              "title": "文件大小 / File Size",
+              "columns": [
+                "阶段 / Stage",
+                "大小 GB / Size GB"
+              ],
+              "rows": [
+                [
+                  "Pre-Processed",
+                  "0.015"
+                ],
+                [
+                  "Processed",
+                  "0.013"
+                ],
+                [
+                  "Published",
+                  "0.010"
+                ]
+              ]
+            }
+          ],
+          "note": "Processed 包含重复文件，不含容器和 DeNIST 文件；Published 再排除重复文件。 / Processed includes duplicates, excludes containers and DeNIST files; Published also excludes duplicates."
+        },
+        {
+          "id": "inventory-details",
+          "title": "盘点明细 / Inventory Details",
+          "minStage": 1,
+          "sections": [
+            {
+              "title": "盘点筛选设置 / Inventory Filter Settings",
+              "columns": [
+                "设置 / Setting",
+                "值 / Value"
+              ],
+              "rows": [
+                [
+                  "DeNIST Files Excluded",
+                  "Yes"
+                ],
+                [
+                  "Date Range",
+                  "2026-01-01 – 2026-09-30"
+                ],
+                [
+                  "File Size Range",
+                  "0 – 100 MB"
+                ],
+                [
+                  "Inventory Errors",
+                  "0"
+                ],
+                [
+                  "Files With Unknown Dates",
+                  "1"
+                ]
+              ]
+            },
+            {
+              "title": "Excluded by File Type",
+              "columns": [
+                "File Type",
+                "Excluded File Count"
+              ],
+              "rows": [
+                [
+                  "TXT",
+                  "5"
+                ]
+              ]
+            },
+            {
+              "title": "Excluded by Location",
+              "columns": [
+                "Location",
+                "Excluded File Count"
+              ],
+              "rows": [
+                [
+                  "/Temp",
+                  "3"
+                ]
+              ]
+            },
+            {
+              "title": "Excluded by Sender Domain",
+              "columns": [
+                "Sender Domain",
+                "Excluded File Count"
+              ],
+              "rows": [
+                [
+                  "newsletter.example",
+                  "4"
+                ]
+              ]
+            }
+          ],
+          "note": "渐进筛选计数，扣除已被前序筛选排除的文件。 / Progressive counts account for prior exclusions."
+        },
+        {
+          "id": "inventory-details-custodian",
+          "title": "盘点明细（按保管人） / Inventory Details by Custodian",
+          "minStage": 1,
+          "sections": [
+            {
+              "title": "盘点筛选设置 / Inventory Filter Settings",
+              "columns": [
+                "设置 / Setting",
+                "值 / Value"
+              ],
+              "rows": [
+                [
+                  "DeNIST Files Excluded",
+                  "Yes"
+                ],
+                [
+                  "Date Range",
+                  "2026-01-01 – 2026-09-30"
+                ],
+                [
+                  "File Size Range",
+                  "0 – 100 MB"
+                ],
+                [
+                  "Inventory Errors",
+                  "0"
+                ],
+                [
+                  "Files With Unknown Dates",
+                  "1"
+                ]
+              ]
+            },
+            {
+              "title": "Excluded by File Type",
+              "columns": [
+                "保管人 / Custodian",
+                "File Type",
+                "Excluded File Count"
+              ],
+              "rows": [
+                [
+                  "{custodian}",
+                  "TXT",
+                  "5"
+                ]
+              ]
+            },
+            {
+              "title": "Excluded by Location",
+              "columns": [
+                "保管人 / Custodian",
+                "Location",
+                "Excluded File Count"
+              ],
+              "rows": [
+                [
+                  "{custodian}",
+                  "/Temp",
+                  "3"
+                ]
+              ]
+            },
+            {
+              "title": "Excluded by Sender Domain",
+              "columns": [
+                "保管人 / Custodian",
+                "Sender Domain",
+                "Excluded File Count"
+              ],
+              "rows": [
+                [
+                  "{custodian}",
+                  "newsletter.example",
+                  "4"
+                ]
+              ]
+            }
+          ],
+          "note": "渐进筛选计数，扣除已被前序筛选排除的文件。 / Progressive counts account for prior exclusions."
+        },
+        {
+          "id": "inventory-exclusion",
+          "title": "盘点排除结果 / Inventory Exclusion Results",
+          "minStage": 1,
+          "sections": [
+            {
+              "title": "盘点筛选设置 / Inventory Filter Settings",
+              "columns": [
+                "设置 / Setting",
+                "值 / Value"
+              ],
+              "rows": [
+                [
+                  "DeNIST Files Excluded",
+                  "Yes"
+                ],
+                [
+                  "Date Range",
+                  "2026-01-01 – 2026-09-30"
+                ],
+                [
+                  "File Size Range",
+                  "0 – 100 MB"
+                ],
+                [
+                  "Inventory Errors",
+                  "0"
+                ],
+                [
+                  "Files With Unknown Dates",
+                  "1"
+                ]
+              ]
+            },
+            {
+              "title": "Excluded by File Type",
+              "columns": [
+                "File Type",
+                "Excluded File Count"
+              ],
+              "rows": [
+                [
+                  "TXT",
+                  "5"
+                ]
+              ]
+            },
+            {
+              "title": "Excluded by Location",
+              "columns": [
+                "Location",
+                "Excluded File Count"
+              ],
+              "rows": [
+                [
+                  "/Temp",
+                  "3"
+                ]
+              ]
+            },
+            {
+              "title": "Excluded by Sender Domain",
+              "columns": [
+                "Sender Domain",
+                "Excluded File Count"
+              ],
+              "rows": [
+                [
+                  "newsletter.example",
+                  "4"
+                ]
+              ]
+            }
+          ],
+          "note": "绝对筛选计数，各筛选独立计算，不应相加。 / Absolute counts; filters are calculated independently and should not be added."
+        },
+        {
+          "id": "inventory-exclusion-custodian",
+          "title": "盘点排除结果（按保管人） / Inventory Exclusion Results by Custodian",
+          "minStage": 1,
+          "sections": [
+            {
+              "title": "盘点筛选设置 / Inventory Filter Settings",
+              "columns": [
+                "设置 / Setting",
+                "值 / Value"
+              ],
+              "rows": [
+                [
+                  "DeNIST Files Excluded",
+                  "Yes"
+                ],
+                [
+                  "Date Range",
+                  "2026-01-01 – 2026-09-30"
+                ],
+                [
+                  "File Size Range",
+                  "0 – 100 MB"
+                ],
+                [
+                  "Inventory Errors",
+                  "0"
+                ],
+                [
+                  "Files With Unknown Dates",
+                  "1"
+                ]
+              ]
+            },
+            {
+              "title": "Excluded by File Type",
+              "columns": [
+                "保管人 / Custodian",
+                "File Type",
+                "Excluded File Count"
+              ],
+              "rows": [
+                [
+                  "{custodian}",
+                  "TXT",
+                  "5"
+                ]
+              ]
+            },
+            {
+              "title": "Excluded by Location",
+              "columns": [
+                "保管人 / Custodian",
+                "Location",
+                "Excluded File Count"
+              ],
+              "rows": [
+                [
+                  "{custodian}",
+                  "/Temp",
+                  "3"
+                ]
+              ]
+            },
+            {
+              "title": "Excluded by Sender Domain",
+              "columns": [
+                "保管人 / Custodian",
+                "Sender Domain",
+                "Excluded File Count"
+              ],
+              "rows": [
+                [
+                  "{custodian}",
+                  "newsletter.example",
+                  "4"
+                ]
+              ]
+            }
+          ],
+          "note": "绝对筛选计数，各筛选独立计算，不应相加。 / Absolute counts; filters are calculated independently and should not be added."
+        },
+        {
+          "id": "inventory-summary",
+          "title": "盘点摘要 / Inventory Summary",
+          "minStage": 1,
+          "sections": [
+            {
+              "title": "初始盘点 / Initial Inventory Results",
+              "columns": [
+                "Processing Set",
+                "Status",
+                "File Count",
+                "File Size (GB)"
+              ],
+              "rows": [
+                [
+                  "{set}",
+                  "Complete",
+                  "100",
+                  "0.015"
+                ]
+              ]
+            },
+            {
+              "title": "筛选摘要 / Filtering Summary",
+              "columns": [
+                "Applied Order",
+                "Filter Type",
+                "File Count Excluded",
+                "% Excluded",
+                "Total Remaining File Count",
+                "Total % Remaining"
+              ],
+              "rows": [
+                [
+                  "1",
+                  "Date Range",
+                  "5",
+                  "5%",
+                  "95",
+                  "95%"
+                ],
+                [
+                  "2",
+                  "File Type",
+                  "3",
+                  "3%",
+                  "92",
+                  "92%"
+                ]
+              ]
+            },
+            {
+              "title": "最终盘点 / Final Inventory Results",
+              "columns": [
+                "File Count After Filtering",
+                "File Size (GB)",
+                "Total Excluded Files",
+                "Total % Excluded"
+              ],
+              "rows": [
+                [
+                  "92",
+                  "0.014",
+                  "8",
+                  "8%"
+                ]
+              ]
+            }
+          ],
+          "note": "仅统计父文件，使用渐进筛选计数。 / Parent files only; progressive filtration."
+        },
+        {
+          "id": "job-exception",
+          "title": "作业异常 / Job Exception",
+          "minStage": 2,
+          "sections": [
+            {
+              "title": "作业级错误 / Job Level Errors",
+              "columns": [
+                "Error Message",
+                "Phase of Processing",
+                "Count"
+              ],
+              "rows": [
+                [
+                  "Text extraction interrupted",
+                  "Discover",
+                  "1"
+                ]
+              ]
+            }
+          ],
+          "note": ""
+        },
+        {
+          "id": "text-extraction",
+          "title": "文本提取 / Text Extraction",
+          "minStage": 3,
+          "sections": [
+            {
+              "title": "按保管人 / Text Extraction by Custodian",
+              "columns": [
+                "保管人 / Custodian",
+                "With Text",
+                "Without Text",
+                "% without Text",
+                "Total Published Files"
+              ],
+              "rows": [
+                [
+                  "{custodian}",
+                  "76",
+                  "4",
+                  "5%",
+                  "80"
+                ]
+              ]
+            },
+            {
+              "title": "按文件类型 / Text Extraction by File Type",
+              "columns": [
+                "文件扩展名 / File Extension",
+                "With Text",
+                "Without Text",
+                "% without Text",
+                "Total Published Files"
+              ],
+              "rows": [
+                [
+                  ".pdf",
+                  "76",
+                  "4",
+                  "5%",
+                  "80"
+                ]
+              ]
+            },
+            {
+              "title": "错误明细 / Breakdown by Error Message",
+              "columns": [
+                "Error Message",
+                "File Count",
+                "Percentage"
+              ],
+              "rows": [
+                [
+                  "Missing Extracted Text",
+                  "3",
+                  "3.75%"
+                ]
+              ]
+            }
+          ],
+          "note": "包括 OCR 和提取文本；历史错误计数不会因重试解决而减少。 / Includes OCR and extracted text; historical error counts do not decrease after resolution."
+        }
+      ],
+      "notPublished": "尚未发布 / Not published"
+    },
+    replacementPage: {
+      "title": "替换文件 / Replacement Files",
+      "subtitle": "上传修复后的 ZIP，校验并替换存在未解决异常的文件。 / Validate a repaired ZIP and replace files with unresolved exceptions.",
+      "new": "替换文件 / Replace",
+      "upload": "上传 / Upload",
+      "select": "选择 ZIP / Select ZIP",
+      "demo": "使用示例 ZIP / Use Sample ZIP",
+      "zipHint": "每个 ZIP 不超过 1 GB；包内文件以原文件的 Storage ID 命名，保留扩展名。 / ZIP up to 1 GB; name each file with its original Storage ID and extension.",
+      "sampleName": "repaired-files-demo.zip",
+      "sampleBytes": 2048,
+      "maxBytes": 1073741824,
+      "empty": "尚未上传替换包 / No replacement package uploaded",
+      "invalid": "请选择不超过 1 GB 的 ZIP 文件。 / Select a ZIP file up to 1 GB.",
+      "invalidZip": "无法读取此 ZIP。演示仅支持普通 ZIP 目录；加密、ZIP64 或损坏文件需另行处理。 / Could not read ZIP; this demo supports standard ZIP directories only, not encrypted, ZIP64 or corrupt archives.",
+      "readError": "读取文件失败，请重新选择。 / File read failed; select it again.",
+      "uploadNotice": "系统提示：已在浏览器读取 ZIP 目录，按示例原文件检查名称、状态、大小与扩展名；未上传或解压真实文件。 / System: ZIP directory checked locally against sample originals; no files uploaded or decompressed.",
+      "log": "替换日志 / Replace Log",
+      "logColumns": [
+        "Replacement File Name",
+        "Candidate Extension",
+        "Candidate Size (bytes)",
+        "Storage ID",
+        "Original Extension",
+        "Original Size (bytes)",
+        "Exception Status",
+        "Validation Status",
+        "Reason"
+      ],
+      "success": "成功 / Successful",
+      "warning": "成功但有警告 / Successful with warning",
+      "failed": "失败 / Unsuccessful",
+      "reasonMatch": "匹配成功 / Matched",
+      "reasonWarning": "扩展名不同或大小偏差超过 10% / Extension differs or size deviates by more than 10%",
+      "reasonMissing": "未匹配 Storage ID / No matching Storage ID",
+      "reasonResolved": "原文件没有未解决异常 / Original has no outstanding exception",
+      "reasonExtract": "文件不可提取 / File cannot be extracted",
+      "reasonDuplicate": "同一 ZIP 中 Storage ID 重复 / Duplicate Storage ID in ZIP",
+      "retry": "替换并重试 / Replace & Retry",
+      "retryHint": "仅处理成功及警告条目；失败项保留在日志。 / Only successful and warning entries proceed; failures remain in the log.",
+      "warningConfirm": "确认处理有警告的文件 / Include files with warnings",
+      "complete": "替换和重试完成（示例） / Replace and retry complete (sample)",
+      "ready": "已校验 / Validated",
+      "republish": "重新发布 / Republish",
+      "republished": "已重新发布（示例） / Republished (sample)",
+      "systemTitle": "系统提示 / System",
+      "replaceSystem": "示例系统已更新通过校验文件的 Native，并完成一次重试。尚未更新文档中的元数据及提取文本，请重新发布。正式系统须再次校验并执行真实替换。 / Simulation updated valid natives and completed retry; republish to update metadata and extracted text. Production must revalidate and replace actual files.",
+      "publishSystem": "示例系统已重新发布，文档元数据、提取文本与异常状态已同步。 / Simulation republished metadata, extracted text and exception status.",
+      "dash": "—",
+      "columns": [
+        "替换包 / Package",
+        "状态 / Status",
+        "成功 / Successful",
+        "警告 / Warning",
+        "失败 / Unsuccessful"
+      ],
+      "export": "导出日志 / Export Log",
+      "exportName": "replacement-log.csv",
+      "sampleCandidates": [
+        {
+          "name": "STO-20033.docx",
+          "size": 250000,
+          "readable": true
+        },
+        {
+          "name": "STO-20038.pdf",
+          "size": 400000,
+          "readable": true
+        },
+        {
+          "name": "STO-99999.pdf",
+          "size": 250000,
+          "readable": true
+        },
+        {
+          "name": "STO-20050.pdf",
+          "size": 250000,
+          "readable": true
+        }
+      ],
+      "originals": [
+        {
+          "storageId": "STO-20033",
+          "extension": ".docx",
+          "size": 253952,
+          "status": "open"
+        },
+        {
+          "storageId": "STO-20038",
+          "extension": ".pdf",
+          "size": 253952,
+          "status": "open"
+        },
+        {
+          "storageId": "STO-20050",
+          "extension": ".pdf",
+          "size": 253952,
+          "status": "resolved"
+        }
+      ]
     },
     modulePlaceholder: {
       titleSuffix: "模块 / Module",
