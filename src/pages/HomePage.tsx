@@ -1,4 +1,4 @@
-import { AlertTriangle, ArrowRight, CheckCircle2, Clock3, FileWarning, Sparkles } from "lucide-react";
+import { AlertTriangle, ArrowRight, CheckCircle2, Clock3, FileWarning, FolderInput, Sparkles, Table2 } from "lucide-react";
 import { copy, type PageId } from "../constants/copy";
 import { Badge, Button, PageHeader, Panel } from "../components/UI";
 
@@ -10,7 +10,7 @@ const toneIcon = {
   neutral: FileWarning,
 } as const;
 
-export function HomePage({ navigate }: { navigate: (page: PageId) => void }) {
+export function HomePage({ navigate, onOpenRawImport, notify }: { navigate: (page: PageId) => void; onOpenRawImport: () => void; notify: (message: string) => void }) {
   return (
     <div className="page page--home">
       <PageHeader title={copy.home.title} subtitle={copy.home.subtitle} ids={copy.home.ids} />
@@ -24,6 +24,21 @@ export function HomePage({ navigate }: { navigate: (page: PageId) => void }) {
           {copy.home.continueReview}
         </Button>
       </section>
+
+      <Panel title={copy.home.dataEntryTitle} subtitle={copy.home.dataEntrySubtitle} className="data-entry-panel">
+        <div className="data-entry-grid">
+          <article className="data-entry-card">
+            <span className="data-entry-card__icon"><Table2 size={22} aria-hidden="true" /></span>
+            <div><h3>{copy.home.structuredImport}</h3><p>{copy.home.structuredImportDetail}</p></div>
+            <Button onClick={() => notify(copy.home.structuredImportPending)} icon={<ArrowRight size={16} />}>{copy.common.openImport}</Button>
+          </article>
+          <article className="data-entry-card data-entry-card--primary">
+            <span className="data-entry-card__icon"><FolderInput size={22} aria-hidden="true" /></span>
+            <div><h3>{copy.home.rawImport}</h3><p>{copy.home.rawImportDetail}</p></div>
+            <Button variant="primary" onClick={onOpenRawImport} icon={<ArrowRight size={16} />}>{copy.common.openImport}</Button>
+          </article>
+        </div>
+      </Panel>
 
       <div className="metric-grid">
         {copy.home.metrics.map((metric) => (

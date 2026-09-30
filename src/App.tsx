@@ -16,6 +16,7 @@ import { TasksPage } from "./pages/TasksPage";
 import { WorkspacesPage } from "./pages/WorkspacesPage";
 import { LoginPage } from "./pages/LoginPage";
 import { ReviewSetupPage } from "./pages/ReviewSetupPage";
+import { RawImportPage } from "./pages/RawImportPage";
 import { AuditPage, BatchesPage, UserStatusPage, WorkspaceSelectionPage, type AuditEntry } from "./pages/AccessPages";
 import { createId } from "./state/ids";
 
@@ -24,6 +25,7 @@ function PrototypeApp() {
   const [role, setRole] = useState<Role | null>(null);
   const [page, setPage] = useState<PageId>("workspaces");
   const [reviewOrigin, setReviewOrigin] = useState<PageId>("documents");
+  const [rawImportOpen, setRawImportOpen] = useState(false);
   const [otherTab, setOtherTab] = useState<string>(copy.tasks.title);
   const [scopeOpen, setScopeOpen] = useState(false), [notificationsOpen, setNotificationsOpen] = useState(false), [helpOpen, setHelpOpen] = useState(false), [userOpen, setUserOpen] = useState(false);
   const [toast, setToast] = useState<string | null>(null), [audit, setAudit] = useState<AuditEntry[]>([]);
@@ -33,10 +35,10 @@ function PrototypeApp() {
   const record = (action: string, actor = role, target = workspace) => { if (!actor) return; setAudit(current => [{ id: createId(), time: new Date().toLocaleString(copy.userManagement.dateLocale, { hour12: false }), user: copy.access.accounts[actor].name, action, workspace: target?.name ?? copy.access.platformScope }, ...current]); };
   const notify = (message: string) => { setToast(message); record(message); };
   const closeOverlays = () => { setNotificationsOpen(false); setHelpOpen(false); setUserOpen(false); setScopeOpen(false); };
-  const navigate = (nextPage: PageId) => { if (!role || !canNavigate(role, Boolean(workspace), nextPage)) return setToast(copy.access.denied); if (nextPage === "review") setReviewOrigin(page === "batches" ? "batches" : page === "other" ? "other" : "documents"); setPage(nextPage); closeOverlays(); window.scrollTo({ top: 0, behavior: "auto" }); };
-  const enterWorkspace = (id: string) => { const target = workspaces.find(item => item.id === id); if (!target || !role) return; setActiveWorkspaceId(id); setPage(role === "admin" ? "home" : "documents"); setOtherTab(copy.tasks.title); closeOverlays(); setToast(null); record(copy.audit.enter, role, target); window.scrollTo(0, 0); };
-  const leaveWorkspace = () => { if (workspace) record(copy.audit.leave); setActiveWorkspaceId(null); setPage("workspaces"); closeOverlays(); setToast(null); };
-  const logout = () => { record(copy.audit.logout); setRole(null); setActiveWorkspaceId(null); setPage("workspaces"); closeOverlays(); setToast(null); };
+  const navigate = (nextPage: PageId) => { if (!role || !canNavigate(role, Boolean(workspace), nextPage)) return setToast(copy.access.denied); if (nextPage === "review") setReviewOrigin(page === "batches" ? "batches" : page === "other" ? "other" : "documents"); if (nextPage !== "home") setRawImportOpen(false); setPage(nextPage); closeOverlays(); window.scrollTo({ top: 0, behavior: "auto" }); };
+  const enterWorkspace = (id: string) => { const target = workspaces.find(item => item.id === id); if (!target || !role) return; setActiveWorkspaceId(id); setPage(role === "admin" ? "home" : "documents"); setRawImportOpen(false); setOtherTab(copy.tasks.title); closeOverlays(); setToast(null); record(copy.audit.enter, role, target); window.scrollTo(0, 0); };
+  const leaveWorkspace = () => { if (workspace) record(copy.audit.leave); setActiveWorkspaceId(null); setPage("workspaces"); setRawImportOpen(false); closeOverlays(); setToast(null); };
+  const logout = () => { record(copy.audit.logout); setRole(null); setActiveWorkspaceId(null); setPage("workspaces"); setRawImportOpen(false); closeOverlays(); setToast(null); };
   if (!role) return <LoginPage onLogin={next => { setRole(next); setPage("workspaces"); record(copy.audit.login, next); }} />;
   const batches = <BatchesPage role={role} onReview={() => { setReviewOrigin(page === "other" ? "other" : "batches"); setPage("review"); }} />;
   const other = <div className="page"><PageHeader title={copy.modules.other} subtitle={workspace ? copy.modules.otherHint : copy.modules.platformOtherHint} ids={copy.tasks.ids} priorities={[]} /><Tabs items={workspace ? [copy.tasks.title, copy.modules.batchTitle] : [copy.tasks.title]} active={otherTab} onChange={setOtherTab} />{otherTab === copy.modules.batchTitle && workspace ? batches : <TasksPage notify={notify} />}</div>;
@@ -46,7 +48,7 @@ function PrototypeApp() {
     users: <UsersPage notify={notify} status={<UserStatusPage role={role} workspaceId={activeWorkspaceId} />} />,
     audit: <AuditPage entries={audit} />,
     fields: setup, reviewSetup: setup,
-    home: <HomePage navigate={navigate} />,
+    home: rawImportOpen ? <RawImportPage onBack={() => setRawImportOpen(false)} notify={notify} /> : <HomePage navigate={navigate} onOpenRawImport={() => { setRawImportOpen(true); window.scrollTo({ top: 0, behavior: "auto" }); }} notify={notify} />,
     processing: <ProcessingPage notify={notify} />,
     documents: <DocumentsPage navigate={navigate} notify={notify} />,
     analytics: <AnalyticsPage notify={notify} navigate={navigate} />,
