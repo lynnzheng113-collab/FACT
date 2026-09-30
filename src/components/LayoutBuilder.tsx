@@ -4,6 +4,7 @@ import { copy } from "../constants/copy";
 import type { FieldRecord } from "../state/fields";
 import type { LayoutRecord, LayoutSection, LayoutItem } from "../state/layouts";
 import { cleanHelp, newLayoutItem, sortedItems } from "../state/layouts";
+import { createId } from "../state/ids";
 import { Button, Field, Modal, Toggle } from "./UI";
 
 const t = copy.layoutManagement, f = copy.fieldManagement, c = copy.common;
@@ -17,7 +18,7 @@ export function LayoutBuilder({ layout, fields, onClose, onSave }: { layout: Lay
   const usedIds = new Set(sections.flatMap(section => section.items.map(item => item.fieldId)));
   const available = fields.filter(field => !usedIds.has(field.id) && field.name.toLowerCase().includes(fieldFilter.toLowerCase()));
   const editSections = (next: LayoutSection[]) => { setSections(next); setDirty(true); };
-  const addCategory = () => { const section: LayoutSection = { id: crypto.randomUUID(), name: t.defaultCategory, help: "", collapsible: false, collapsed: false, items: [] }; editSections([...sections, section]); setSelected({ sectionId: section.id, itemId: "" }); };
+  const addCategory = () => { const section: LayoutSection = { id: createId(), name: t.defaultCategory, help: "", collapsible: false, collapsed: false, items: [] }; editSections([...sections, section]); setSelected({ sectionId: section.id, itemId: "" }); };
   const addField = (field: FieldRecord) => { if (!currentSection) return; const sectionId = currentSection.id; const nextItem = newLayoutItem(field, currentSection.items.length, 0); editSections(sections.map(section => section.id === sectionId ? { ...section, items: [...section.items, nextItem] } : section)); setSelected({ sectionId, itemId: nextItem.id }); };
   const updateSection = (key: keyof LayoutSection, value: string | boolean) => currentSection && editSections(sections.map(section => section.id === currentSection.id ? { ...section, [key]: value } : section));
   const updateItem = (key: keyof LayoutItem, value: string | boolean | number) => { if (!currentSection || !currentItem) return; const sectionId = currentSection.id, itemId = currentItem.id; editSections(sections.map(section => section.id === sectionId ? { ...section, items: section.items.map(item => item.id === itemId ? { ...item, [key]: value } : item) } : section)); };

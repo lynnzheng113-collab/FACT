@@ -1,12 +1,16 @@
 import { createContext, useContext, useState, type ReactNode, type SetStateAction } from "react";
-import { type WorkspacePermissionStore } from "./permissions";
+import { initialPermissions, type WorkspacePermissionStore } from "./permissions";
 import { copy } from "../constants/copy";
 import { createFields, createCategories } from "./fields";
 import type { LayoutRecord } from "./layouts";
 
 export type ClientRecord = { id: string; name: string; number: string; status: string; domain: string };
 export type MatterRecord = { id: string; name: string; number: string; clientId: string; clientName: string; clientNumber: string; status: string; keywords: string; notes: string };
-export type WorkspaceRecord = { id: string; name: string; matterId: string; matterName: string; clientName: string; artifactId: string; template: string; status: string; pinned: boolean; adminGroupId?: string };
+export type WorkspaceRecord = {
+  id: string; name: string; matterId: string; matterName: string; clientName: string; artifactId: string; template: string; status: string; pinned: boolean; adminGroupId?: string;
+  resourcePool?: string; databaseLocation?: string; defaultFileRepository?: string; dataGridFileRepository?: string; defaultCacheLocation?: string; downloadHandlerUrl?: string;
+  sqlFullTextLanguage?: string; keywords?: string; notes?: string;
+};
 export type UserRecord = {
   id: string; firstName: string; lastName: string; email: string; type: string; clientId: string;
   access: boolean; disableOn: string; trustedIPs: string; changeSettings: boolean;
@@ -47,9 +51,9 @@ function useAdministrationState() {
   const [clients, setClients] = useState<ClientRecord[]>(() => copy.workspaceManagement.clients.map(item => ({ ...item })));
   const [matters, setMatters] = useState<MatterRecord[]>(() => copy.workspaceManagement.matters.map(item => ({ ...item })));
   const [workspaces, setWorkspaces] = useState<WorkspaceRecord[]>(() => copy.workspaceManagement.workspaces.map(item => ({ ...item })));
-  const [users, setUsers] = useState<UserRecord[]>([]);
-  const [groups, setGroups] = useState<GroupRecord[]>([]);
-  const [permissions, setPermissions] = useState<WorkspacePermissionStore>({});
+  const [users, setUsers] = useState<UserRecord[]>(() => copy.userManagement.testUsers.map(user => ({ ...user })));
+  const [groups, setGroups] = useState<GroupRecord[]>(() => copy.userManagement.testGroups.map(group => ({ ...group, userIds: [...group.userIds], workspaceIds: [...group.workspaceIds] })));
+  const [permissions, setPermissions] = useState<WorkspacePermissionStore>(() => Object.fromEntries(copy.workspaceManagement.workspaces.map(workspace => [workspace.id, Object.fromEntries(copy.userManagement.testGroups.filter(group => (group.workspaceIds as readonly string[]).includes(String(workspace.id))).map(group => [group.id, initialPermissions(group.name.includes("Managers"))]))])));
   return { documentView, setDocumentView, activeWorkspaceId, setActiveWorkspaceId, highlights, setHighlights, savedSearches, setSavedSearches, batchOwner, setBatchOwner, qcPassed, setQcPassed, layouts, setLayouts, fields, setFields, fieldCategories, setFieldCategories, permissions, setPermissions, clients, setClients, matters, setMatters, workspaces, setWorkspaces, users, setUsers, groups, setGroups };
 }
 

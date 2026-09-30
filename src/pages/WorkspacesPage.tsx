@@ -4,7 +4,7 @@ import { copy } from "../constants/copy";
 import { Badge, Button, Field, Modal, PageHeader, Panel } from "../components/UI";
 
 import { useAdministration, type ClientRecord, type MatterRecord, type WorkspaceRecord } from "../state/Administration";
-import { WorkspaceAdvanced } from "../components/WorkspaceAdvanced";
+import { WorkspaceAdvanced, WorkspaceResourceInfo } from "../components/WorkspaceAdvanced";
 import { WorkspacePermissions } from "../components/WorkspacePermissions";
 
 type TabId = "clients" | "matters" | "workspaces";
@@ -171,7 +171,7 @@ export function WorkspacesPage({ notify, navigateHome }: { notify: (message: str
         {selectedMatter && <DetailGrid items={[[text.name, selectedMatter.name], [text.matterNumber, selectedMatter.number], [text.status, selectedMatter.status], [text.client, selectedMatter.clientName], [text.keywords, selectedMatter.keywords || text.notProvided], [text.notes, selectedMatter.notes || text.notProvided], [text.lastModifiedBy, text.history.actor], [text.lastModifiedOn, text.history.modified]]} />}
         {selectedWorkspace && <div className="tabs" role="tablist">{[{ id: "information", label: copy.permissionManagement.workspaceInfo }, { id: "advanced", label: copy.permissionManagement.advanced }].map(item => <button type="button" role="tab" aria-selected={detailTab === item.id} className={detailTab === item.id ? "is-active" : ""} key={item.id} onClick={() => setDetailTab(item.id)}>{item.label}</button>)}</div>}
         {selectedWorkspace && detailTab === "advanced" && <WorkspaceAdvanced key={selectedWorkspace.id} workspace={selectedWorkspace} notify={notify} />}
-        {selectedWorkspace && detailTab === "information" && <DetailGrid items={[[text.name, selectedWorkspace.name], [text.status, selectedWorkspace.status], [text.client, selectedWorkspace.clientName], [text.matter, selectedWorkspace.matterName], [text.caseArtifactId, selectedWorkspace.artifactId], [text.templateWorkspace, selectedWorkspace.template], [text.lastModifiedBy, text.history.actor], [text.lastModifiedOn, text.history.modified]]} />}
+        {selectedWorkspace && detailTab === "information" && <><DetailGrid items={[[text.name, selectedWorkspace.name], [text.status, selectedWorkspace.status], [text.client, selectedWorkspace.clientName], [text.matter, selectedWorkspace.matterName], [text.caseArtifactId, selectedWorkspace.artifactId], [text.templateWorkspace, selectedWorkspace.template], [text.lastModifiedBy, text.history.actor], [text.lastModifiedOn, text.history.modified]]} /><WorkspaceResourceInfo workspace={selectedWorkspace} /></>}
       </Panel>
 
       {selectedWorkspace && <WorkspacePermissions open={permissionsOpen} workspace={selectedWorkspace} onClose={() => setPermissionsOpen(false)} notify={notify} />}

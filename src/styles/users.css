@@ -36,6 +36,11 @@
 .users-admin .detail-grid div { grid-template-columns: minmax(var(--space-0), 1fr) minmax(var(--space-0), 1fr); }
 .users-admin .detail-grid dd { overflow-wrap: anywhere; white-space: pre-line; }
 .users-admin .panel__actions { flex-wrap: wrap; }
+.user-status-panel { overflow: hidden; }
+.user-status-panel table { min-width: var(--size-permission-matrix); }
+.user-status-filters th { padding: var(--space-2); background: var(--color-surface-alt); }
+.user-status-filters input { width: 100%; min-width: var(--size-admin-search); }
+.preview-picker-grid { display: grid; grid-template-columns: repeat(2, minmax(var(--space-0), 1fr)); gap: var(--space-4); }
 @media (max-width: 760px) {
   .admin-identity-form > .field { grid-template-columns: minmax(var(--space-0), 1fr); gap: var(--space-2); }
   .admin-identity-form .field__label { justify-self: start; }
@@ -48,4 +53,5 @@
   .users-admin .panel__header { flex-wrap: wrap; gap: var(--space-3); }
   .users-admin .detail-grid div { grid-template-columns: minmax(var(--space-0), 1fr); }
   .users-admin > .tabs { flex-wrap: wrap; }
+  .preview-picker-grid { grid-template-columns: minmax(var(--space-0), 1fr); }
 }

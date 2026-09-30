@@ -7,10 +7,8 @@ export const permissionActions = ["view", "edit", "delete", "add", "security"] a
 
 export function initialPermissions(templateManager = false): PermissionSet {
   const flags: Record<string, boolean> = {};
-  for (const id of ["document", "lists", "search", "searchContainer"]) flags[`object.${id}.view`] = true;
+  for (const id of ["batch", "field", "folder", "dashboard", "layout", "document", "redaction", "massOperation", "list", "search", "searchIndex", "tab", "searchFolder", "view", "workspace"]) flags[`object.${id}.view`] = true;
   flags["tab.documents"] = true;
-  flags["feature.manageImage"] = true;
-  flags["feature.sentiment"] = true;
   // Only the visible navigation and review library of the manager template are evidenced.
   if (templateManager) for (const id of ["reviewQueues", "reviewCenter", "reviewManagement"]) flags[`tab.${id}`] = true;
   return { reviewCenter: templateManager, role: "reviewer", flags };
@@ -36,12 +34,7 @@ export function samePermissions(a: PermissionSet, b: PermissionSet): boolean {
 export function permissionChanges(before: PermissionSet, after: PermissionSet) {
   const t = copy.permissionManagement;
   const state = (value: boolean | undefined) => value ? t.on : t.off;
-  const role = (value: PermissionSet) => value.reviewCenter ? `${t.on}${t.separator}${t[value.role]}` : t.off;
   const boolChange = (label: string, key: string) => ({ label, before: state(before.flags[key]), after: state(after.flags[key]) });
-  const features = [
-    { label: t.reviewCenter, before: role(before), after: role(after) },
-    boolChange(t.code, "object.document.edit"), boolChange(t.manageImage, "feature.manageImage"), boolChange(t.sentiment, "feature.sentiment"),
-  ];
   const labels = { view: t.view, edit: t.editAction, delete: t.deleteAction, add: t.add, security: t.editSecurity };
   const objectValue = (value: PermissionSet, id: string) => permissionActions.filter(action => value.flags[`object.${id}.${action}`]).map(action => labels[action]).join(t.valueSeparator) || t.none;
   const objects = [
@@ -49,7 +42,7 @@ export function permissionChanges(before: PermissionSet, after: PermissionSet) {
     ...t.documentActions.map(row => boolChange(row.label, `document.${row.id}`)),
   ];
   return [
-    { id: "features", title: t.featureChanges, rows: features }, { id: "objects", title: t.objects, rows: objects },
+    { id: "objects", title: t.objects, rows: objects },
     { id: "tabs", title: t.tabs, rows: t.tabRows.map(row => boolChange(row.label, `tab.${row.id}`)) },
     { id: "other", title: t.other, rows: t.settingSections.flatMap(section => section.items.map(row => boolChange(row.label, `other.${row.id}`))) },
   ].map(section => ({ ...section, rows: section.rows.filter(row => row.before !== row.after) }));

@@ -3,6 +3,7 @@ import { Plus, Search } from "lucide-react";
 import { copy } from "../constants/copy";
 import { useAdministration } from "../state/Administration";
 import { fieldTimestamp, type FieldRecord, type FieldCategory } from "../state/fields";
+import { createId } from "../state/ids";
 import { Button, Field, Modal, PageHeader, Panel, Tabs } from "../components/UI";
 import { LayoutsPage } from "./LayoutsPage";
 import { FieldChoices } from "../components/FieldChoices";
@@ -53,7 +54,7 @@ export function FieldsPage({ notify }: { notify: (message: string) => void }) {
     const records = entity === "fields" ? fields : fieldCategories;
     if (records.some(record => record.id !== draft.id && record.name.toLocaleLowerCase() === name.toLocaleLowerCase())) return setError(entity === "fields" ? t.duplicateField : t.duplicateCategory);
     if (entity === "categories" && (!draft.order.trim() || !Number.isSafeInteger(Number(draft.order)) || Number(draft.order) < 0)) return setError(t.invalidOrder);
-    const id = draft.id || crypto.randomUUID();
+    const id = draft.id || createId();
     const stamp = fieldTimestamp();
     if (entity === "fields") {
       const previous = fields.find(field => field.id === id);

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { copy } from "../constants/copy";
 import { Button, Field, Modal, Panel } from "./UI";
 import { choiceBranchIds, type ChoiceRecord } from "../state/fields";
+import { createId } from "../state/ids";
 
 const t = copy.fieldManagement;
 export function FieldChoices({ choices, onChange }: { choices: ChoiceRecord[]; onChange: (choices: ChoiceRecord[]) => void }) {
@@ -20,7 +21,7 @@ export function FieldChoices({ choices, onChange }: { choices: ChoiceRecord[]; o
     if (!names.length) return setError(t.choiceRequired);
     const normalized = names.map(name => name.toLocaleLowerCase());
     if (new Set(normalized).size !== normalized.length || choices.some(choice => choice.parentId === editor.parentId && choice.id !== editor.id && normalized.includes(choice.name.toLocaleLowerCase()))) return setError(t.duplicateChoice);
-    onChange(editor.mode === "edit" ? choices.map(choice => choice.id === editor.id ? { ...choice, name: names[0] } : choice) : [...choices, ...names.map(name => ({ id: crypto.randomUUID(), name, parentId: editor.parentId }))]);
+    onChange(editor.mode === "edit" ? choices.map(choice => choice.id === editor.id ? { ...choice, name: names[0] } : choice) : [...choices, ...names.map(name => ({ id: createId(), name, parentId: editor.parentId }))]);
     setEditor(null);
   };
   const ordered: { choice: ChoiceRecord; ancestors: string[] }[] = [];

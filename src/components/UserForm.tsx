@@ -27,16 +27,16 @@ export function OtherDetails({ keywords, notes, onChange }: { keywords: string; 
   return <div className="form-grid"><Field label={copy.workspaceManagement.keywords}><input aria-label={copy.workspaceManagement.keywords} value={keywords} onChange={e => onChange("keywords", e.target.value)} /></Field><Field label={copy.workspaceManagement.notes}><textarea aria-label={copy.workspaceManagement.notes} value={notes} onChange={e => onChange("notes", e.target.value)} /></Field></div>;
 }
 
-export function UserForm({ value, onChange, other }: { value: UserRecord; onChange: (value: UserRecord) => void; other: boolean }) {
+export function UserForm({ value, onChange }: { value: UserRecord; onChange: (value: UserRecord) => void }) {
   const text = copy.userManagement;
   const update = <K extends keyof UserRecord>(key: K, next: UserRecord[K]) => onChange({ ...value, [key]: next });
-  if (other) return <Panel title={text.otherUserDetails}><OtherDetails keywords={value.keywords} notes={value.notes} onChange={update} /></Panel>;
   return <>
     <Panel title={text.userInformation}><div className="admin-identity-form">
       {(["firstName", "lastName", "email"] as const).map(key => <Field key={key} label={text[key]} required><input aria-label={text[key]} required type={key === "email" ? "email" : "text"} value={value[key]} onChange={e => update(key, e.target.value)} /></Field>)}
       <Field label={text.type} required><select aria-label={text.type} required value={value.type} onChange={e => update("type", e.target.value)}><option value="">{copy.workspaceManagement.select}</option><option>{text.internal}</option></select></Field>
       <Field label={copy.workspaceManagement.client} required><ClientPicker value={value.clientId} onChange={id => update("clientId", id)} /></Field>
     </div></Panel>
+    <Panel title={text.otherUserDetails}><OtherDetails keywords={value.keywords} notes={value.notes} onChange={update} /></Panel>
     <Panel title={text.access}><div className="form-grid">
       <Toggle label={text.relativityAccess} checked={value.access} onChange={() => update("access", !value.access)} />
       <Field label={text.disableOn}><input type="datetime-local" aria-label={text.disableOn} value={value.disableOn} onChange={e => update("disableOn", e.target.value)} /></Field>

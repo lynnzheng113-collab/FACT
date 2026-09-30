@@ -17,6 +17,7 @@ import { WorkspacesPage } from "./pages/WorkspacesPage";
 import { LoginPage } from "./pages/LoginPage";
 import { ReviewSetupPage } from "./pages/ReviewSetupPage";
 import { AuditPage, BatchesPage, UserStatusPage, WorkspaceSelectionPage, type AuditEntry } from "./pages/AccessPages";
+import { createId } from "./state/ids";
 
 export default function App() { return <AdministrationProvider><PrototypeApp /></AdministrationProvider>; }
 function PrototypeApp() {
@@ -29,7 +30,7 @@ function PrototypeApp() {
   const { workspaces, activeWorkspaceId, setActiveWorkspaceId, qcPassed, setQcPassed } = useAdministration();
   const workspace = workspaces.find(item => item.id === activeWorkspaceId);
   useEffect(() => { if (!toast) return; const timer = window.setTimeout(() => setToast(null), 3200); return () => window.clearTimeout(timer); }, [toast]);
-  const record = (action: string, actor = role, target = workspace) => { if (!actor) return; setAudit(current => [{ id: crypto.randomUUID(), time: new Date().toLocaleString(copy.userManagement.dateLocale, { hour12: false }), user: copy.access.accounts[actor].name, action, workspace: target?.name ?? copy.access.platformScope }, ...current]); };
+  const record = (action: string, actor = role, target = workspace) => { if (!actor) return; setAudit(current => [{ id: createId(), time: new Date().toLocaleString(copy.userManagement.dateLocale, { hour12: false }), user: copy.access.accounts[actor].name, action, workspace: target?.name ?? copy.access.platformScope }, ...current]); };
   const notify = (message: string) => { setToast(message); record(message); };
   const closeOverlays = () => { setNotificationsOpen(false); setHelpOpen(false); setUserOpen(false); setScopeOpen(false); };
   const navigate = (nextPage: PageId) => { if (!role || !canNavigate(role, Boolean(workspace), nextPage)) return setToast(copy.access.denied); if (nextPage === "review") setReviewOrigin(page === "batches" ? "batches" : page === "other" ? "other" : "documents"); setPage(nextPage); closeOverlays(); window.scrollTo({ top: 0, behavior: "auto" }); };

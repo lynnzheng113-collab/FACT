@@ -19,16 +19,16 @@ export function WorkspaceSelectionPage({ onEnter }: { onEnter: (id: string) => v
 
 export function UserStatusPage({ role, workspaceId }: { role: Role; workspaceId: string | null }) {
   const { workspaces, users } = useAdministration();
-  const [filter, setFilter] = useState("");
+  const [filters, setFilters] = useState<string[]>(["", "", "", "", "", ""]);
   const t = copy.userStatus;
   const workspaceName = (id: string | null) => workspaces.find(workspace => workspace.id === id)?.name ?? copy.access.platformScope;
+  const current = t.currentAccounts[role];
   const rows = [
-    { id: copy.access.accounts[role].id, name: copy.access.accounts[role].name, role: copy.access.roles[role], workspace: workspaceName(workspaceId), status: t.online, source: t.current },
-    ...t.samples.map(user => ({ ...user, role: copy.access.roles.reviewer, workspace: workspaceName(user.workspaceId), status: t.online, source: t.sample })),
-    ...users.map(user => ({ id: user.id, name: `${user.lastName}${copy.userManagement.nameSeparator}${user.firstName}`, role: user.type, workspace: copy.fieldManagement.empty, status: t.offline, source: t.account })),
-  ].filter(row => `${row.name} ${row.workspace}`.toLowerCase().includes(filter.toLowerCase()));
-  return <Panel title={t.title} subtitle={t.hint} className="table-panel"><div className="module-toolbar"><input aria-label={t.filter} placeholder={t.filter} value={filter} onChange={event => setFilter(event.target.value)} /></div>
-    <div className="table-scroll"><table><thead><tr>{t.columns.map(label => <th key={label}>{label}</th>)}</tr></thead><tbody>{rows.map(row => <tr key={row.id}><td>{row.name}</td><td>{row.role}</td><td><Badge tone={row.status === t.online ? "success" : "neutral"}>{row.status}</Badge></td><td>{row.workspace}</td><td>{row.source}</td></tr>)}{!rows.length && <tr><td colSpan={t.columns.length}>{copy.userManagement.noData}</td></tr>}</tbody></table></div>
+    { id: copy.access.accounts[role].id, name: copy.access.accounts[role].name, email: current.email, currentCase: current.currentCase, clientName: current.clientName, webServer: current.webServer, lastUpdate: current.lastUpdate },
+    ...t.samples,
+    ...users.map(user => ({ id: user.id, name: `${user.lastName}${copy.userManagement.nameSeparator}${user.firstName}`, email: user.email, currentCase: copy.fieldManagement.empty, clientName: copy.fieldManagement.empty, webServer: copy.fieldManagement.empty, lastUpdate: user.modifiedOn || copy.fieldManagement.empty })),
+  ].filter(row => row.name.toLowerCase().includes(filters[0].toLowerCase()) && row.email.toLowerCase().includes(filters[1].toLowerCase()) && row.currentCase.toLowerCase().includes(filters[2].toLowerCase()) && row.clientName.toLowerCase().includes(filters[3].toLowerCase()) && row.webServer.toLowerCase().includes(filters[4].toLowerCase()) && row.lastUpdate.toLowerCase().includes(filters[5].toLowerCase()));
+  return <Panel title={t.title} subtitle={t.hint} className="table-panel user-status-panel"><div className="table-scroll"><table><thead><tr>{t.columns.map(label => <th key={label}>{label}</th>)}</tr><tr className="user-status-filters">{t.filterLabels.map((label, index) => <th key={label + index}><input aria-label={`${t.columns[index]} ${t.filters[index]}`} placeholder={t.filters[index]} value={filters[index]} onChange={event => setFilters(current => current.map((item, itemIndex) => itemIndex === index ? event.target.value : item))} /></th>)}</tr></thead><tbody>{rows.map(row => <tr key={row.id}><td>{row.name}</td><td>{row.email}</td><td>{row.currentCase}</td><td>{row.clientName}</td><td>{row.webServer}</td><td>{row.lastUpdate}</td></tr>)}{!rows.length && <tr><td colSpan={t.columns.length}>{copy.userManagement.noData}</td></tr>}</tbody></table></div>
   </Panel>;
 }
 

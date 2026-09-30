@@ -3,6 +3,7 @@ import { Plus, Search } from "lucide-react";
 import { copy } from "../constants/copy";
 import { useAdministration } from "../state/Administration";
 import { fieldTimestamp } from "../state/fields";
+import { createId } from "../state/ids";
 import { defaultSections, withExampleFields, type LayoutRecord } from "../state/layouts";
 import { Button, Field, Modal, Panel, Toggle } from "../components/UI";
 import { LayoutBuilder } from "../components/LayoutBuilder";
@@ -38,7 +39,7 @@ export function LayoutsPage({ notify }: { notify: (message: string) => void }) {
     if (!Number.isSafeInteger(Number(draft.order)) || Number(draft.order) < 0) return setError(f.invalidOrder);
     if (layouts.some(layout => layout.id !== draft.id && layout.name.toLowerCase() === name.toLowerCase())) return setError(t.duplicate);
     const previous = layouts.find(layout => layout.id === draft.id);
-    const id = draft.id || crypto.randomUUID();
+    const id = draft.id || createId();
     const record: LayoutRecord = { ...draft, id, name, order: Number(draft.order), sections: previous?.sections ?? defaultSections(fields), createdOn: previous?.createdOn ?? fieldTimestamp(), modifiedOn: fieldTimestamp() };
     if (!record.copyPrevious) record.sections = record.sections.map(section => ({ ...section, items: section.items.map(item => ({ ...item, allowCopy: false })) }));
     setLayouts(current => previous ? current.map(layout => layout.id === id ? record : layout) : [...current, record]);

@@ -1,5 +1,6 @@
 import { copy } from "../constants/copy";
 import { fieldTimestamp, type FieldRecord } from "./fields";
+import { createId } from "./ids";
 
 export type LayoutItem = {
   id: string; fieldId: string; row: number; column: number;
@@ -13,9 +14,9 @@ export type LayoutRecord = {
   id: string; name: string; order: number; copyPrevious: boolean; keywords: string; notes: string;
   sections: LayoutSection[]; createdOn: string; modifiedOn: string;
 };
-export const newSection = (): LayoutSection => ({ id: crypto.randomUUID(), name: copy.layoutManagement.defaultCategory, help: "", collapsible: false, collapsed: false, items: [] });
+export const newSection = (): LayoutSection => ({ id: createId(), name: copy.layoutManagement.defaultCategory, help: "", collapsible: false, collapsed: false, items: [] });
 export function newLayoutItem(field: FieldRecord, row: number, column: number): LayoutItem {
-  return { id: crypto.randomUUID(), fieldId: field.id, row, column, readOnly: false, showName: true, customLabel: "", display: field.type === "multiple" ? "checkbox" : ["single", "singleObject", "multipleObject", "boolean"].includes(field.type) ? "dropdown" : "text", repeatColumns: copy.layoutManagement.defaultRepeatColumns, allowCopy: false };
+  return { id: createId(), fieldId: field.id, row, column, readOnly: false, showName: true, customLabel: "", display: field.type === "multiple" ? "checkbox" : ["single", "singleObject", "multipleObject", "boolean"].includes(field.type) ? "dropdown" : "text", repeatColumns: copy.layoutManagement.defaultRepeatColumns, allowCopy: false };
 }
 export const sortedItems = (items: LayoutItem[]) => [...items].sort((a, b) => a.row - b.row || a.column - b.column);
 export function defaultSections(fields: FieldRecord[]): LayoutSection[] {
@@ -29,9 +30,9 @@ export function withExampleFields(fields: FieldRecord[]): FieldRecord[] {
   const t = copy.layoutManagement;
   for (const sample of t.exampleFields) {
     if (result.some(field => field.name.toLowerCase() === sample.name.toLowerCase())) continue;
-    const id = crypto.randomUUID();
-    const choices: { id: string; name: string; parentId: string | null }[] = sample.key === "issues" ? copy.fieldManagement.exampleChoices.map(name => ({ id: crypto.randomUUID(), name, parentId: null })) : [];
-    if (sample.key === "issues") choices.push({ id: crypto.randomUUID(), name: t.financial, parentId: choices[0].id });
+    const id = createId();
+    const choices: { id: string; name: string; parentId: string | null }[] = sample.key === "issues" ? copy.fieldManagement.exampleChoices.map(name => ({ id: createId(), name, parentId: null })) : [];
+    if (sample.key === "issues") choices.push({ id: createId(), name: t.financial, parentId: choices[0].id });
     result.push({ id, name: sample.name, type: sample.type, choices, createdOn: fieldTimestamp(), modifiedOn: fieldTimestamp() });
   }
   return result;

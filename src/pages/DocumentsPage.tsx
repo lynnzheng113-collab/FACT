@@ -4,6 +4,7 @@ import { copy, type PageId } from "../constants/copy";
 import { Badge, Button, CheckRow, Field, Modal, PageHeader, Toggle } from "../components/UI";
 
 import { useAdministration } from "../state/Administration";
+import { createId } from "../state/ids";
 
 const documentIcon = (type: string) => type.includes("Email") ? Mail : type.includes("Excel") ? FileSpreadsheet : FileText;
 
@@ -93,7 +94,7 @@ export function DocumentsPage({ navigate, notify }: { navigate: (page: PageId) =
         </section>
       </div>
 
-      <Modal open={saveOpen} title={copy.documents.saveSearch} onClose={() => setSaveOpen(false)} footer={<><Button onClick={() => setSaveOpen(false)}>{copy.common.cancel}</Button><Button variant="primary" onClick={() => { if (!searchName.trim()) return setSaveError(true); setSavedSearches(current => [...current, { id: crypto.randomUUID(), name: searchName.trim(), query, includeFamily, folder }]); setSaveOpen(false); notify(copy.documents.saveSearchSuccess); }}>{copy.common.save}</Button></>}>
+      <Modal open={saveOpen} title={copy.documents.saveSearch} onClose={() => setSaveOpen(false)} footer={<><Button onClick={() => setSaveOpen(false)}>{copy.common.cancel}</Button><Button variant="primary" onClick={() => { if (!searchName.trim()) return setSaveError(true); setSavedSearches(current => [...current, { id: createId(), name: searchName.trim(), query, includeFamily, folder }]); setSaveOpen(false); notify(copy.documents.saveSearchSuccess); }}>{copy.common.save}</Button></>}>
         {saveError && <p role="alert">{copy.modules.invalidSearch}</p>}
         <Field label={copy.documents.savedSearchName} required><input aria-label={copy.documents.savedSearchName} value={searchName} onChange={event => setSearchName(event.target.value)} /></Field>
         <Field label={copy.documents.conditions}><div className="read-only-summary"><Filter size={16} /><span>{copy.documents.conditionFieldValue} · {copy.documents.conditionOperatorValue} · {query}</span></div></Field>
