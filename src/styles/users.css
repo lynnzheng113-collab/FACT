@@ -37,9 +37,19 @@
 .users-admin .detail-grid dd { overflow-wrap: anywhere; white-space: pre-line; }
 .users-admin .panel__actions { flex-wrap: wrap; }
 .user-status-panel { overflow: hidden; }
-.user-status-panel table { min-width: var(--size-permission-matrix); }
-.user-status-filters th { padding: var(--space-2); background: var(--color-surface-alt); }
-.user-status-filters input { width: 100%; min-width: var(--size-admin-search); }
+.user-status-panel .panel__header { padding: var(--space-2) var(--space-3); }
+.user-status-panel .table-scroll { overflow-x: hidden; }
+.user-status-panel table { min-width: var(--space-0); table-layout: fixed; width: 100%; }
+.user-status-panel th,
+.user-status-panel td { font-size: var(--font-size-xs); overflow-wrap: anywhere; padding: var(--space-1) var(--space-2); white-space: normal; }
+.user-status-panel th:nth-child(1) { width: 15%; }
+.user-status-panel th:nth-child(2) { width: 18%; }
+.user-status-panel th:nth-child(3) { width: 22%; }
+.user-status-panel th:nth-child(4) { width: 16%; }
+.user-status-panel th:nth-child(5) { width: 16%; }
+.user-status-panel th:nth-child(6) { width: 13%; }
+.user-status-filters th { padding: var(--space-1); background: var(--color-surface-alt); }
+.user-status-filters input { font-size: var(--font-size-xs); min-width: var(--space-0); padding: var(--space-1) var(--space-2); width: 100%; }
 .preview-picker-grid { display: grid; grid-template-columns: repeat(2, minmax(var(--space-0), 1fr)); gap: var(--space-4); }
 @media (max-width: 760px) {
   .admin-identity-form > .field { grid-template-columns: minmax(var(--space-0), 1fr); gap: var(--space-2); }

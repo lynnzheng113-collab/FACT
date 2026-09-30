@@ -52,14 +52,17 @@
 .permission-document-preview > aside p { margin-top: var(--space-4); }
 .permission-document-preview > div { flex: 1; min-width: var(--space-0); }
 .workspace-advanced dd { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
+.workspace-advanced .admin-toolbar { align-items: center; justify-content: space-between; border-bottom: var(--size-border) solid var(--color-border-soft); }
+.workspace-advanced .admin-toolbar h3 { margin: var(--space-0); }
 .workspace-resource-info { margin-top: var(--space-5); padding-top: var(--space-4); border-top: var(--size-border) solid var(--color-border-soft); }
 .workspace-resource-grid, .workspace-advanced-grid { display: grid; grid-template-columns: repeat(2, minmax(var(--space-0), 1fr)); gap: var(--space-4) var(--space-5); }
 .workspace-resource-grid .field, .workspace-advanced-grid .field { min-width: var(--space-0); }
 .workspace-resource-grid select, .workspace-resource-grid input, .workspace-advanced-grid select, .workspace-advanced-grid input, .workspace-advanced-grid textarea { width: 100%; }
-.workspace-advanced-grid textarea { min-height: var(--size-module-textarea); }
+.workspace-advanced-grid textarea { min-height: var(--size-module-textarea); resize: vertical; }
 .workspace-advanced-grid .admin-radio-group { display: grid; gap: var(--space-2); }
 .workspace-advanced-grid > .field:first-child .admin-radio-group { justify-items: start; }
 .workspace-advanced-grid > .field:first-child .admin-check { width: max-content; }
+.workspace-advanced-grid > .field:nth-child(5) { grid-column: 1 / -1; }
 @media (max-width: 760px) {
   .permission-dialog .modal--wide { width: calc(100vw - var(--space-4)); }
   .permission-selection > span, .permission-selection > label { grid-template-columns: minmax(var(--space-0), 1fr); }
