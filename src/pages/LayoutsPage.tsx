@@ -4,7 +4,7 @@ import { copy } from "../constants/copy";
 import { useAdministration } from "../state/Administration";
 import { fieldTimestamp } from "../state/fields";
 import { createId } from "../state/ids";
-import { defaultSections, withExampleFields, type LayoutRecord } from "../state/layouts";
+import { defaultSections, type LayoutRecord } from "../state/layouts";
 import { Button, Field, Modal, Panel, Toggle } from "../components/UI";
 import { LayoutBuilder } from "../components/LayoutBuilder";
 import { LayoutPreview } from "../components/LayoutPreview";
@@ -16,7 +16,7 @@ const blank = (): Draft => ({ id: "", name: "", order: "", copyPrevious: false, 
 const detail = (items: Array<[string, string | number]>) => <dl className="detail-grid">{items.map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value === "" ? f.empty : value}</dd></div>)}</dl>;
 
 export function LayoutsPage({ notify }: { notify: (message: string) => void }) {
-  const { layouts, setLayouts, fields, setFields } = useAdministration();
+  const { layouts, setLayouts, fields } = useAdministration();
   const [view, setView] = useState<"list" | "form" | "detail">("list");
   const [selectedId, setSelectedId] = useState("");
   const [draft, setDraft] = useState<Draft>(blank);
@@ -32,7 +32,6 @@ export function LayoutsPage({ notify }: { notify: (message: string) => void }) {
   const change = (key: keyof Draft, value: string | boolean) => setDraft(current => ({ ...current, [key]: value }));
   const back = () => { setView("list"); setError(""); };
   const open = (id: string) => { setSelectedId(id); setView("detail"); setError(""); };
-  const loadExamples = () => { setFields(current => withExampleFields(current)); notify(t.loadedFields); };
   const save = (mode: "save" | "new" | "back") => {
     const name = draft.name.trim();
     if (!name || !draft.order.trim()) return setError(w.requiredHint);
@@ -50,7 +49,7 @@ export function LayoutsPage({ notify }: { notify: (message: string) => void }) {
   };
   return <div className="layouts-page">
     {view === "list" && <>
-      <div className="admin-toolbar"><Button variant="primary" icon={<Plus size={17} />} onClick={() => { setDraft(blank()); setView("form"); setError(""); }}>{t.new}</Button><strong>{t.all}</strong><Button onClick={loadExamples}>{t.loadFields}</Button><label className="admin-search"><Search size={16} /><input aria-label={t.filter} placeholder={t.filter} value={search} onChange={e => setSearch(e.target.value)} /></label></div>
+      <div className="admin-toolbar"><Button variant="primary" icon={<Plus size={17} />} onClick={() => { setDraft(blank()); setView("form"); setError(""); }}>{t.new}</Button><strong>{t.all}</strong><label className="admin-search"><Search size={16} /><input aria-label={t.filter} placeholder={t.filter} value={search} onChange={e => setSearch(e.target.value)} /></label></div>
       <Panel className="table-panel admin-list"><div className="table-scroll"><table><thead><tr>{t.columns.map(label => <th key={label}>{label}</th>)}</tr></thead><tbody>{sorted.filter(layout => layout.name.toLowerCase().includes(search.toLowerCase())).map(layout => <tr key={layout.id}><td>{f.document}</td><td><button className="table-link" onClick={() => open(layout.id)}>{layout.name}</button></td><td>{layout.order}</td><td>{layout.copyPrevious ? copy.userManagement.yes : copy.userManagement.no}</td></tr>)}{!sorted.some(layout => layout.name.toLowerCase().includes(search.toLowerCase())) && <tr><td colSpan={t.columns.length} className="admin-empty">{copy.userManagement.noData}</td></tr>}</tbody></table></div></Panel>
     </>}
     {view === "form" && <form noValidate onSubmit={e => { e.preventDefault(); save("save"); }}>
@@ -68,7 +67,7 @@ export function LayoutsPage({ notify }: { notify: (message: string) => void }) {
     </form>}
     {view === "detail" && selected && <>
       <div className="admin-actions"><Button variant="primary" onClick={() => { setDraft({ ...selected, order: String(selected.order) }); setView("form"); }}>{c.edit}</Button><Button onClick={() => setDeleteOpen(true)}>{w.delete}</Button><Button onClick={back}>{c.back}</Button><span title={f.advancedUnavailable}><Button disabled>{w.editPermissions}</Button></span><Button onClick={() => history.current?.scrollIntoView({ behavior: "smooth", block: "center" })}>{w.viewAudit}</Button></div>
-      <div className="layout-detail"><div><Panel title={t.information}>{detail([[f.objectType, f.document], [w.name, selected.name], [f.order, selected.order], [t.copyPrevious, selected.copyPrevious ? copy.userManagement.yes : copy.userManagement.no], [t.overwrite, t.disabled], [t.applications, f.empty]])}</Panel><Panel title={w.other}>{detail([[w.keywords, selected.keywords], [w.notes, selected.notes]])}</Panel><div ref={history}><Panel title={w.recordHistory}>{detail([[w.createdBy, copy.workspace.user], [w.createdOn, selected.createdOn], [w.lastModifiedBy, copy.workspace.user], [w.lastModifiedOn, selected.modifiedOn]])}</Panel></div></div><Panel title={t.build}><div className="layout-detail-actions"><Button variant="primary" onClick={() => setBuilderOpen(true)}>{t.build}</Button><Button onClick={() => setPreviewOpen(true)}>{t.preview}</Button><Button onClick={loadExamples}>{t.loadFields}</Button></div></Panel></div>
+      <div className="layout-detail"><div><Panel title={t.information}>{detail([[f.objectType, f.document], [w.name, selected.name], [f.order, selected.order], [t.copyPrevious, selected.copyPrevious ? copy.userManagement.yes : copy.userManagement.no], [t.overwrite, t.disabled], [t.applications, f.empty]])}</Panel><Panel title={w.other}>{detail([[w.keywords, selected.keywords], [w.notes, selected.notes]])}</Panel><div ref={history}><Panel title={w.recordHistory}>{detail([[w.createdBy, copy.workspace.user], [w.createdOn, selected.createdOn], [w.lastModifiedBy, copy.workspace.user], [w.lastModifiedOn, selected.modifiedOn]])}</Panel></div></div><Panel title={t.build}><div className="layout-detail-actions"><Button variant="primary" onClick={() => setBuilderOpen(true)}>{t.build}</Button><Button onClick={() => setPreviewOpen(true)}>{t.preview}</Button></div></Panel></div>
     </>}
     <Modal open={orderOpen} title={f.orderReference} onClose={() => setOrderOpen(false)} footer={<Button onClick={() => setOrderOpen(false)}>{c.close}</Button>}><p>{t.orderReferenceHint}</p><table><thead><tr><th>{w.name}</th><th>{f.order}</th></tr></thead><tbody>{sorted.map(layout => <tr key={layout.id}><td>{layout.name}</td><td>{layout.order}</td></tr>)}{!sorted.length && <tr><td colSpan={2}>{copy.userManagement.noData}</td></tr>}</tbody></table></Modal>
     <Modal open={deleteOpen} title={t.deleteTitle} onClose={() => setDeleteOpen(false)} footer={<><Button onClick={() => setDeleteOpen(false)}>{c.cancel}</Button><Button variant="danger" onClick={() => { setLayouts(current => current.filter(layout => layout.id !== selectedId)); setDeleteOpen(false); back(); notify(f.deleted); }}>{w.delete}</Button></>}><p>{t.deleteHint}</p></Modal>

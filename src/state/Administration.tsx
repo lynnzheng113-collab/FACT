@@ -1,8 +1,8 @@
-import { createContext, useContext, useState, type ReactNode, type SetStateAction } from "react";
+import { createContext, useContext, useMemo, useState, type ReactNode, type SetStateAction } from "react";
 import { initialPermissions, type WorkspacePermissionStore } from "./permissions";
 import { copy } from "../constants/copy";
 import { createFields, createCategories } from "./fields";
-import type { LayoutRecord } from "./layouts";
+import { withExampleFields, type LayoutRecord } from "./layouts";
 
 export type ClientRecord = { id: string; name: string; number: string; status: string; domain: string };
 export type MatterRecord = { id: string; name: string; number: string; clientId: string; clientName: string; clientNumber: string; status: string; keywords: string; notes: string };
@@ -26,15 +26,16 @@ type WorkspaceState = {
   highlights: { name: string; terms: string; enabled: boolean }; savedSearches: SavedSearch[];
   batchOwner: string | null; qcPassed: boolean; documentView: { query: string; folder: number; includeFamily: boolean; reportTerm: string | null };
 };
-const newWorkspaceState = (): WorkspaceState => ({ fields: createFields(), layouts: [], fieldCategories: createCategories(), highlights: { name: copy.modules.highlightDefault, terms: copy.modules.highlightTerms, enabled: true }, savedSearches: [], batchOwner: null, qcPassed: false, documentView: { query: copy.documents.searchValue, folder: 0, includeFamily: true, reportTerm: null } });
+const newWorkspaceState = (): WorkspaceState => ({ fields: withExampleFields(createFields()), layouts: [], fieldCategories: createCategories(), highlights: { name: copy.modules.highlightDefault, terms: copy.modules.highlightTerms, enabled: true }, savedSearches: [], batchOwner: null, qcPassed: false, documentView: { query: copy.documents.searchValue, folder: 0, includeFamily: true, reportTerm: null } });
 function useAdministrationState() {
   const [activeWorkspaceId, setActiveWorkspaceId] = useState<string | null>(null);
   const [workspaceStates, setWorkspaceStates] = useState<Record<string, WorkspaceState>>({});
   const scope = activeWorkspaceId ?? "platform";
-  const state = workspaceStates[scope] ?? newWorkspaceState();
+  const initialState = useMemo(newWorkspaceState, [scope]);
+  const state = workspaceStates[scope] ?? initialState;
   function setScoped<K extends keyof WorkspaceState>(key: K, action: SetStateAction<WorkspaceState[K]>) {
     setWorkspaceStates(current => {
-      const previous = current[scope] ?? newWorkspaceState();
+      const previous = current[scope] ?? initialState;
       const value = typeof action === "function" ? (action as (value: WorkspaceState[K]) => WorkspaceState[K])(previous[key]) : action;
       return { ...current, [scope]: { ...previous, [key]: value } };
     });
