@@ -1952,6 +1952,12 @@ textarea {
 .processing-source-form section:last-child { grid-column: 1 / -1; }
 .processing-source-form section h3 { color: var(--color-ink-strong); font-size: var(--font-size-lg); }
 .processing-source-form__actions { display: flex; gap: var(--space-2); justify-content: flex-end; margin-top: var(--space-4); }
+.processing-picker-list { display: flex; flex-direction: column; gap: var(--space-2); }
+.processing-picker-list button { align-items: flex-start; border: var(--size-border) solid var(--color-border-soft); border-radius: var(--size-radius-sm); display: flex; flex-direction: column; gap: var(--space-1); padding: var(--space-3); text-align: left; }
+.processing-picker-list button:hover { background: var(--color-primary-soft); border-color: var(--color-primary-border); }
+.processing-picker-list small { color: var(--color-ink-muted); font-size: var(--font-size-xs); }
+.processing-custodian-form { display: flex; flex-direction: column; gap: var(--space-4); }
+.processing-custodian-form textarea { min-height: var(--size-module-textarea); }
 .workspace-cards { display: grid; gap: var(--space-4); grid-template-columns: repeat(auto-fit, minmax(var(--size-workspace-card), 1fr)); }
 .workspace-cards .panel { display: flex; flex-direction: column; }
 .workspace-cards .panel__body { display: flex; flex: 1; flex-direction: column; gap: var(--space-4); }
