@@ -65,7 +65,7 @@ function ProcessingSetsPage({ onBack, onOpenSet, notify }: { onBack: () => void;
   </div>;
 }
 
-function ProcessingSetDetail({ setId, onBack, notify }: { setId: string; onBack: () => void; notify: (message: string) => void }) {
+function ProcessingSetDetail({ setId, onBack, onOpenModule, notify }: { setId: string; onBack: () => void; onOpenModule: (view: ModuleId) => void; notify: (message: string) => void }) {
   const t = copy.processing;
   const s = t.sets;
   const existing = t.rows.find(row => row.id === setId);
@@ -125,7 +125,7 @@ function ProcessingSetDetail({ setId, onBack, notify }: { setId: string; onBack:
     </Panel>
     <Panel className="processing-set-console" title={s.processFiles}>
       <div className="processing-set-console__buttons"><Button variant="primary" onClick={runInventory}>{s.inventoryFiles}</Button><Button onClick={() => notify(s.actionSaved)}>{s.filterFiles}</Button><Button variant="primary" onClick={runDiscover}>{s.discoverFiles}</Button><Button disabled>{s.retryFileExceptions}</Button><Button variant="primary" onClick={runPublish}>{s.publishFiles}</Button></div>
-      <div className="processing-set-console__links"><div><strong>{s.reports}</strong><button type="button" onClick={() => notify(s.inventoryReport)}>{s.inventoryReport}</button><button type="button" onClick={() => notify(s.discoveryReport)}>{s.discoveryReport}</button><button type="button" onClick={() => notify(s.allReports)}>{s.allReports}</button></div><div><strong>{s.exceptions}</strong><button type="button" onClick={() => setDataSourceTab(s.jobErrors)}>{s.jobErrors}</button><button type="button" onClick={() => notify(s.fileExceptions)}>{s.fileExceptions}</button></div></div>
+      <div className="processing-set-console__links"><div><strong>{s.reports}</strong><button type="button" onClick={() => notify(s.inventoryReport)}>{s.inventoryReport}</button><button type="button" onClick={() => notify(s.discoveryReport)}>{s.discoveryReport}</button><button type="button" onClick={() => notify(s.allReports)}>{s.allReports}</button></div><div><strong>{s.exceptions}</strong><button type="button" onClick={() => onOpenModule("errors")}>{s.jobErrors}</button><button type="button" onClick={() => onOpenModule("files")}>{s.fileExceptions}</button></div></div>
     </Panel>
     <Panel className="processing-data-source-panel"><Tabs items={[s.dataSource, s.jobErrors]} active={dataSourceTab} onChange={setDataSourceTab} />{dataSourceTab === s.dataSource ? <><div className="panel__actions processing-table-actions"><Button variant="primary" icon={<Plus size={16} />} onClick={() => setDataSourceForm(true)}>{s.createDataSource}</Button><Button disabled>{s.deleteDataSource}</Button></div><div className="table-scroll"><table><thead><tr>{s.dataSourceColumns.map(column => <th key={column}>{column}</th>)}</tr></thead><tbody>{s.dataSourcesView.rows.map((row, index) => <tr key={row.id}><td><Badge tone={index === 2 && !publishDone ? "warning" : publishDone ? "success" : inventoryDone ? "info" : "neutral"}>{publishDone ? s.publishResultStatus : discoverDone ? s.discoverResultStatus : inventoryDone ? s.inventoryResultStatus : s.stageNotStarted}</Badge></td><td>{publishDone ? s.publishPercent : index === 2 ? s.partialPercent : currentPercent}</td><td><button className="table-link" type="button" onClick={() => setDataSourceForm(true)}>{row.source}</button></td><td>{row.custodian}</td><td>{custodianPrefix}</td><td>{timeZone}</td><td>{ocrLanguages.split("\n").map(language => <span className="processing-table-line" key={language}>{language}</span>)}</td></tr>)}</tbody></table></div></> : <div className="processing-empty-state"><AlertTriangle size={22} aria-hidden="true" /><p>{t.exceptionRows[0].impact}</p><Button icon={<RefreshCw size={16} />} onClick={() => notify(t.retrySuccess)}>{copy.common.retry}</Button></div>}</Panel>
     {dataSourceForm && <Panel title={s.dataSource} className="processing-source-form-panel"><div className="processing-source-form"><section><h3>{s.data}</h3><p className="admin-note">{s.sourceLocationHint}</p><Field label={s.sourcePath} required><div className="processing-field-with-action"><input value={sourcePath} onChange={event => setSourcePath(event.target.value)} /><Button onClick={() => setSourcePickerOpen(true)}>{s.browse}</Button></div></Field><Field label={s.custodian} required><div className="processing-field-with-action"><input value={custodian} onChange={event => setCustodian(event.target.value)} /><Button onClick={() => setCustodianPickerOpen(true)}>{s.select}</Button><button type="button" className="processing-settings__link" onClick={() => { setCustodianFormOpen(true); setCustodianPickerOpen(false); }}>{s.add}</button><button type="button" className="processing-settings__link" onClick={() => setCustodian("")}>{s.clear}</button></div></Field><Field label={s.destinationFolder} required><div className="processing-field-with-action"><input value={destination} onChange={event => setDestination(event.target.value)} /><Button onClick={() => setDestinationPickerOpen(true)}>{s.select}</Button><button type="button" className="processing-settings__link" onClick={() => setDestination("")}>{s.clear}</button></div></Field></section><section><h3>{s.custodian} {s.advancedOptions}</h3><Field label={s.timeZone} required><div className="processing-field-with-action"><select value={timeZone} onChange={event => setTimeZone(event.target.value)}>{s.timezoneOptions.map(option => <option key={option}>{option}</option>)}</select><Button onClick={() => notify(s.select)}>{s.select}</Button><button type="button" className="processing-settings__link" onClick={() => setTimeZone("")}>{s.clear}</button></div></Field><Field label={s.ocrLanguages} required><div className="processing-field-with-action"><textarea value={ocrLanguages} onChange={event => setOcrLanguages(event.target.value)} /><Button onClick={() => notify(s.select)}>{s.select}</Button><button type="button" className="processing-settings__link" onClick={() => notify(s.add)}>{s.add}</button><button type="button" className="processing-settings__link" onClick={() => setOcrLanguages("")}>{s.clear}</button></div></Field><Field label={s.numberingPrefix} required><input value={custodianPrefix} onChange={event => setCustodianPrefix(event.target.value)} /></Field></section><section><h3>{s.advancedOptions}</h3><div className="processing-basic-grid"><Field label={s.sourceName}><input /></Field><Field label={s.order} required><input defaultValue={s.orderValue} /></Field></div></section></div><div className="processing-source-form__actions"><Button onClick={() => setDataSourceForm(false)}>{copy.common.cancel}</Button><Button variant="primary" onClick={saveDataSource}>{s.createDataSource}</Button></div></Panel>}
@@ -148,6 +148,58 @@ function ProcessingDataSourcesPage({ onBack }: { onBack: () => void }) {
       <div className="table-scroll processing-data-sources-table"><table><thead><tr>{t.columns.map(column => <th key={column}>{column}</th>)}</tr></thead><tbody>{rows.map(row => <tr key={row.id}><td><button type="button" className="table-link">{row.source}</button><small className="processing-table-line">{row.id}</small></td><td>{row.set}</td><td>{row.custodian}</td><td>{row.preprocessedSize}</td><td>{row.preprocessedCount}</td><td>{row.nested}</td><td>{row.excludedSize}</td><td>{row.excluded}</td><td>{row.filtered}</td><td>{row.discoverSubmitted}</td><td>{row.discoveredSize}</td><td>{row.discovered}</td><td>{row.publishSubmitted}</td><td>{row.deduplication}</td><td>{row.duplicate}</td><td>{row.published}</td><td>{row.publishedSize}</td><td><Badge tone={row.tone}>{row.status}</Badge></td></tr>)}{!rows.length && <tr><td colSpan={t.columns.length} className="admin-empty">{t.noData}</td></tr>}</tbody></table></div>
     </Panel>
     <Panel title={t.additionalTitle} className="processing-data-source-additional"><div className="processing-additional-grid">{t.additionalFields.map((field, index) => <div key={field}><span>{field}</span><strong>{t.additionalValues[index]}</strong></div>)}</div></Panel>
+  </div>;
+}
+
+function JobErrorsPage({ onBack, notify }: { onBack: () => void; notify: (message: string) => void }) {
+  const t = copy.processing.sets.jobErrorsView;
+  const [activeView, setActiveView] = useState<string>(t.current);
+  const [retrying, setRetrying] = useState<string[]>([]);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const rows = activeView === t.current ? t.rows.filter(row => !retrying.includes(row.id) || row.status !== t.statusLabels.retried) : t.rows;
+  const selected = t.rows.find(row => row.id === selectedId);
+  const statusFor = (row: typeof t.rows[number]) => retrying.includes(row.id) ? t.statusLabels.inProgress : row.status;
+  const toneFor = (row: typeof t.rows[number]) => retrying.includes(row.id) ? "info" : row.tone;
+  return <div className="page processing-module-page processing-error-page">
+    <div className="module-toolbar"><Button onClick={onBack} icon={<ArrowLeft size={16} />}>{copy.processing.backToDirectory}</Button></div>
+    <PageHeader title={t.title} subtitle={t.subtitle} ids={copy.processing.ids} />
+    <Tabs items={[t.current, t.all]} active={activeView} onChange={setActiveView} />
+    <Panel title={activeView} actions={<Button onClick={() => notify(t.retryNotice)}>{t.retry}</Button>}>
+      <div className="table-scroll processing-error-table"><table><thead><tr>{t.columns.map(column => <th key={column}>{column}</th>)}</tr></thead><tbody>{rows.map(row => <tr key={row.id}><td><button type="button" className="table-link" onClick={() => setSelectedId(row.id)}>{row.id}</button></td><td><Badge tone={toneFor(row)}>{statusFor(row)}</Badge></td><td>{row.message}</td><td>{row.custodian}</td><td>{row.set}</td><td>{row.source}</td><td>{row.created}</td><td>{row.republish}</td><td>{row.notes}</td></tr>)}{!rows.length && <tr><td colSpan={t.columns.length} className="admin-empty">{t.noData}</td></tr>}</tbody></table></div>
+    </Panel>
+    <Modal open={Boolean(selected)} title={t.details} onClose={() => setSelectedId(null)} footer={<Button onClick={() => setSelectedId(null)}>{copy.common.close}</Button>}>
+      {selected && <div className="processing-error-detail"><div><strong>{selected.id}</strong><Badge tone={toneFor(selected)}>{statusFor(selected)}</Badge></div><p>{selected.message}</p><Field label={t.advanced}><textarea readOnly value={t.stackTrace} /></Field>{selected.retryable && !retrying.includes(selected.id) && <Button variant="primary" onClick={() => { setRetrying(current => [...current, selected.id]); notify(t.retryNotice); }}>{t.retry}</Button>}{!selected.retryable && <p className="admin-note">{selected.notes}</p>}</div>}
+    </Modal>
+  </div>;
+}
+
+function FileExceptionsPage({ onBack, notify }: { onBack: () => void; notify: (message: string) => void }) {
+  const t = copy.processing.sets.fileExceptionsView;
+  const [activeView, setActiveView] = useState<string>(t.current);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [ignoredIds, setIgnoredIds] = useState<string[]>(t.rows.filter(row => row.status === t.statusLabels.ignored).map(row => row.id));
+  const [resolvingIds, setResolvingIds] = useState<string[]>([]);
+  const [phase, setPhase] = useState<string>(t.phaseOptions[0]);
+  const [category, setCategory] = useState<string>(t.categoryOptions[0]);
+  const [custodian, setCustodian] = useState<string>(t.custodianOptions[0]);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const rows = t.rows.filter(row => (activeView === t.current ? !ignoredIds.includes(row.id) : true) && (phase === t.phaseOptions[0] || row.phase === phase) && (category === t.categoryOptions[0] || row.category === category) && (custodian === t.custodianOptions[0] || row.custodian === custodian));
+  const selected = t.rows.find(row => row.id === selectedId);
+  const statusFor = (row: typeof t.rows[number]) => resolvingIds.includes(row.id) ? t.statusLabels.resolving : ignoredIds.includes(row.id) ? t.statusLabels.ignored : row.status;
+  const toggleSelected = (id: string) => setSelectedIds(current => current.includes(id) ? current.filter(item => item !== id) : [...current, id]);
+  const selectedRows = t.rows.filter(row => selectedIds.includes(row.id));
+  return <div className="page processing-module-page processing-error-page">
+    <div className="module-toolbar"><Button onClick={onBack} icon={<ArrowLeft size={16} />}>{copy.processing.backToDirectory}</Button></div>
+    <PageHeader title={t.title} subtitle={t.subtitle} ids={copy.processing.ids} />
+    <Tabs items={[t.current, t.all]} active={activeView} onChange={setActiveView} />
+    <Panel title={activeView}>
+      <div className="processing-exception-filters"><strong>{t.filters}</strong><select value={phase} onChange={event => setPhase(event.target.value)} aria-label={t.phase}>{t.phaseOptions.map(option => <option key={option}>{option}</option>)}</select><select value={category} onChange={event => setCategory(event.target.value)} aria-label={t.category}>{t.categoryOptions.map(option => <option key={option}>{option}</option>)}</select><select value={custodian} onChange={event => setCustodian(event.target.value)} aria-label={t.custodian}>{t.custodianOptions.map(option => <option key={option}>{option}</option>)}</select></div>
+      <div className="table-scroll processing-error-table"><table><thead><tr><th><input type="checkbox" aria-label={copy.common.all} checked={rows.length > 0 && rows.every(row => selectedIds.includes(row.id))} onChange={() => setSelectedIds(rows.every(row => selectedIds.includes(row.id)) ? selectedIds.filter(id => !rows.some(row => row.id === id)) : [...new Set([...selectedIds, ...rows.map(row => row.id)])])} /></th>{t.columns.map(column => <th key={column}>{column}</th>)}</tr></thead><tbody>{rows.map(row => <tr key={row.id}><td><input type="checkbox" checked={selectedIds.includes(row.id)} onChange={() => toggleSelected(row.id)} aria-label={row.name} /></td><td><button type="button" className="table-link" onClick={() => setSelectedId(row.id)}>{row.name}</button><small className="processing-table-line">{row.id}</small></td><td><Badge tone={row.tone}>{row.level}</Badge></td><td>{row.message}</td><td>{row.phase}</td><td>{row.category}</td><td>{statusFor(row)}</td><td>{row.custodian}</td><td>{row.set}</td></tr>)}{!rows.length && <tr><td colSpan={t.columns.length + 1} className="admin-empty">{t.noData}</td></tr>}</tbody></table></div>
+      <div className="processing-exception-actions"><span>{t.selected} {selectedRows.length}</span><Button onClick={() => notify(t.export)}>{t.export}</Button><Button disabled={!selectedRows.length} onClick={() => { setResolvingIds(current => [...new Set([...current, ...selectedRows.filter(row => !ignoredIds.includes(row.id)).map(row => row.id)])]); notify(t.retryNotice); }}>{t.retry}</Button><Button disabled={!selectedRows.length} onClick={() => { setIgnoredIds(current => [...new Set([...current, ...selectedIds])]); setSelectedIds([]); notify(t.ignoreNotice); }}>{t.ignore}</Button><Button disabled={!selectedRows.some(row => ignoredIds.includes(row.id))} onClick={() => { setIgnoredIds(current => current.filter(id => !selectedIds.includes(id))); notify(t.undoNotice); }}>{t.undoIgnore}</Button><Button disabled={!selectedRows.length} onClick={() => notify(t.downloadNotice)}>{t.download}</Button><Button disabled={!selectedRows.length} onClick={() => notify(t.replaceNotice)}>{t.replace}</Button><Button disabled={!selectedRows.length} onClick={() => notify(t.republishNotice)}>{t.republish}</Button></div>
+    </Panel>
+    <Modal open={Boolean(selected)} title={selected ? selected.name : t.title} onClose={() => setSelectedId(null)} footer={<Button onClick={() => setSelectedId(null)}>{copy.common.close}</Button>}>
+      {selected && <div className="processing-error-detail"><div><strong>{selected.name}</strong><Badge tone={selected.tone}>{statusFor(selected)}</Badge></div><p>{selected.message}</p><dl className="processing-error-meta"><div><dt>{t.phase}</dt><dd>{selected.phase}</dd></div><div><dt>{t.category}</dt><dd>{selected.category}</dd></div><div><dt>{t.custodian}</dt><dd>{selected.custodian}</dd></div></dl><p className="admin-note">{selected.status} · {selected.set}</p></div>}
+    </Modal>
   </div>;
 }
 
@@ -206,8 +258,10 @@ export function ProcessingPage({ notify }: { notify: (message: string) => void }
   const [selectedSet, setSelectedSet] = useState<string>(copy.processing.rows[1].id);
   if (view === "directory") return <Directory onOpen={next => setView(next)} />;
   if (view === "sets") return <ProcessingSetsPage onBack={() => setView("directory")} onOpenSet={id => { setSelectedSet(id); setView("set-detail"); }} notify={notify} />;
-  if (view === "set-detail") return <ProcessingSetDetail setId={selectedSet} onBack={() => setView("sets")} notify={notify} />;
+  if (view === "set-detail") return <ProcessingSetDetail setId={selectedSet} onBack={() => setView("sets")} onOpenModule={next => setView(next)} notify={notify} />;
   if (view === "sources") return <ProcessingDataSourcesPage onBack={() => setView("directory")} />;
+  if (view === "errors") return <JobErrorsPage onBack={() => setView("directory")} notify={notify} />;
+  if (view === "files") return <FileExceptionsPage onBack={() => setView("directory")} notify={notify} />;
   if (view === "profile") return <ProcessingProfilePage onBack={() => setView("directory")} notify={notify} />;
   return <ModulePlaceholder view={view} onBack={() => setView("directory")} />;
 }
