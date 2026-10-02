@@ -102,6 +102,13 @@
   --size-permission-matrix: 650px;
   --size-permission-preview-nav: 110px;
   --size-permission-empty: 420px;
+  --size-export-dialog: 1000px;
+  --size-export-label: 250px;
+  --size-export-card: 190px;
+  --size-export-heading: 56px;
+  --size-export-status: 240px;
+  --size-export-table: 1000px;
+  --size-export-footer-note: 370px;
 
   --size-processing-error-table: 1800px;
   --size-processing-error-id: 170px;

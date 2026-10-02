@@ -4,6 +4,8 @@ import { copy } from "../constants/copy";
 import { createFields, createCategories } from "./fields";
 import { withExampleFields, type LayoutRecord } from "./layouts";
 
+import type { ExportJob } from "./export";
+
 export type ClientRecord = { id: string; name: string; number: string; status: string; domain: string };
 export type MatterRecord = { id: string; name: string; number: string; clientId: string; clientName: string; clientNumber: string; status: string; keywords: string; notes: string };
 export type WorkspaceRecord = {
@@ -22,11 +24,12 @@ export type GroupRecord = { id: string; name: string; clientId: string; userIds:
 
 export type SavedSearch = { id: string; name: string; query: string; includeFamily: boolean; folder: number };
 type WorkspaceState = {
+  exportJobs: ExportJob[];
   fields: ReturnType<typeof createFields>; layouts: LayoutRecord[]; fieldCategories: ReturnType<typeof createCategories>;
   highlights: { name: string; terms: string; enabled: boolean }; savedSearches: SavedSearch[];
   batchOwner: string | null; qcPassed: boolean; documentView: { query: string; folder: number; includeFamily: boolean; reportTerm: string | null };
 };
-const newWorkspaceState = (): WorkspaceState => ({ fields: withExampleFields(createFields()), layouts: [], fieldCategories: createCategories(), highlights: { name: copy.modules.highlightDefault, terms: copy.modules.highlightTerms, enabled: true }, savedSearches: [], batchOwner: null, qcPassed: false, documentView: { query: copy.documents.searchValue, folder: 0, includeFamily: true, reportTerm: null } });
+const newWorkspaceState = (): WorkspaceState => ({ exportJobs: [], fields: withExampleFields(createFields()), layouts: [], fieldCategories: createCategories(), highlights: { name: copy.modules.highlightDefault, terms: copy.modules.highlightTerms, enabled: true }, savedSearches: [], batchOwner: null, qcPassed: false, documentView: { query: copy.documents.searchValue, folder: 0, includeFamily: true, reportTerm: null } });
 function useAdministrationState() {
   const [activeWorkspaceId, setActiveWorkspaceId] = useState<string | null>(null);
   const [workspaceStates, setWorkspaceStates] = useState<Record<string, WorkspaceState>>({});
@@ -41,6 +44,7 @@ function useAdministrationState() {
     });
   }
   const { fields, layouts, fieldCategories, highlights, savedSearches, batchOwner, qcPassed, documentView } = state;
+  const setExportJobs = (action: SetStateAction<ExportJob[]>) => setScoped("exportJobs", action);
   const setFields = (action: SetStateAction<WorkspaceState["fields"]>) => setScoped("fields", action);
   const setLayouts = (action: SetStateAction<LayoutRecord[]>) => setScoped("layouts", action);
   const setFieldCategories = (action: SetStateAction<WorkspaceState["fieldCategories"]>) => setScoped("fieldCategories", action);
@@ -55,7 +59,7 @@ function useAdministrationState() {
   const [users, setUsers] = useState<UserRecord[]>(() => copy.userManagement.testUsers.map(user => ({ ...user })));
   const [groups, setGroups] = useState<GroupRecord[]>(() => copy.userManagement.testGroups.map(group => ({ ...group, userIds: [...group.userIds], workspaceIds: [...group.workspaceIds] })));
   const [permissions, setPermissions] = useState<WorkspacePermissionStore>(() => Object.fromEntries(copy.workspaceManagement.workspaces.map(workspace => [workspace.id, Object.fromEntries(copy.userManagement.testGroups.filter(group => (group.workspaceIds as readonly string[]).includes(String(workspace.id))).map(group => [group.id, initialPermissions(group.name.includes("Managers"))]))])));
-  return { documentView, setDocumentView, activeWorkspaceId, setActiveWorkspaceId, highlights, setHighlights, savedSearches, setSavedSearches, batchOwner, setBatchOwner, qcPassed, setQcPassed, layouts, setLayouts, fields, setFields, fieldCategories, setFieldCategories, permissions, setPermissions, clients, setClients, matters, setMatters, workspaces, setWorkspaces, users, setUsers, groups, setGroups };
+  return { exportJobs: state.exportJobs, setExportJobs, documentView, setDocumentView, activeWorkspaceId, setActiveWorkspaceId, highlights, setHighlights, savedSearches, setSavedSearches, batchOwner, setBatchOwner, qcPassed, setQcPassed, layouts, setLayouts, fields, setFields, fieldCategories, setFieldCategories, permissions, setPermissions, clients, setClients, matters, setMatters, workspaces, setWorkspaces, users, setUsers, groups, setGroups };
 }
 
 const AdministrationContext = createContext<ReturnType<typeof useAdministrationState> | null>(null);

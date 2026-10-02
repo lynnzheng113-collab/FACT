@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { AlertTriangle, CheckCircle2, Download, LoaderCircle, PackageCheck, Play, ShieldCheck } from "lucide-react";
 import { copy, type PageId } from "../constants/copy";
-import { Badge, Button, CheckRow, Field, PageHeader, Panel } from "../components/UI";
+import { Badge, Button, CheckRow, Field, PageHeader, Panel, Tabs } from "../components/UI";
+
+import { ExportPage } from "./ExportPage";
 
 export function ProductionPage({
   navigate,
@@ -12,6 +14,7 @@ export function ProductionPage({
   notify: (message: string) => void;
   qcPassed: boolean;
 }) {
+  const [tab, setTab] = useState<string>(copy.exportPage.productionTab);
   const [outputs, setOutputs] = useState<string[]>(copy.production.outputOptions.filter((item) => item.checked).map((item) => item.id));
   const [validated, setValidated] = useState(false);
   const [running, setRunning] = useState(false);
@@ -43,6 +46,9 @@ export function ProductionPage({
   return (
     <div className="page page--production">
       <PageHeader title={copy.production.title} subtitle={copy.production.subtitle} ids={copy.production.ids} />
+      <Tabs items={[copy.exportPage.productionTab, copy.exportPage.tab]} active={tab} onChange={setTab} />
+      <div hidden={tab !== copy.exportPage.tab}><ExportPage notify={notify} /></div>
+      <div hidden={tab !== copy.exportPage.productionTab}>
       <div className="production-heading"><span><strong>{copy.production.productionName}</strong><Badge tone={completed ? "success" : running ? "info" : "neutral"}>{completed ? copy.production.completed : running ? copy.production.running : copy.production.statusDraft}</Badge></span><div>{copy.production.steps.map((step, index) => <span key={step} className={index < (validated ? 4 : 3) ? "is-done" : ""}>{step}</span>)}</div></div>
 
       <div className="production-grid">
@@ -73,6 +79,7 @@ export function ProductionPage({
           <Button onClick={run} disabled={!validated || running} icon={running ? <LoaderCircle className="spin" size={16} /> : <Play size={16} />}>{running ? copy.production.running : copy.production.runProduction}</Button>
           {completed && <div className="production-complete"><PackageCheck size={30} /><strong>{copy.production.completed}</strong><span>{copy.production.completedDetail}</span><Button icon={<Download size={16} />} onClick={() => notify(copy.toasts.download)}>{copy.production.manifest}</Button><Button variant="primary" icon={<Download size={16} />} onClick={() => notify(copy.toasts.download)}>{copy.production.package}</Button></div>}
         </Panel>
+      </div>
       </div>
     </div>
   );
