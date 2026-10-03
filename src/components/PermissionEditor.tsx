@@ -19,7 +19,12 @@ export function PermissionEditor({ workspace, group, groups, initial, onSave, on
   const leave = (action: () => void) => dirty ? setPending(() => action) : action();
   const match = (label: string) => label.toLowerCase().includes(query.trim().toLowerCase());
   const flag = (key: string) => !!draft.flags[key];
-  const toggle = (key: string) => setDraft(current => ({ ...current, flags: { ...current.flags, [key]: !current.flags[key] } }));
+  const toggle = (key: string) => setDraft(current => {
+    const flags = { ...current.flags, [key]: !current.flags[key] };
+    if (key.startsWith("other.sample") && key !== "other.sample" && flags[key]) flags["other.sample"] = true;
+    if (key === "other.sample" && !flags[key]) ["sampleFixed", "samplePercentage", "sampleStatistical"].forEach(id => { flags[`other.${id}`] = false; });
+    return { ...current, flags };
+  });
   const setObject = (id: string, action: string) => setDraft(current => {
     const flags = { ...current.flags };
     if (action === "none") permissionActions.forEach(a => { flags[`object.${id}.${a}`] = false; });
@@ -42,7 +47,7 @@ export function PermissionEditor({ workspace, group, groups, initial, onSave, on
         <section className="permission-content"><h3>{t[section]}</h3><input type="search" aria-label={t.search} placeholder={t.search} value={query} onChange={e => setQuery(e.target.value)} />
           {section === "objects" && <div className="table-scroll"><table className="permission-matrix"><thead><tr><th>{t.permissionName}</th>{(["none", ...permissionActions] as const).map(action => <th key={action}>{actionLabels[action]}</th>)}</tr></thead><tbody>{t.objectRows.filter(row => match(row.label)).map(row => <ObjectRows key={row.id} id={row.id} label={row.label} flag={flag} onAction={setObject} onToggle={toggle} actionLabels={actionLabels} />)}{!t.objectRows.some(row => match(row.label)) && <tr><td colSpan={7} className="admin-empty">{copy.userManagement.noData}</td></tr>}</tbody></table></div>}
           {section === "tabs" && <div className="permission-checks">{t.tabRows.filter(row => match(row.label)).map(row => <label className="admin-check" key={row.id}><input type="checkbox" checked={flag(`tab.${row.id}`)} onChange={() => toggle(`tab.${row.id}`)} />{row.label}</label>)}{!t.tabRows.some(row => match(row.label)) && <p>{copy.userManagement.noData}</p>}</div>}
-          {section === "other" && <div className="permission-settings">{t.settingSections.map(category => <section key={category.id}><h4>{category.label}</h4>{category.items.filter(row => match(row.label)).map(row => <label className="admin-check" key={row.id}><input type="checkbox" checked={flag(`other.${row.id}`)} onChange={() => toggle(`other.${row.id}`)} />{row.label}</label>)}</section>)}</div>}
+          {section === "other" && <div className="permission-settings">{t.settingSections.map(category => <section key={category.id}><h4>{category.label}</h4>{category.id === "admin" && <p className="admin-note">{t.adminScopeHint}</p>}{category.items.filter(row => match(row.label) || ("children" in row && row.children.some(child => match(child.label)))).map(row => <div className="permission-setting-item" key={row.id}><label className="admin-check"><input type="checkbox" checked={flag(`other.${row.id}`)} onChange={() => toggle(`other.${row.id}`)} />{row.label}</label>{"children" in row && <div className="permission-setting-children">{row.children.filter(child => match(child.label) || match(row.label)).map(child => <label className="admin-check" key={child.id}><input type="checkbox" checked={flag(`other.${child.id}`)} onChange={() => toggle(`other.${child.id}`)} />{child.label}</label>)}</div>}</div>)}</section>)}</div>}
         </section>
       </div>}
     </Modal>

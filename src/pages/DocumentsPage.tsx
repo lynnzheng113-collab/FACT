@@ -18,6 +18,14 @@ export function DocumentsPage({ navigate, notify }: { navigate: (page: PageId) =
   const [folderSearch, setFolderSearch] = useState("");
   const [autoRun, setAutoRun] = useState(false);
   const [saveOpen, setSaveOpen] = useState(false);
+  const [sampleOpen, setSampleOpen] = useState(false);
+  const [sampleMethod, setSampleMethod] = useState<"fixed" | "percentage" | "statistical">("fixed");
+  const [sampleCount, setSampleCount] = useState("10");
+  const [samplePercentage, setSamplePercentage] = useState("10");
+  const [sampleConfidence, setSampleConfidence] = useState("95%");
+  const [sampleMargin, setSampleMargin] = useState("5%");
+  const [sampleError, setSampleError] = useState(false);
+  const [sampleResult, setSampleResult] = useState<number | null>(null);
   const [selected, setSelected] = useState<string[]>([]);
   const docs = useMemo(() => copy.documents.docs.filter(doc => (includeFamily || doc.direct) && (reportTerm === null || doc.file.toLowerCase().includes(reportTerm.toLowerCase())) && (folder === 0 || (folder === 1 ? doc.responsive === copy.documents.docs[2].responsive : folder === 2 ? !doc.type.includes("Email") : folder === 3 ? doc.confidential === copy.documents.docs[0].confidential : doc.responsive === copy.documents.docs[0].responsive))), [includeFamily, folder, reportTerm]);
 
@@ -62,6 +70,7 @@ export function DocumentsPage({ navigate, notify }: { navigate: (page: PageId) =
             <div className="document-toolbar__search"><Search size={16} /><input value={query} onChange={(event) => setQuery(event.target.value)} /></div>
             <Button onClick={() => { setSaveError(false); setSaveOpen(true); }} icon={<Save size={16} />}>{copy.documents.saveSearch}</Button>
             <Button disabled={selected.length === 0}>{copy.documents.bulkEdit}</Button>
+            <Button onClick={() => { setSampleError(false); setSampleResult(null); setSampleOpen(true); }}>{copy.documents.sample}</Button>
           </div>
           <div className="index-coverage"><span />{copy.documents.indexCoverage}</div>
           <div className="results-summary">
@@ -99,6 +108,15 @@ export function DocumentsPage({ navigate, notify }: { navigate: (page: PageId) =
         <Field label={copy.documents.savedSearchName} required><input aria-label={copy.documents.savedSearchName} value={searchName} onChange={event => setSearchName(event.target.value)} /></Field>
         <Field label={copy.documents.conditions}><div className="read-only-summary"><Filter size={16} /><span>{copy.documents.conditionFieldValue} · {copy.documents.conditionOperatorValue} · {query}</span></div></Field>
         <CheckRow label={copy.documents.includeFamily} checked={includeFamily} onChange={() => setIncludeFamily(!includeFamily)} />
+      </Modal>
+      <Modal open={sampleOpen} title={copy.documents.sampleTitle} onClose={() => setSampleOpen(false)} wide footer={<><Button onClick={() => setSampleOpen(false)}>{copy.common.cancel}</Button><Button variant="primary" onClick={() => { const value = sampleMethod === "fixed" ? Number(sampleCount) : sampleMethod === "percentage" ? Number(samplePercentage) : Number(sampleCount); if (!Number.isFinite(value) || value <= 0 || (sampleMethod === "percentage" && value > 100) || (sampleMethod === "fixed" && value > docs.length && docs.length > 0)) { setSampleError(true); return; } const count = sampleMethod === "percentage" ? Math.max(1, Math.round(docs.length * value / 100)) : Math.min(value, docs.length || value); setSampleResult(count); setSampleError(false); notify(copy.documents.sampleCreated); }}>{copy.documents.sampleRun}</Button></>}>
+        <p className="admin-note">{copy.documents.sampleHint}</p>
+        {sampleError && <p role="alert" className="form-alert">{copy.documents.sampleInvalid}</p>}
+        <Field label={copy.documents.sampleMethod} required><select value={sampleMethod} onChange={event => setSampleMethod(event.target.value as typeof sampleMethod)}><option value="fixed">{copy.documents.sampleFixed}</option><option value="percentage">{copy.documents.samplePercentage}</option><option value="statistical">{copy.documents.sampleStatistical}</option></select></Field>
+        {sampleMethod === "fixed" && <Field label={copy.documents.sampleCount} required><input type="number" min="1" value={sampleCount} onChange={event => setSampleCount(event.target.value)} /></Field>}
+        {sampleMethod === "percentage" && <Field label={copy.documents.samplePercentageValue} required><input type="number" min="1" max="100" value={samplePercentage} onChange={event => setSamplePercentage(event.target.value)} /></Field>}
+        {sampleMethod === "statistical" && <div className="workspace-advanced-grid"><Field label={copy.documents.sampleConfidence} required><select value={sampleConfidence} onChange={event => setSampleConfidence(event.target.value)}><option>90%</option><option>95%</option><option>99%</option></select></Field><Field label={copy.documents.sampleMargin} required><select value={sampleMargin} onChange={event => setSampleMargin(event.target.value)}><option>3%</option><option>5%</option><option>10%</option></select></Field></div>}
+        {sampleResult !== null && <section className="sample-result"><h3>{copy.documents.sampleResult}</h3><strong>{copy.documents.sampleCountValue.replace("{count}", String(sampleResult))}</strong><p>{copy.documents.sampleResultHint}</p></section>}
       </Modal>
     </div>
   );

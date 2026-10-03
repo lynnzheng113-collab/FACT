@@ -41,9 +41,13 @@ export function permissionChanges(before: PermissionSet, after: PermissionSet) {
     ...t.objectRows.map(row => ({ label: row.label, before: objectValue(before, row.id), after: objectValue(after, row.id) })),
     ...t.documentActions.map(row => boolChange(row.label, `document.${row.id}`)),
   ];
+  const settingRows = t.settingSections.flatMap(section => section.items.flatMap(row => [
+    boolChange(row.label, `other.${row.id}`),
+    ...("children" in row ? row.children.map(child => boolChange(child.label, `other.${child.id}`)) : []),
+  ]));
   return [
     { id: "objects", title: t.objects, rows: objects },
     { id: "tabs", title: t.tabs, rows: t.tabRows.map(row => boolChange(row.label, `tab.${row.id}`)) },
-    { id: "other", title: t.other, rows: t.settingSections.flatMap(section => section.items.map(row => boolChange(row.label, `other.${row.id}`))) },
+    { id: "other", title: t.other, rows: settingRows },
   ].map(section => ({ ...section, rows: section.rows.filter(row => row.before !== row.after) }));
 }

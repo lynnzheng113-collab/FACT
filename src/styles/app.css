@@ -2079,3 +2079,11 @@ textarea {
 .login-roles input[type="radio"] { flex: 0 0 var(--size-icon); height: var(--size-icon); min-height: var(--space-0); padding: var(--space-0); width: var(--size-icon); }
 .login-roles svg { flex: 0 0 var(--size-icon-lg); }
 .login-roles label > span { min-width: var(--space-0); }
+.sample-result {
+  margin-top: var(--space-4);
+  padding: var(--space-4);
+  border: var(--size-border) solid var(--color-border-soft);
+  background: var(--color-surface-alt);
+}
+.sample-result h3 { margin-bottom: var(--space-2); }
+.sample-result strong { color: var(--color-primary); }

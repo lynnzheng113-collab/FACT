@@ -133,3 +133,14 @@
   --shadow-menu: 0 8px 24px var(--color-shadow);
   --transition-fast: 140ms ease;
 }
+
+:root {
+  --size-audit-filter: 240px;
+  --size-audit-demo-note: 420px;
+  --size-audit-chart: 220px;
+  --size-audit-bar: 12px;
+  --size-audit-list-height: 520px;
+  --size-audit-table: 2200px;
+  --size-audit-cell: 120px;
+  --size-audit-detail: 420px;
+}
