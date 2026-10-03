@@ -1899,6 +1899,14 @@ textarea {
   .detail-grid div { grid-template-columns: 1fr; }
   .workflow-stages { grid-template-columns: 1fr; }
   .workflow-stages__arrow { display: none; }
+  .processing-directory-steps--primary { grid-template-columns: 1fr; }
+  .processing-directory-steps--primary .processing-directory-step__arrow { display: none; }
+  .processing-module-card--secondary { grid-template-columns: auto minmax(0, 1fr); }
+  .processing-module-card--secondary .button { grid-column: 1 / -1; }
+  .processing-directory-layout { grid-template-columns: 1fr; }
+  .processing-directory-primary-card { grid-template-columns: auto minmax(0, 1fr); }
+  .processing-directory-primary-card .processing-directory-primary-arrow { grid-column: 2; justify-self: end; }
+  .processing-directory-card-actions { grid-column: 2; }
   .documents-workbench { display: block; }
   .search-panel { border-bottom: var(--size-border) solid var(--color-border); border-right: var(--space-0); }
   .search-panel__conditions { display: none; }
@@ -1938,7 +1946,30 @@ textarea {
 .module-filter { margin-bottom: var(--space-4); max-width: var(--size-admin-search); width: 100%; }
 .module-toolbar { align-items: center; display: flex; flex-wrap: wrap; gap: var(--space-2); }
 .processing-directory-workflow .panel__body { padding: var(--space-4); }
+.processing-directory-layout { align-items: start; display: grid; gap: var(--space-5); grid-template-columns: minmax(0, 1.55fr) minmax(280px, .75fr); }
+.processing-directory-primary-list { display: grid; gap: var(--space-4); }
+.processing-directory-primary-card { align-items: start; background: var(--color-surface); border: var(--size-border) solid var(--color-border-soft); border-radius: var(--size-radius-md); cursor: pointer; display: grid; gap: var(--space-4); grid-template-columns: auto minmax(0, 1fr) auto; min-height: 150px; padding: var(--space-4); position: relative; transition: border-color .15s ease, box-shadow .15s ease, background .15s ease; }
+.processing-directory-primary-card:hover, .processing-directory-primary-card:focus-visible { background: var(--color-surface-alt); border-color: var(--color-primary); box-shadow: var(--shadow-card); outline: none; }
+.processing-directory-primary-card--sets, .processing-directory-primary-card--files { grid-template-columns: auto minmax(0, 1fr); }
+.processing-directory-card-actions { display: flex; flex-wrap: wrap; gap: var(--space-2); grid-column: 2 / -1; }
+.processing-directory-card-actions small { color: var(--color-ink-muted); flex-basis: 100%; font-size: var(--font-size-xs); }
+.processing-directory-file-actions .button { font-size: var(--font-size-xs); }
+.processing-directory-primary-arrow { align-self: center; color: var(--color-primary); }
+.processing-directory-secondary { margin-top: var(--space-0); }
+.processing-directory-secondary-list { display: grid; gap: var(--space-2); }
+.processing-directory-secondary-card { align-items: center; border: var(--size-border) solid var(--color-border-soft); border-radius: var(--size-radius-sm); cursor: pointer; display: grid; gap: var(--space-3); grid-template-columns: auto minmax(0, 1fr) auto; padding: var(--space-3); }
+.processing-directory-secondary-card:hover, .processing-directory-secondary-card:focus-visible { background: var(--color-surface-alt); border-color: var(--color-primary); outline: none; }
+.processing-directory-secondary-card .processing-module-card__icon { height: var(--size-control); width: var(--size-control); }
+.processing-directory-secondary-card .processing-module-card__copy { gap: var(--space-1); }
+.processing-directory-secondary-card .processing-module-card__copy strong { font-size: var(--font-size-sm); }
+.processing-directory-secondary-card .processing-module-card__copy small { color: var(--color-ink-muted); font-size: var(--font-size-xs); line-height: 1.45; }
+.processing-directory-secondary-card .badge { font-size: var(--font-size-xs); }
 .processing-directory-steps { display: grid; gap: var(--space-3); grid-template-columns: repeat(7, minmax(var(--space-0), 1fr)); }
+.processing-directory-steps--primary { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.processing-directory-steps--primary .processing-directory-step { min-height: 220px; }
+.processing-directory-steps--primary .processing-directory-step .button { margin-top: auto; width: 100%; }
+.processing-module-card--secondary { display: grid; gap: var(--space-4); grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; }
+.processing-module-card--secondary .processing-module-card__copy p { min-height: auto; }
 .processing-directory-step { border: var(--size-border) solid var(--color-border-soft); border-radius: var(--size-radius-md); display: flex; flex-direction: column; gap: var(--space-3); min-width: var(--space-0); padding: var(--space-3); position: relative; }
 .processing-directory-step__marker { align-items: center; background: var(--color-neutral-badge); border-radius: 50%; color: var(--color-ink-muted); display: flex; flex: 0 0 var(--size-control); font-weight: var(--weight-bold); height: var(--size-control); justify-content: center; width: var(--size-control); }
 .processing-directory-step--success .processing-directory-step__marker { background: var(--color-success-soft); color: var(--color-success); }

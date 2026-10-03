@@ -7,16 +7,12 @@ type Props = { onBack: () => void; notify: (message: string) => void };
 type PasswordEntry = { id: string; type: string; description: string; passwords: string[]; file: string; custodian: string };
 type TableSection = { title: string; columns: readonly string[]; rows: readonly (readonly string[])[] };
 type ReportRun = { id: string; title: string; time: string; sets: string; sections: TableSection[]; note: string };
-type Candidate = { name: string; size: number; readable: boolean };
-type ReplacementRow = { candidate: Candidate; storageId: string; extension: string; originalExtension: string; originalSize: string; originalStatus: string; status: "success" | "warning" | "failed"; reason: string };
-type Batch = { id: string; name: string; rows: ReplacementRow[]; state: "ready" | "complete" | "republished" };
 function useSupportState() {
   const [fileStates, setFileStates] = useState<Record<string, keyof typeof copy.processing.sets.fileExceptionsView.statusLabels>>({});
   const [entries, setEntries] = useState<PasswordEntry[]>(copy.processing.passwordBank.rows.map(row => ({ ...row, passwords: [...row.passwords] })));
   const [audits, setAudits] = useState<string[][]>(copy.processing.passwordBank.auditRows.map(row => [...row]));
   const [reports, setReports] = useState<ReportRun[]>([]);
-  const [batches, setBatches] = useState<Batch[]>([]);
-  return { entries, setEntries, audits, setAudits, reports, setReports, batches, setBatches, fileStates, setFileStates };
+  return { entries, setEntries, audits, setAudits, reports, setReports, fileStates, setFileStates };
 }
 const SupportContext = createContext<ReturnType<typeof useSupportState> | null>(null);
 export function ProcessingSupportProvider({ children }: { children: ReactNode }) { const state = useSupportState(); return <SupportContext.Provider value={state}>{children}</SupportContext.Provider>; }
@@ -85,73 +81,5 @@ export function ReportsPage({ onBack, notify, initialReport = "inventory-summary
   return <div className="page processing-support-page"><Back onBack={onBack} /><PageHeader title={t.title} subtitle={t.subtitle} ids={copy.processing.ids} />
     {!result ? <Panel title={t.selectReport} actions={<Button onClick={() => setHistoryOpen(true)}>{t.history}</Button>}><div className="processing-report-selector"><Field label={t.selectReport}><select aria-label={t.selectReport} size={14} value={reportId} onChange={e => { setReportId(e.target.value); setSelected([]); }}>{t.reports.map(report => <option key={report.id} value={report.id}>{report.title}</option>)}</select></Field><section><h3>{t.selectSet}</h3><p className="admin-note">{t.eligibility}</p>{eligible.map(set => <label className="processing-support-choice" key={set.id}><input type="checkbox" checked={selected.includes(set.id)} onChange={() => setSelected(current => current.includes(set.id) ? current.filter(id => id !== set.id) : [...current, set.id])} /><span><strong>{set.name}</strong><small>{set.label}</small></span></label>)}{!eligible.length && <p>{t.noSets}</p>}<Button disabled={!selected.some(id => eligible.some(set => set.id === id))} variant="primary" onClick={generate}>{t.generate}</Button></section></div></Panel> : <Panel title={result.title} actions={<><Button onClick={() => setResult(null)}>{t.new}</Button><Button onClick={() => DownloadCSV(t.exportName, [[result.title, result.time, result.sets], ...result.sections.flatMap(section => [[section.title], section.columns, ...section.rows])])}>{t.export}</Button><Button onClick={() => setHistoryOpen(true)}>{t.history}</Button></>}><p className="admin-note">{t.sample} · {result.time}</p><p>{result.note}</p>{result.sections.map((section, i) => <Table key={i} section={section} />)}</Panel>}
     <Modal open={historyOpen} title={t.history} onClose={() => setHistoryOpen(false)} footer={<Button onClick={() => setHistoryOpen(false)}>{copy.common.close}</Button>}><div className="table-scroll"><table><thead><tr>{t.historyColumns.map(column => <th key={column}>{column}</th>)}</tr></thead><tbody>{reports.map(run => <tr key={run.id}><td>{run.time}</td><td><button className="table-link" onClick={() => { setResult(run); setHistoryOpen(false); }}>{run.title}</button></td><td>{run.sets}</td></tr>)}{!reports.length && <tr><td colSpan={t.historyColumns.length}>{t.empty}</td></tr>}</tbody></table></div></Modal>
-  </div>;
-}
-
-async function readZip(file: File): Promise<Candidate[]> {
-  const fail = () => new Error(copy.processing.replacementPage.invalidZip);
-  const tail = new DataView(await file.slice(Math.max(0, file.size - 65557)).arrayBuffer());
-  let end = tail.byteLength - 22;
-  while (end >= 0 && tail.getUint32(end, true) !== 0x06054b50) end--;
-  if (end < 0 || tail.getUint16(end + 4, true) !== 0 || tail.getUint16(end + 6, true) !== 0) throw fail();
-  const count = tail.getUint16(end + 10, true), size = tail.getUint32(end + 12, true), offset = tail.getUint32(end + 16, true);
-  if (!count || count > 10000 || size > 16777216 || offset + size > file.size) throw fail();
-  const buffer = await file.slice(offset, offset + size).arrayBuffer(); const view = new DataView(buffer); const result: Candidate[] = []; let p = 0;
-  for (let i = 0; i < count; i++) {
-    if (p + 46 > size || view.getUint32(p, true) !== 0x02014b50) throw fail();
-    const flags = view.getUint16(p + 8, true), method = view.getUint16(p + 10, true), bytes = view.getUint32(p + 24, true);
-    const nameSize = view.getUint16(p + 28, true), extra = view.getUint16(p + 30, true), comment = view.getUint16(p + 32, true);
-    if (p + 46 + nameSize + extra + comment > size || bytes === 0xffffffff) throw fail();
-    const path = new TextDecoder().decode(new Uint8Array(buffer, p + 46, nameSize));
-    if (!path.endsWith("/")) result.push({ name: path.split(/[\\/]/).pop()!, size: bytes, readable: !(flags & 1) && (method === 0 || method === 8) });
-    p += 46 + nameSize + extra + comment;
-  }
-  if (!result.length) throw fail(); return result;
-}
-
-export function ReplacementFilesPage({ onBack }: Props) {
-  const t = copy.processing.replacementPage;
-  const { batches, setBatches, fileStates, setFileStates } = useSupport();
-  const [open, setOpen] = useState(false), [busy, setBusy] = useState(false), [sample, setSample] = useState(false), [includeWarnings, setIncludeWarnings] = useState(false);
-  const [file, setFile] = useState<File | null>(null);
-  const [error, setError] = useState("");
-  const [activeId, setActiveId] = useState<string | null>(null);
-  const [system, setSystem] = useState("");
-  const batch = batches.find(batch => batch.id === activeId);
-  const begin = () => { setOpen(true); setFile(null); setSample(false); setError(""); setActiveId(null); setIncludeWarnings(false); setSystem(""); };
-  const upload = async () => {
-    if (!sample && (!file || !file.name.toLowerCase().endsWith(".zip") || file.size > t.maxBytes)) { setError(t.invalid); return; }
-    setBusy(true); setError("");
-    try {
-      const candidates: readonly Candidate[] = sample ? t.sampleCandidates : await readZip(file!);
-      const ids = candidates.map(candidate => candidate.name.slice(0, candidate.name.lastIndexOf(".")));
-      const rows = candidates.map((candidate, i): ReplacementRow => {
-        const storageId = ids[i], extension = candidate.name.slice(candidate.name.lastIndexOf(".")).toLowerCase();
-        const fixture = t.originals.find(original => original.storageId === storageId);
-        const originalFile = copy.processing.sets.fileExceptionsView.rows.find(row => row.storageId === storageId);
-        const original = fixture ? { ...fixture, status: (originalFile && fileStates[originalFile.id]) || fixture.status } : undefined;
-        const failed = !candidate.readable || ids.indexOf(storageId) !== i || !original || original.status !== "open";
-        const warning = original && (original.extension !== extension || Math.abs(candidate.size - original.size) > original.size * 0.1);
-        return { candidate, storageId, extension, originalExtension: original?.extension ?? t.dash, originalSize: original ? String(original.size) : t.dash, originalStatus: original ? copy.processing.sets.fileExceptionsView.statusLabels[original.status] : t.dash, status: failed ? "failed" : warning ? "warning" : "success", reason: !candidate.readable ? t.reasonExtract : ids.indexOf(storageId) !== i ? t.reasonDuplicate : !original ? t.reasonMissing : original.status !== "open" ? t.reasonResolved : warning ? t.reasonWarning : t.reasonMatch };
-      });
-      const next: Batch = { id: crypto.randomUUID(), name: sample ? t.sampleName : file!.name, rows, state: "ready" };
-      setBatches(current => [next, ...current]); setActiveId(next.id); setSystem(t.uploadNotice);
-    } catch (error) { setError(error instanceof Error ? error.message : t.readError); } finally { setBusy(false); }
-  };
-  const advance = (state: Batch["state"]) => {
-    if (state === "complete" && batch) {
-      const ids = batch.rows.filter(row => row.status !== "failed").map(row => row.storageId);
-      setFileStates(current => ({ ...current, ...Object.fromEntries(copy.processing.sets.fileExceptionsView.rows.filter(row => ids.includes(row.storageId)).map(row => [row.id, "resolved" as const])) }));
-    }
-    setBatches(current => current.map(item => item.id === activeId ? { ...item, state } : item)); setSystem(state === "complete" ? t.replaceSystem : t.publishSystem);
-  };
-  const counts = (batch: Batch, status: ReplacementRow["status"]) => batch.rows.filter(row => row.status === status).length;
-  const log = batch ? { title: t.log, columns: t.logColumns, rows: batch.rows.map(row => [row.candidate.name, row.extension, String(row.candidate.size), row.storageId, row.originalExtension, row.originalSize, row.originalStatus, t[row.status], row.reason]) } : null;
-  return <div className="page processing-support-page"><Back onBack={onBack} /><PageHeader title={t.title} subtitle={t.subtitle} ids={copy.processing.ids} />
-    <Panel title={t.title} actions={<Button variant="primary" onClick={begin}>{t.new}</Button>}><div className="table-scroll"><table><thead><tr>{t.columns.map(column => <th key={column}>{column}</th>)}</tr></thead><tbody>{batches.map(batch => <tr key={batch.id}><td><button className="table-link" onClick={() => { setActiveId(batch.id); setOpen(true); setSystem(""); setIncludeWarnings(false); }}>{batch.name}</button></td><td><Badge tone={batch.state === "ready" ? "warning" : "success"}>{t[batch.state]}</Badge></td><td>{counts(batch, "success")}</td><td>{counts(batch, "warning")}</td><td>{counts(batch, "failed")}</td></tr>)}{!batches.length && <tr><td colSpan={t.columns.length}>{t.empty}</td></tr>}</tbody></table></div></Panel>
-    <Modal open={open} wide title={t.new} onClose={() => { if (!busy) setOpen(false); }} footer={<><Button disabled={busy} onClick={() => setOpen(false)}>{copy.common.close}</Button>{batch?.state === "ready" && <Button variant="primary" disabled={(!counts(batch, "success") && !counts(batch, "warning")) || (counts(batch, "warning") > 0 && !includeWarnings)} onClick={() => advance("complete")}>{t.retry}</Button>}{batch?.state === "complete" && <Button variant="primary" onClick={() => advance("republished")}>{t.republish}</Button>}</>}>
-      {!batch ? <div className="processing-support-form"><p>{t.zipHint}</p><Field label={t.select}><input aria-label={t.select} type="file" accept=".zip" disabled={busy} onChange={e => { setFile(e.target.files?.[0] ?? null); setSample(false); setError(""); }} /></Field><Button disabled={busy} onClick={() => { setSample(true); setFile(null); setError(""); }}>{t.demo}</Button>{sample && <strong>{t.sampleName}</strong>}<Button variant="primary" disabled={busy || (!sample && !file)} onClick={() => void upload()}>{t.upload}</Button>{error && <p role="alert" className="processing-form-error">{error}</p>}</div> : <><div className="processing-replacement-counts">{(["success", "warning", "failed"] as const).map(status => <div key={status}><Badge tone={status === "success" ? "success" : status === "warning" ? "warning" : "danger"}>{t[status]}</Badge><strong>{counts(batch, status)}</strong></div>)}</div>{log && <div className="processing-replacement-log"><Table section={log} /></div>}<Button onClick={() => log && DownloadCSV(t.exportName, [log.columns, ...log.rows])}>{t.export}</Button><p>{t.retryHint}</p>{batch.state === "ready" && counts(batch, "warning") > 0 && <label className="processing-support-choice"><input type="checkbox" checked={includeWarnings} onChange={e => setIncludeWarnings(e.target.checked)} />{t.warningConfirm}</label>}{batch.state !== "ready" && <Badge tone="success">{t[batch.state]}</Badge>}</>}
-      {system && <div className="processing-system-notice" role="status"><strong>{t.systemTitle}</strong><p>{system}</p></div>}
-    </Modal>
   </div>;
 }

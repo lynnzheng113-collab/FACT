@@ -1,10 +1,10 @@
-import { useState, type ReactNode } from "react";
-import { AlertTriangle, ArrowLeft, BarChart3, ChevronRight, Database, FileText, HelpCircle, KeyRound, Layers3, PackageSearch, Plus, RefreshCw, Replace, Save, Search, Settings2 } from "lucide-react";
-import { ProcessingSupportProvider, useProcessingFileState, PasswordBankPage, ReportsPage, ReplacementFilesPage } from "./ProcessingSupportPages";
+import { useState, type KeyboardEvent, type ReactNode } from "react";
+import { AlertTriangle, ArrowLeft, BarChart3, ChevronRight, Database, FileText, HelpCircle, KeyRound, Layers3, PackageSearch, Plus, RefreshCw, Save, Search, Settings2 } from "lucide-react";
+import { ProcessingSupportProvider, useProcessingFileState, PasswordBankPage, ReportsPage } from "./ProcessingSupportPages";
 import { copy } from "../constants/copy";
 import { Badge, Button, CheckRow, Field, Modal, PageHeader, Panel, Tabs, Toggle } from "../components/UI";
 
-type ProcessingView = "directory" | "sets" | "set-detail" | "profile" | "sources" | "password" | "inventory" | "reports" | "errors" | "files" | "file-exceptions" | "replacement" | "inventory-report" | "discovery-report";
+type ProcessingView = "directory" | "sets" | "set-detail" | "profile" | "sources" | "password" | "inventory" | "reports" | "errors" | "files" | "file-exceptions" | "inventory-report" | "discovery-report";
 type ModuleId = Exclude<ProcessingView, "directory" | "set-detail">;
 
 function SettingRadioGroup({ name, options, value, onChange }: { name: string; options: readonly string[]; value: string; onChange: (value: string) => void }) {
@@ -19,24 +19,30 @@ function StatusBadge({ status, tone }: { status: string; tone: "success" | "warn
   return <Badge tone={tone}>{status}</Badge>;
 }
 
-function Directory({ onOpen }: { onOpen: (view: ModuleId) => void }) {
+function Directory({ onOpen, onCreateSet, onViewSets, onOpenFiles }: { onOpen: (view: ModuleId) => void; onCreateSet: () => void; onViewSets: () => void; onOpenFiles: (initialView?: string) => void }) {
   const t = copy.processing;
+  const primaryModules = t.directoryModules.slice(0, 3);
+  const secondaryModules = t.directoryModules.slice(3);
+  const openByKeyboard = (event: KeyboardEvent, action: () => void) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); action(); } };
+  const openPrimary = (id: string) => id === "sets" ? onOpen("sets") : id === "files" ? onOpenFiles() : onOpen(id as ModuleId);
   return <div className="page processing-directory">
     <PageHeader title={t.directoryTitle} subtitle={t.directorySubtitle} ids={t.ids} />
-    <Panel className="processing-directory-workflow" title={t.directoryStepsTitle} subtitle={t.subtitle}>
-      <div className="processing-directory-steps">{t.directoryWorkflow.map((step, index) => <div className={`processing-directory-step processing-directory-step--${step.tone}`} key={step.order}>
-        <div className="processing-directory-step__marker">{step.order}</div>
-        <div className="processing-directory-step__copy"><strong>{step.title}</strong><small>{step.detail}</small><StatusBadge status={step.status} tone={step.tone === "success" ? "success" : step.tone === "warning" ? "warning" : "neutral"} /></div>
-        {index < t.directoryWorkflow.length - 1 && <ChevronRight className="processing-directory-step__arrow" size={18} aria-hidden="true" />}
-      </div>)}</div>
-    </Panel>
-    <Panel title={t.directoryModulesTitle}>
-      <div className="processing-module-grid">{t.directoryModules.map(module => <article className="processing-module-card" key={module.id}>
-        <div className="processing-module-card__icon"><ModuleIcon id={module.id} /></div>
-        <div className="processing-module-card__copy"><h3>{module.title}</h3><p>{module.detail}</p><StatusBadge status={module.status} tone={module.tone === "success" ? "success" : module.tone === "warning" ? "warning" : module.tone === "danger" ? "danger" : "neutral"} /></div>
-        <Button onClick={() => onOpen(module.id as ModuleId)} icon={<ChevronRight size={16} />}>{t.directoryOpen}</Button>
-      </article>)}</div>
-    </Panel>
+    <div className="processing-directory-layout">
+      <Panel className="processing-directory-workflow" title={t.directoryPrimaryTitle} subtitle={t.directoryPrimaryHint}>
+        <div className="processing-directory-primary-list">{primaryModules.map((module, index) => <article className={`processing-directory-primary-card processing-directory-primary-card--${module.id}`} key={module.id} role="button" tabIndex={0} onClick={() => openPrimary(module.id)} onKeyDown={event => openByKeyboard(event, () => openPrimary(module.id))}>
+          <div className="processing-directory-step__marker">{index + 1}</div>
+          <div className="processing-directory-step__copy"><strong>{module.title}</strong><small>{module.detail}</small>{module.id === "profile" && <StatusBadge status={module.status} tone="success" />}</div>
+          {module.id === "sets" && <div className="processing-directory-card-actions" onClick={event => event.stopPropagation()}><Button variant="primary" onClick={onCreateSet} icon={<Plus size={16} />}>{t.sets.quickCreateSet}</Button><Button onClick={onViewSets} icon={<ChevronRight size={16} />}>{t.sets.allSets}</Button></div>}
+          {module.id === "files" && <div className="processing-directory-card-actions processing-directory-file-actions" onClick={event => event.stopPropagation()}><small>{t.directoryFilesHint}</small>{[t.sets.fileExceptionsView.allFiles, t.sets.fileExceptionsView.current, t.sets.fileExceptionsView.all, t.sets.fileExceptionsView.deleted].map(view => <Button key={view} variant="quiet" onClick={() => onOpenFiles(view)}>{view}</Button>)}</div>}
+          {module.id !== "sets" && module.id !== "files" && <ChevronRight className="processing-directory-primary-arrow" size={20} aria-hidden="true" />}
+        </article>)}</div>
+      </Panel>
+      <Panel className="processing-directory-secondary" title={t.directorySecondaryTitle} subtitle={t.directorySecondaryHint}>
+        <div className="processing-directory-secondary-list">{secondaryModules.map(module => <article className="processing-directory-secondary-card" key={module.id} role="button" tabIndex={0} onClick={() => onOpen(module.id as ModuleId)} onKeyDown={event => openByKeyboard(event, () => onOpen(module.id as ModuleId))}>
+          <div className="processing-module-card__icon"><ModuleIcon id={module.id} /></div><div className="processing-module-card__copy"><strong>{module.title}</strong><small>{module.detail}</small></div>{module.id === "errors" && module.status && <StatusBadge status={module.status} tone="danger" />}
+        </article>)}</div>
+      </Panel>
+    </div>
   </div>;
 }
 
@@ -50,15 +56,15 @@ function ModuleIcon({ id }: { id: string }) {
   if (id === "reports") return <BarChart3 {...props} />;
   if (id === "errors") return <AlertTriangle {...props} />;
   if (id === "files") return <FileText {...props} />;
-  return <Replace {...props} />;
+  return <FileText {...props} />;
 }
 
-function ProcessingSetsPage({ onBack, onOpenSet, notify }: { onBack: () => void; onOpenSet: (id: string) => void; notify: (message: string) => void }) {
+function ProcessingSetsPage({ onBack, onCreateSet, onOpenSet }: { onBack: () => void; onCreateSet: () => void; onOpenSet: (id: string) => void }) {
   const t = copy.processing;
   const [query, setQuery] = useState("");
   const rows = t.rows.filter(row => `${row.name} ${row.id}`.toLowerCase().includes(query.toLowerCase()));
   return <div className="page processing-module-page">
-    <div className="module-toolbar"><Button onClick={onBack} icon={<ArrowLeft size={16} />}>{t.backToDirectory}</Button><Button variant="primary" icon={<Plus size={16} />} onClick={() => onOpenSet("new")}>{t.sets.newSet}</Button><Button onClick={() => notify(t.sets.saved)}>{t.sets.quickCreate}</Button></div>
+    <div className="module-toolbar"><Button onClick={onBack} icon={<ArrowLeft size={16} />}>{t.backToDirectory}</Button><Button variant="primary" icon={<Plus size={16} />} onClick={onCreateSet}>{t.sets.quickCreateSet}</Button></div>
     <PageHeader title={t.sets.title} subtitle={t.sets.subtitle} ids={t.ids} />
     <Panel className="table-panel" title={t.sets.allSets} actions={<label className="processing-search"><Search size={16} aria-hidden="true" /><input aria-label={t.sets.search} placeholder={t.sets.search} value={query} onChange={event => setQuery(event.target.value)} /></label>}>
       <div className="table-scroll"><table><thead><tr>{t.sets.columns.map(column => <th key={column}>{column}</th>)}</tr></thead><tbody>{rows.map(row => <tr key={row.id} className="processing-set-row" onClick={() => onOpenSet(row.id)}><td><strong>{row.name}</strong><small>{row.id}</small></td><td>{t.profileValue}</td><td>{row.id === t.rows[0].id ? t.sets.oneOfOne : t.sets.oneOfTwo}</td><td><Badge tone={row.tone}>{row.stage}</Badge></td><td><Badge tone={row.tone}>{row.progress === 100 ? t.directoryCompleted : t.directoryInProgress}</Badge></td><td>{row.updated}</td></tr>)}{!rows.length && <tr><td colSpan={t.sets.columns.length} className="admin-empty">{t.sets.noData}</td></tr>}</tbody></table></div>
@@ -185,12 +191,12 @@ function JobErrorsPage({ onBack, notify }: { onBack: () => void; notify: (messag
   </div>;
 }
 
-function FilesPage({ onBack, notify, onReplace, exceptionsInitially = false }: { onBack: () => void; notify: (message: string) => void; onReplace: () => void; exceptionsInitially?: boolean }) {
+function FilesPage({ onBack, notify, initialView, exceptionsInitially = false }: { onBack: () => void; notify: (message: string) => void; initialView?: string; exceptionsInitially?: boolean }) {
   const t = copy.processing.sets.fileExceptionsView;
   type FileRow = typeof t.rows[number];
   type FileState = keyof typeof t.statusLabels;
   type Filter = { name: string; view: string; query: string; phase: string; category: string; custodian: string };
-  const [activeView, setActiveView] = useState<string>(exceptionsInitially ? t.current : t.allFiles);
+  const [activeView, setActiveView] = useState<string>(initialView ?? (exceptionsInitially ? t.current : t.allFiles));
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const { fileStates: states, setFileStates: setStates } = useProcessingFileState();
   const [events, setEvents] = useState<Record<string, { state: FileState; time: string }[]>>({});
@@ -243,7 +249,7 @@ function FilesPage({ onBack, notify, onReplace, exceptionsInitially = false }: {
     <div className="module-toolbar"><Button onClick={onBack} icon={<ArrowLeft size={16} />}>{exceptionsInitially ? t.backToSet : copy.processing.backToDirectory}</Button></div>
     <PageHeader title={t.title} subtitle={t.subtitle} ids={copy.processing.ids} />
     <Tabs items={[t.allFiles, t.current, t.all, t.deleted]} active={activeView} onChange={changeView} />
-    <Panel title={activeView} actions={<><select aria-label={t.dashboard} value={dashboard} onChange={e => setDashboard(e.target.value)}>{t.dashboards.map(value => <option key={value}>{value}</option>)}</select><Button onClick={onReplace}>{t.replace}</Button></>}>
+    <Panel title={activeView} actions={<select aria-label={t.dashboard} value={dashboard} onChange={e => setDashboard(e.target.value)}>{t.dashboards.map(value => <option key={value}>{value}</option>)}</select>}>
       <div className="processing-exception-filters">
         <input aria-label={t.search} placeholder={t.search} value={query} onChange={e => { setQuery(e.target.value); setSelectedIds([]); }} />
         <select value={custodian} onChange={e => { setCustodian(e.target.value); setSelectedIds([]); }} aria-label={t.custodian}>{t.custodianOptions.map((value, i) => <option value={i === 0 ? "" : value} key={value}>{value}</option>)}</select>
@@ -329,17 +335,19 @@ export function ProcessingPage({ notify }: { notify: (message: string) => void }
 function ProcessingContent({ notify }: { notify: (message: string) => void }) {
   const [view, setView] = useState<ProcessingView>("directory");
   const [selectedSet, setSelectedSet] = useState<string>(copy.processing.rows[1].id);
-  if (view === "directory") return <Directory onOpen={next => setView(next)} />;
-  if (view === "sets") return <ProcessingSetsPage onBack={() => setView("directory")} onOpenSet={id => { setSelectedSet(id); setView("set-detail"); }} notify={notify} />;
+  const [initialFileView, setInitialFileView] = useState<string | undefined>(undefined);
+  const createSet = () => { setSelectedSet("new"); setView("set-detail"); };
+  const viewSets = () => setView("sets");
+  if (view === "directory") return <Directory onOpen={next => setView(next)} onCreateSet={createSet} onViewSets={viewSets} onOpenFiles={initialView => { setInitialFileView(initialView); setView("files"); }} />;
+  if (view === "sets") return <ProcessingSetsPage onBack={() => setView("directory")} onCreateSet={createSet} onOpenSet={id => { setSelectedSet(id); setView("set-detail"); }} />;
   if (view === "set-detail") return <ProcessingSetDetail setId={selectedSet} onBack={() => setView("sets")} onOpenModule={next => setView(next)} notify={notify} />;
   if (view === "sources") return <ProcessingDataSourcesPage onBack={() => setView("directory")} />;
   if (view === "errors") return <JobErrorsPage onBack={() => setView("directory")} notify={notify} />;
-  if (view === "files") return <FilesPage onReplace={() => setView("replacement")} onBack={() => setView("directory")} notify={notify} />;
-  if (view === "file-exceptions") return <FilesPage onReplace={() => setView("replacement")} exceptionsInitially onBack={() => setView("set-detail")} notify={notify} />;
+  if (view === "files") return <FilesPage initialView={initialFileView} onBack={() => { setInitialFileView(undefined); setView("directory"); }} notify={notify} />;
+  if (view === "file-exceptions") return <FilesPage exceptionsInitially onBack={() => setView("set-detail")} notify={notify} />;
   if (view === "profile") return <ProcessingProfilePage onBack={() => setView("directory")} notify={notify} />;
   if (view === "password") return <PasswordBankPage onBack={() => setView("directory")} notify={notify} />;
   if (view === "reports" || view === "inventory-report" || view === "discovery-report") return <ReportsPage onBack={() => setView("directory")} notify={notify} initialReport={view === "discovery-report" ? "discovered-custodian" : "inventory-summary"} />;
-  if (view === "replacement") return <ReplacementFilesPage onBack={() => setView("directory")} notify={notify} />;
   return <ModulePlaceholder view={view} onBack={() => setView("directory")} />;
 }
 
