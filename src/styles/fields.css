@@ -5,6 +5,17 @@
 .field-order, .field-row-actions, .field-choice-footer { display: flex; align-items: center; flex-wrap: wrap; gap: var(--space-2); }
 .field-order input { width: var(--size-field-order); }
 .field-row-actions .button { padding: var(--space-1) var(--space-2); }
+.field-bulk-actions { display: flex; align-items: center; flex-wrap: wrap; gap: var(--space-2); }
+.field-table-index, .field-table-selection, .field-table-icon { text-align: center; white-space: nowrap; }
+.field-table-index { color: var(--color-ink-muted); }
+.field-table-icon .icon-button { margin: 0 auto; }
+.field-permission-inheritance { display: grid; gap: var(--space-1); padding: var(--space-3); margin-bottom: var(--space-4); background: var(--color-surface-alt); border: var(--size-border) solid var(--color-border-soft); }
+.field-permission-layout { display: grid; grid-template-columns: minmax(var(--space-0), 1fr) minmax(var(--space-0), 1fr); gap: var(--space-6); }
+.field-permission-groups, .field-permission-actions { display: grid; align-content: start; gap: var(--space-3); }
+.field-permission-members { display: grid; gap: var(--space-2); padding: var(--space-3); background: var(--color-surface-alt); border: var(--size-border) solid var(--color-border-soft); }
+.field-permission-members span { color: var(--color-ink-muted); font-size: var(--font-size-sm); }
+.field-permission-actions { padding: var(--space-4); border: var(--size-border) solid var(--color-border-soft); border-radius: var(--size-radius-md); }
+@media (max-width: 760px) { .field-permission-layout { grid-template-columns: minmax(var(--space-0), 1fr); } }
 .fields-admin .modal__footer { position: sticky; bottom: var(--space-0); }
 .field-choice-filter { padding: var(--space-3) var(--space-4); background: var(--color-surface-strong); }
 .field-choice-input { min-height: var(--size-transfer-column); }
