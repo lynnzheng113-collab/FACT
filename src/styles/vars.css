@@ -109,6 +109,10 @@
   --size-export-status: 240px;
   --size-export-table: 1000px;
   --size-export-footer-note: 370px;
+  --size-analytics-form: 900px;
+  --size-analytics-stage: 220px;
+  --size-analytics-choice: 420px;
+  --size-custodian-picker: 420px;
 
   --size-processing-error-table: 1800px;
   --size-processing-error-id: 170px;

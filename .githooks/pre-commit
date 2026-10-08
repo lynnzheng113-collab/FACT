@@ -1,0 +1,14 @@
+#!/bin/sh
+set -eu
+root=$(git rev-parse --show-toplevel)
+cd "$root"
+node scripts/feature-ledger.mjs check
+node scripts/feature-ledger.mjs check --staged
+# 校验工作区后，再要求源码和台账文件与暂存内容一致，防止只暂存代码遗漏台账。
+if ! git diff --quiet -- src public package.json package-lock.json index.html vite.config.ts tsconfig.json tsconfig.app.json tsconfig.node.json docs/feature-ledger.json docs/FEATURE_LEDGER.md docs/feature-ledger-baseline.json; then
+  echo '请将已核对的源码和功能台账一起暂存；当前暂存内容与核对工作区不一致。' >&2
+  exit 1
+fi
+for file in docs/feature-ledger.json docs/FEATURE_LEDGER.md docs/feature-ledger-baseline.json; do
+  git ls-files --error-unmatch "$file" >/dev/null || { echo "台账未暂存：$file" >&2; exit 1; }
+done

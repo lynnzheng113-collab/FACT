@@ -1,21 +1,25 @@
 import { useMemo, useState } from "react";
-import { ChevronDown, FileSpreadsheet, FileText, Filter, Lock, Mail, Plus, Save, Search } from "lucide-react";
+import { ChevronDown, FileSpreadsheet, FileText, Filter, FolderInput, Lock, Mail, Plus, Save, Search, Shield } from "lucide-react";
 import { copy, type PageId } from "../constants/copy";
 import { Badge, Button, CheckRow, Field, Modal, PageHeader, Toggle } from "../components/UI";
-
 import { useAdministration } from "../state/Administration";
 import { createId } from "../state/ids";
 
 const documentIcon = (type: string) => type.includes("Email") ? Mail : type.includes("Excel") ? FileSpreadsheet : FileText;
+type BrowserMode = "folders" | "saved";
 
 export function DocumentsPage({ navigate, notify }: { navigate: (page: PageId) => void; notify: (message: string) => void }) {
-  const { savedSearches, setSavedSearches, documentView, setDocumentView } = useAdministration();
-  const { query, includeFamily, folder, reportTerm } = documentView;
-  const setQuery = (query: string) => setDocumentView(current => ({ ...current, query }));
-  const setIncludeFamily = (includeFamily: boolean) => setDocumentView(current => ({ ...current, includeFamily }));
-  const [searchName, setSearchName] = useState<string>(copy.documents.savedSearchNameValue);
-  const [saveError, setSaveError] = useState(false);
+  const { savedSearches, setSavedSearches, dtSearchIndexes, documentView, setDocumentView } = useAdministration();
+  const { query, includeFamily, folder, reportTerm, searchIndexId } = documentView;
+  const [browserMode, setBrowserMode] = useState<BrowserMode>("folders");
+  const [searchExecuted, setSearchExecuted] = useState(false);
+  const [activeSearchId, setActiveSearchId] = useState<string | null>(null);
   const [folderSearch, setFolderSearch] = useState("");
+  const [savedFolder, setSavedFolder] = useState<string>(copy.documents.searchFolderOptions[0]);
+  const [searchName, setSearchName] = useState<string>(copy.documents.savedSearchNameValue);
+  const [saveOwner, setSaveOwner] = useState<string>(copy.documents.savedSearchOwnerMe);
+  const [saveVisibility, setSaveVisibility] = useState<string>(copy.documents.savedSearchPrivate);
+  const [saveError, setSaveError] = useState(false);
   const [autoRun, setAutoRun] = useState(false);
   const [saveOpen, setSaveOpen] = useState(false);
   const [sampleOpen, setSampleOpen] = useState(false);
@@ -27,97 +31,88 @@ export function DocumentsPage({ navigate, notify }: { navigate: (page: PageId) =
   const [sampleError, setSampleError] = useState(false);
   const [sampleResult, setSampleResult] = useState<number | null>(null);
   const [selected, setSelected] = useState<string[]>([]);
-  const docs = useMemo(() => copy.documents.docs.filter(doc => (includeFamily || doc.direct) && (reportTerm === null || doc.file.toLowerCase().includes(reportTerm.toLowerCase())) && (folder === 0 || (folder === 1 ? doc.responsive === copy.documents.docs[2].responsive : folder === 2 ? !doc.type.includes("Email") : folder === 3 ? doc.confidential === copy.documents.docs[0].confidential : doc.responsive === copy.documents.docs[0].responsive))), [includeFamily, folder, reportTerm]);
+  const [custodianOpen, setCustodianOpen] = useState(false);
+  const [custodians, setCustodians] = useState<string[]>([]);
+  const [moveOpen, setMoveOpen] = useState(false);
+  const [securityOpen, setSecurityOpen] = useState(false);
+  const [moveSearchId, setMoveSearchId] = useState<string | null>(null);
+  const [securityTarget, setSecurityTarget] = useState<"users" | "groups">("groups");
+  const [securityAccess, setSecurityAccess] = useState<string>(copy.documents.securityView);
 
-  const openDoc = (id: string, locked: boolean) => {
-    if (locked) {
-      notify(copy.documents.lockedMessage);
-      return;
+  const setQuery = (value: string) => setDocumentView(current => ({ ...current, query: value }));
+  const setIncludeFamily = (value: boolean) => setDocumentView(current => ({ ...current, includeFamily: value }));
+  const activeSavedSearch = savedSearches.find(search => search.id === activeSearchId);
+  const activeIndex = dtSearchIndexes.find(index => index.id === searchIndexId && index.status === copy.analytics.indexed);
+  const indexedSearch = activeIndex?.searchableSetId ? savedSearches.find(search => search.id === activeIndex.searchableSetId) : undefined;
+  const availableIndexes = dtSearchIndexes.filter(index => index.status === copy.analytics.indexed);
+  const selectSavedSearch = (search: typeof savedSearches[number]) => {
+    setActiveSearchId(search.id);
+    setBrowserMode("saved");
+    setSearchExecuted(true);
+    setQuery(search.query);
+    setIncludeFamily(search.includeFamily);
+    setDocumentView(current => ({ ...current, folder: 0, reportTerm: null, searchIndexId: null }));
+  };
+  const runAdHocSearch = () => {
+    setActiveSearchId(null);
+    setDocumentView(current => ({ ...current, searchIndexId: null }));
+    setSearchExecuted(true);
+    notify(copy.documents.searchRunSuccess);
+  };
+  const docs = useMemo(() => copy.documents.docs.filter(doc => {
+    if (!includeFamily && !doc.direct) return false;
+    if (reportTerm !== null && !doc.file.toLowerCase().includes(reportTerm.toLowerCase())) return false;
+    if (folder !== 0 && !(folder === 1 ? doc.responsive === copy.documents.docs[2].responsive : folder === 2 ? !doc.type.includes("Email") : folder === 3 ? doc.confidential === copy.documents.docs[0].confidential : doc.responsive === copy.documents.docs[0].responsive)) return false;
+    const effectiveQuery = indexedSearch?.query ?? (searchExecuted ? query : "");
+    if (effectiveQuery.trim()) {
+      const searchable = `${doc.id} ${doc.file} ${doc.type} ${doc.responsive} ${doc.confidential}`.toLowerCase();
+      if (!searchable.includes(effectiveQuery.trim().toLowerCase())) return false;
     }
-    setSelected([id]);
-    navigate("review");
+    return true;
+  }), [folder, includeFamily, indexedSearch?.query, query, reportTerm, searchExecuted]);
+  const groupedSearches = copy.documents.searchFolderOptions.map(folderName => ({ folderName, searches: savedSearches.filter(search => (search.folderName ?? copy.documents.searchFolderOptions[search.folder] ?? copy.documents.searchFolderOptions[0]) === folderName) }));
+  const openDoc = (id: string, locked: boolean) => { if (locked) { notify(copy.documents.lockedMessage); return; } setSelected([id]); navigate("review"); };
+  const saveCurrentSearch = () => {
+    if (!searchName.trim()) { setSaveError(true); return; }
+    const id = createId();
+    const folderIndex = Math.max(0, copy.documents.searchFolderOptions.map(String).indexOf(savedFolder));
+    setSavedSearches(current => [...current, { id, name: searchName.trim(), query, includeFamily, folder: folderIndex, folderName: savedFolder, owner: saveOwner, visibility: saveVisibility === copy.documents.savedSearchPublic ? "public" : "private", selectedFields: [copy.documents.conditionFieldValue], sort: copy.documents.controlNumberSort }]);
+    setActiveSearchId(id); setBrowserMode("saved"); setSearchExecuted(true); setSaveOpen(false); notify(copy.documents.saveSearchSuccess);
   };
 
-  return (
-    <div className="page page--documents">
-      <PageHeader title={copy.documents.title} subtitle={copy.documents.subtitle} ids={copy.documents.ids} />
-      <div className="documents-workbench">
-        <aside className="search-panel">
-          <div className="search-panel__section">
-            <button type="button" className="search-panel__title"><ChevronDown size={15} />{copy.documents.folders}</button>
-            <input aria-label={copy.common.search} placeholder={copy.common.search} value={folderSearch} onChange={event => setFolderSearch(event.target.value)} />
-            <div className="folder-list">
-              {copy.documents.folderItems.map((label, index) => label.toLowerCase().includes(folderSearch.toLowerCase()) && <button type="button" className={index === folder ? "is-active" : ""} key={label} onClick={() => setDocumentView(current => ({ ...current, folder: index, reportTerm: null }))}>{label}</button>)}
-            </div>
-          </div>
-          <div className="search-panel__section"><h2 className="search-panel__title">{copy.documents.savedSearches}</h2><div className="folder-list">{savedSearches.length ? savedSearches.map(search => <button type="button" key={search.id} onClick={() => setDocumentView({ query: search.query, folder: search.folder, includeFamily: search.includeFamily, reportTerm: null })}>{search.name}</button>) : <p>{copy.modules.savedEmpty}</p>}</div></div>
-          <div className="search-panel__section search-panel__conditions">
-            <div className="search-panel__heading"><button type="button" className="search-panel__title"><ChevronDown size={15} />{copy.documents.conditions}</button><Button icon={<Plus size={15} />}>{copy.documents.addCondition}</Button></div>
-            <div className="condition-card">
-              <div className="condition-card__top"><span>{copy.documents.conditionNumber}</span><strong>{copy.documents.conditionFieldValue}</strong><Filter size={14} /></div>
-              <Field label={copy.documents.conditionField}><select defaultValue={copy.documents.conditionFieldValue}><option>{copy.documents.conditionFieldValue}</option></select></Field>
-              <Field label={copy.documents.conditionOperator}><select defaultValue={copy.documents.conditionOperatorValue}><option>{copy.documents.conditionOperatorValue}</option></select></Field>
-              <Field label={copy.documents.conditionValue}><input value={query} onChange={(event) => setQuery(event.target.value)} /></Field>
-            </div>
-            <Toggle label={copy.documents.autoRun} checked={autoRun} onChange={() => setAutoRun(!autoRun)} />
-            <Button variant="primary" icon={<Search size={16} />}>{copy.documents.runSearch}</Button>
-          </div>
-        </aside>
+  return <div className="page page--documents">
+    <PageHeader title={copy.documents.title} subtitle={copy.documents.subtitle} ids={copy.documents.ids} />
+    <div className="documents-workbench">
+      <aside className="search-panel">
+        <div className="browser-switcher" role="tablist">
+          <button type="button" className={browserMode === "folders" ? "is-active" : ""} onClick={() => { setBrowserMode("folders"); setActiveSearchId(null); }}>{copy.documents.folders}</button>
+          <button type="button" className={browserMode === "saved" ? "is-active" : ""} onClick={() => { setBrowserMode("saved"); setActiveSearchId(null); }}>{copy.documents.savedSearches}</button>
+        </div>
+        {browserMode === "folders" ? <>
+          <div className="search-panel__section"><button type="button" className="search-panel__title"><ChevronDown size={15} />{copy.documents.folders}</button><input aria-label={copy.common.search} placeholder={copy.common.search} value={folderSearch} onChange={event => setFolderSearch(event.target.value)} /><div className="folder-list">{copy.documents.folderItems.map((label, index) => label.toLowerCase().includes(folderSearch.toLowerCase()) && <button type="button" className={index === folder && !activeSearchId && !searchIndexId ? "is-active" : ""} key={label} onClick={() => { setActiveSearchId(null); setSearchExecuted(false); setDocumentView(current => ({ ...current, folder: index, reportTerm: null, searchIndexId: null })); }}>{label}</button>)}</div></div>
+        </> : <div className="search-panel__section saved-search-browser"><div className="search-panel__heading"><button type="button" className="search-panel__title"><ChevronDown size={15} />{copy.documents.savedSearchBrowser}</button><Button icon={<Plus size={15} />} onClick={() => { setSearchName(copy.documents.savedSearchNameValue); setSaveError(false); setSaveOpen(true); }}>{copy.documents.createNewSavedSearch}</Button></div><button type="button" className="saved-search-root" onClick={() => { setActiveSearchId(null); setSearchExecuted(false); setDocumentView(current => ({ ...current, searchIndexId: null })); }}>{copy.documents.searchFolderRoot}</button>{groupedSearches.map(group => <div className="saved-search-group" key={group.folderName}><strong>{group.folderName}</strong>{group.searches.map(search => <div className={`saved-search-row ${activeSearchId === search.id ? "is-active" : ""}`} key={search.id}><button type="button" onClick={() => selectSavedSearch(search)}>{search.name}<small>{search.visibility === "public" ? copy.documents.savedSearchPublic : copy.documents.savedSearchPrivate}</small></button><div className="saved-search-row__actions"><button type="button" aria-label={`${copy.documents.moveSearch} ${search.name}`} title={copy.documents.moveSearch} onClick={() => { setMoveSearchId(search.id); setMoveOpen(true); }}><FolderInput size={14} /></button><button type="button" aria-label={`${copy.documents.security} ${search.name}`} title={copy.documents.security} onClick={() => { setMoveSearchId(search.id); setSecurityOpen(true); }}><Shield size={14} /></button></div></div>)}</div>)}{!savedSearches.length && <p>{copy.modules.savedEmpty}</p>}</div>}
 
-        <section className="document-results">
-          <div className="document-toolbar">
-            <select aria-label={copy.documents.allDocuments} defaultValue={copy.documents.allDocuments}><option>{copy.documents.allDocuments}</option></select>
-            <div className="document-toolbar__search"><Search size={16} /><input value={query} onChange={(event) => setQuery(event.target.value)} /></div>
-            <Button onClick={() => { setSaveError(false); setSaveOpen(true); }} icon={<Save size={16} />}>{copy.documents.saveSearch}</Button>
-            <Button disabled={selected.length === 0}>{copy.documents.bulkEdit}</Button>
-            <Button onClick={() => { setSampleError(false); setSampleResult(null); setSampleOpen(true); }}>{copy.documents.sample}</Button>
-          </div>
-          <div className="index-coverage"><span />{copy.documents.indexCoverage}</div>
-          <div className="results-summary">
-            <span>{copy.modules.results}{copy.fieldManagement.separator}{docs.length}</span>
-            <CheckRow label={copy.documents.includeFamily} checked={includeFamily} onChange={() => setIncludeFamily(!includeFamily)} />
-          </div>
-          <div className="table-scroll document-table">
-            <table>
-              <thead><tr>{copy.documents.columns.map((column, index) => <th key={`${column}-${index}`}>{index === 0 ? <input type="checkbox" aria-label={copy.common.all} /> : column}</th>)}</tr></thead>
-              <tbody>
-                {docs.map((doc) => {
-                  const Icon = documentIcon(doc.type);
-                  return (
-                    <tr key={doc.id} className={selected.includes(doc.id) ? "is-selected" : ""}>
-                      <td><input type="checkbox" aria-label={doc.id} checked={selected.includes(doc.id)} onChange={() => setSelected(selected.includes(doc.id) ? selected.filter((id) => id !== doc.id) : [...selected, doc.id])} /></td>
-                      <td><button type="button" onClick={() => openDoc(doc.id, doc.locked)}>{doc.locked && <Lock size={13} />}<strong>{doc.id}</strong></button></td>
-                      <td><Icon size={16} aria-hidden="true" /><span>{doc.file}</span></td>
-                      <td>{doc.type}</td>
-                      <td>{doc.responsive}</td>
-                      <td>{doc.confidential}</td>
-                      <td><Badge tone={doc.direct ? "info" : "neutral"}>{doc.direct ? copy.documents.directHit : copy.documents.familyHit}</Badge><small>{doc.relation}</small></td>
-                    </tr>
-                  );
-                })}
-                {!docs.length && <tr><td colSpan={copy.documents.columns.length}>{copy.modules.noMatches}</td></tr>}
-              </tbody>
-            </table>
-          </div>
-          <div className="table-footer"><span>{copy.modules.results}{copy.fieldManagement.separator}{docs.length}</span><span>{copy.common.rowsPerPage}</span></div>
-        </section>
-      </div>
+        <div className="search-panel__section search-panel__conditions">
+          <div className="search-panel__heading"><button type="button" className="search-panel__title"><ChevronDown size={15} />{copy.documents.conditions}</button><Button icon={<Plus size={15} />}>{copy.documents.addCondition}</Button></div>
+          <div className="condition-card"><div className="condition-card__top"><span>{copy.documents.conditionNumber}</span><strong>{custodians.length ? copy.documents.custodian : copy.documents.conditionFieldValue}</strong><Filter size={14} /></div><Field label={copy.documents.conditionField}><select defaultValue={copy.documents.conditionFieldValue}><option>{copy.documents.conditionFieldValue}</option><option>{copy.documents.custodian}</option></select></Field><Field label={copy.documents.conditionOperator}><select defaultValue={copy.documents.conditionOperatorValue}><option>{copy.documents.conditionOperatorValue}</option></select></Field><Field label={copy.documents.conditionValue}><input value={query} onChange={event => { setQuery(event.target.value); setActiveSearchId(null); setSearchExecuted(false); }} /></Field><Button icon={<Plus size={14} />} onClick={() => setCustodianOpen(true)}>{copy.documents.advancedSearch}</Button>{custodians.length > 0 && <div className="condition-summary"><span>{copy.documents.selectedCustodians}</span><strong>{custodians.join(", ")}</strong></div>}</div><Toggle label={copy.documents.autoRun} checked={autoRun} onChange={() => setAutoRun(!autoRun)} /><Button variant="primary" icon={<Search size={16} />} onClick={runAdHocSearch}>{copy.documents.runSearch}</Button>
+        </div>
+      </aside>
 
-      <Modal open={saveOpen} title={copy.documents.saveSearch} onClose={() => setSaveOpen(false)} footer={<><Button onClick={() => setSaveOpen(false)}>{copy.common.cancel}</Button><Button variant="primary" onClick={() => { if (!searchName.trim()) return setSaveError(true); setSavedSearches(current => [...current, { id: createId(), name: searchName.trim(), query, includeFamily, folder }]); setSaveOpen(false); notify(copy.documents.saveSearchSuccess); }}>{copy.common.save}</Button></>}>
-        {saveError && <p role="alert">{copy.modules.invalidSearch}</p>}
-        <Field label={copy.documents.savedSearchName} required><input aria-label={copy.documents.savedSearchName} value={searchName} onChange={event => setSearchName(event.target.value)} /></Field>
-        <Field label={copy.documents.conditions}><div className="read-only-summary"><Filter size={16} /><span>{copy.documents.conditionFieldValue} · {copy.documents.conditionOperatorValue} · {query}</span></div></Field>
-        <CheckRow label={copy.documents.includeFamily} checked={includeFamily} onChange={() => setIncludeFamily(!includeFamily)} />
-      </Modal>
-      <Modal open={sampleOpen} title={copy.documents.sampleTitle} onClose={() => setSampleOpen(false)} wide footer={<><Button onClick={() => setSampleOpen(false)}>{copy.common.cancel}</Button><Button variant="primary" onClick={() => { const value = sampleMethod === "fixed" ? Number(sampleCount) : sampleMethod === "percentage" ? Number(samplePercentage) : Number(sampleCount); if (!Number.isFinite(value) || value <= 0 || (sampleMethod === "percentage" && value > 100) || (sampleMethod === "fixed" && value > docs.length && docs.length > 0)) { setSampleError(true); return; } const count = sampleMethod === "percentage" ? Math.max(1, Math.round(docs.length * value / 100)) : Math.min(value, docs.length || value); setSampleResult(count); setSampleError(false); notify(copy.documents.sampleCreated); }}>{copy.documents.sampleRun}</Button></>}>
-        <p className="admin-note">{copy.documents.sampleHint}</p>
-        {sampleError && <p role="alert" className="form-alert">{copy.documents.sampleInvalid}</p>}
-        <Field label={copy.documents.sampleMethod} required><select value={sampleMethod} onChange={event => setSampleMethod(event.target.value as typeof sampleMethod)}><option value="fixed">{copy.documents.sampleFixed}</option><option value="percentage">{copy.documents.samplePercentage}</option><option value="statistical">{copy.documents.sampleStatistical}</option></select></Field>
-        {sampleMethod === "fixed" && <Field label={copy.documents.sampleCount} required><input type="number" min="1" value={sampleCount} onChange={event => setSampleCount(event.target.value)} /></Field>}
-        {sampleMethod === "percentage" && <Field label={copy.documents.samplePercentageValue} required><input type="number" min="1" max="100" value={samplePercentage} onChange={event => setSamplePercentage(event.target.value)} /></Field>}
-        {sampleMethod === "statistical" && <div className="workspace-advanced-grid"><Field label={copy.documents.sampleConfidence} required><select value={sampleConfidence} onChange={event => setSampleConfidence(event.target.value)}><option>90%</option><option>95%</option><option>99%</option></select></Field><Field label={copy.documents.sampleMargin} required><select value={sampleMargin} onChange={event => setSampleMargin(event.target.value)}><option>3%</option><option>5%</option><option>10%</option></select></Field></div>}
-        {sampleResult !== null && <section className="sample-result"><h3>{copy.documents.sampleResult}</h3><strong>{copy.documents.sampleCountValue.replace("{count}", String(sampleResult))}</strong><p>{copy.documents.sampleResultHint}</p></section>}
-      </Modal>
+      {browserMode === "saved" && !activeSearchId ? <section className="saved-search-browser-main"><div className="saved-search-empty"><Search size={46} /><h2>{copy.documents.savedSearchBrowser}</h2><p>{copy.documents.savedSearchHint}</p><Button variant="primary" onClick={() => { setSearchName(copy.documents.savedSearchNameValue); setSaveError(false); setSaveOpen(true); }}>{copy.documents.createNewSavedSearch}</Button></div></section> : <section className="document-results">
+        <div className="document-context-banner"><div><strong>{activeIndex ? copy.documents.indexSearch : activeSavedSearch ? copy.documents.savedSearchView : searchExecuted ? copy.documents.ordinarySearch : copy.documents.allDocumentsView}</strong><small>{activeIndex ? `${activeIndex.name} · ${copy.documents.indexSearchDescription}` : activeSavedSearch ? copy.documents.savedSearchUpdatedResults : copy.documents.ordinarySearchHint}</small></div>{activeIndex ? <Badge tone="success">{copy.documents.indexSearchSelected}</Badge> : activeSavedSearch && <Badge tone="info">{copy.documents.savedSearchSelected}</Badge>}</div>
+        {activeSavedSearch && <div className="saved-search-definition"><span>{copy.documents.activeSearchDefinition}</span><strong>{activeSavedSearch.query}</strong><small>{copy.documents.searchDefinitionNotResults}</small></div>}
+        <div className="document-toolbar"><select aria-label={copy.documents.searchIndex} value={searchIndexId ?? ""} onChange={event => { const value = event.target.value || null; setActiveSearchId(null); setSearchExecuted(false); setDocumentView(current => ({ ...current, searchIndexId: value, folder: 0, reportTerm: null })); }}><option value="">{copy.documents.noSearchIndex}</option>{availableIndexes.map(index => <option key={index.id} value={index.id}>{index.name}</option>)}</select><div className="document-toolbar__search"><Search size={16} /><input value={query} onChange={event => { setQuery(event.target.value); setActiveSearchId(null); setSearchExecuted(false); setDocumentView(current => ({ ...current, searchIndexId: null })); }} /></div><Button onClick={() => { setSaveError(false); setSaveOpen(true); }} icon={<Save size={16} />}>{copy.documents.saveSearch}</Button><Button disabled={selected.length === 0}>{copy.documents.bulkEdit}</Button><Button onClick={() => { setSampleError(false); setSampleResult(null); setSampleOpen(true); }}>{copy.documents.sample}</Button></div>
+        <div className="index-coverage"><span />{copy.documents.indexCoverage}</div><div className="results-summary"><span>{copy.modules.results}{copy.fieldManagement.separator}{docs.length}</span><CheckRow label={copy.documents.includeFamily} checked={includeFamily} onChange={() => setIncludeFamily(!includeFamily)} /></div>
+        <div className="table-scroll document-table"><table><thead><tr>{copy.documents.columns.map((column, index) => <th key={`${column}-${index}`}>{index === 0 ? <input type="checkbox" aria-label={copy.common.all} /> : column}</th>)}</tr></thead><tbody>{docs.map(doc => { const Icon = documentIcon(doc.type); return <tr key={doc.id} className={selected.includes(doc.id) ? "is-selected" : ""}><td><input type="checkbox" aria-label={doc.id} checked={selected.includes(doc.id)} onChange={() => setSelected(selected.includes(doc.id) ? selected.filter(id => id !== doc.id) : [...selected, doc.id])} /></td><td><button type="button" onClick={() => openDoc(doc.id, doc.locked)}>{doc.locked && <Lock size={13} />}<strong>{doc.id}</strong></button></td><td><Icon size={16} aria-hidden="true" /><span>{doc.file}</span></td><td>{doc.type}</td><td>{doc.responsive}</td><td>{doc.confidential}</td><td><Badge tone={doc.direct ? "info" : "neutral"}>{doc.direct ? copy.documents.directHit : copy.documents.familyHit}</Badge><small>{doc.relation}</small></td></tr>; })}{!docs.length && <tr><td colSpan={copy.documents.columns.length}>{copy.modules.noMatches}</td></tr>}</tbody></table></div><div className="table-footer"><span>{copy.modules.results}{copy.fieldManagement.separator}{docs.length}</span><span>{copy.common.rowsPerPage}</span></div>
+      </section>}
     </div>
-  );
+
+    <Modal open={saveOpen} title={copy.documents.saveSearch} onClose={() => setSaveOpen(false)} footer={<><Button onClick={() => setSaveOpen(false)}>{copy.common.cancel}</Button><Button variant="primary" onClick={saveCurrentSearch}>{copy.common.save}</Button></>}>
+      {saveError && <p role="alert">{copy.modules.invalidSearch}</p>}<p className="admin-note">{copy.documents.savedSearchHint}</p><Field label={copy.documents.savedSearchName} required><input aria-label={copy.documents.savedSearchName} value={searchName} onChange={event => setSearchName(event.target.value)} /></Field><Field label={copy.documents.savedSearchFolder}><select value={savedFolder} onChange={event => setSavedFolder(event.target.value)}>{copy.documents.searchFolderOptions.map(option => <option key={option}>{option}</option>)}</select></Field><div className="workspace-advanced-grid"><Field label={copy.documents.savedSearchOwner}><select value={saveOwner} onChange={event => setSaveOwner(event.target.value)}><option>{copy.documents.savedSearchOwnerMe}</option><option>{copy.documents.savedSearchOwnerAdmin}</option></select></Field><Field label={copy.documents.savedSearchVisibility}><select value={saveVisibility} onChange={event => setSaveVisibility(event.target.value)}><option>{copy.documents.savedSearchPrivate}</option><option>{copy.documents.savedSearchPublic}</option></select></Field></div><Field label={copy.documents.conditions}><div className="read-only-summary"><Filter size={16} /><span>{copy.documents.conditionFieldValue} · {copy.documents.conditionOperatorValue} · {query}</span></div></Field><CheckRow label={copy.documents.includeFamily} checked={includeFamily} onChange={() => setIncludeFamily(!includeFamily)} />
+    </Modal>
+    <Modal open={sampleOpen} title={copy.documents.sampleTitle} onClose={() => setSampleOpen(false)} wide footer={<><Button onClick={() => setSampleOpen(false)}>{copy.common.cancel}</Button><Button variant="primary" onClick={() => { const value = sampleMethod === "fixed" ? Number(sampleCount) : sampleMethod === "percentage" ? Number(samplePercentage) : Number(sampleCount); if (!Number.isFinite(value) || value <= 0 || (sampleMethod === "percentage" && value > 100) || (sampleMethod === "fixed" && value > docs.length && docs.length > 0)) { setSampleError(true); return; } const count = sampleMethod === "percentage" ? Math.max(1, Math.round(docs.length * value / 100)) : Math.min(value, docs.length || value); setSampleResult(count); setSampleError(false); notify(copy.documents.sampleCreated); }}>{copy.documents.sampleRun}</Button></>}><p className="admin-note">{copy.documents.sampleHint}</p>{sampleError && <p role="alert" className="form-alert">{copy.documents.sampleInvalid}</p>}<Field label={copy.documents.sampleMethod} required><select value={sampleMethod} onChange={event => setSampleMethod(event.target.value as typeof sampleMethod)}><option value="fixed">{copy.documents.sampleFixed}</option><option value="percentage">{copy.documents.samplePercentage}</option><option value="statistical">{copy.documents.sampleStatistical}</option></select></Field>{sampleMethod === "fixed" && <Field label={copy.documents.sampleCount} required><input type="number" min="1" value={sampleCount} onChange={event => setSampleCount(event.target.value)} /></Field>}{sampleMethod === "percentage" && <Field label={copy.documents.samplePercentageValue} required><input type="number" min="1" max="100" value={samplePercentage} onChange={event => setSamplePercentage(event.target.value)} /></Field>}{sampleMethod === "statistical" && <div className="workspace-advanced-grid"><Field label={copy.documents.sampleConfidence} required><select value={sampleConfidence} onChange={event => setSampleConfidence(event.target.value)}><option>90%</option><option>95%</option><option>99%</option></select></Field><Field label={copy.documents.sampleMargin} required><select value={sampleMargin} onChange={event => setSampleMargin(event.target.value)}><option>3%</option><option>5%</option><option>10%</option></select></Field></div>}{sampleResult !== null && <section className="sample-result"><h3>{copy.documents.sampleResult}</h3><strong>{copy.documents.sampleCountValue.replace("{count}", String(sampleResult))}</strong><p>{copy.documents.sampleResultHint}</p></section>}</Modal>
+    <Modal open={custodianOpen} title={copy.documents.selectCustodian} onClose={() => setCustodianOpen(false)} footer={<><Button onClick={() => setCustodianOpen(false)}>{copy.common.cancel}</Button><Button variant="primary" onClick={() => setCustodianOpen(false)}>{copy.documents.applyCustodian}</Button></>}><p className="admin-note">{copy.documents.custodianHint}</p><div className="custodian-picker">{copy.documents.custodianOptions.map(option => <CheckRow key={option} label={option} checked={custodians.includes(option)} onChange={() => setCustodians(current => current.includes(option) ? current.filter(item => item !== option) : [...current, option])} />)}</div></Modal>
+    <Modal open={moveOpen} title={copy.documents.moveSearchTitle} onClose={() => setMoveOpen(false)} footer={<><Button onClick={() => setMoveOpen(false)}>{copy.common.cancel}</Button><Button variant="primary" onClick={() => { if (moveSearchId) setSavedSearches(current => current.map(search => search.id === moveSearchId ? { ...search, folder: Math.max(0, copy.documents.searchFolderOptions.map(String).indexOf(savedFolder)), folderName: savedFolder } : search)); setMoveOpen(false); notify(copy.documents.moveSearchSuccess); }}>{copy.documents.moveSearch}</Button></>}><p className="admin-note">{copy.documents.moveSearchHint}</p><Field label={copy.documents.searchFolder}><select value={savedFolder} onChange={event => setSavedFolder(event.target.value)}>{copy.documents.searchFolderOptions.map(option => <option key={option}>{option}</option>)}</select></Field></Modal>
+    <Modal open={securityOpen} title={copy.documents.securityTitle} onClose={() => setSecurityOpen(false)} footer={<><Button onClick={() => setSecurityOpen(false)}>{copy.common.cancel}</Button><Button variant="primary" onClick={() => { setSecurityOpen(false); notify(copy.documents.securitySaved); }}>{copy.common.save}</Button></>}><p className="admin-note">{copy.documents.securityHint}</p><div className="security-tabs"><button type="button" className={securityTarget === "users" ? "is-active" : ""} onClick={() => setSecurityTarget("users")}>{copy.documents.securityUsers}</button><button type="button" className={securityTarget === "groups" ? "is-active" : ""} onClick={() => setSecurityTarget("groups")}>{copy.documents.securityGroups}</button></div><Field label={copy.documents.securityAccess}><select value={securityAccess} onChange={event => setSecurityAccess(event.target.value)}><option>{copy.documents.securityView}</option><option>{copy.documents.securityEdit}</option><option>{copy.documents.securityNone}</option></select></Field><div className="security-target-list">{(securityTarget === "users" ? copy.documents.securityUserOptions : copy.documents.securityGroupOptions).map(target => <CheckRow key={target} label={target} checked onChange={() => undefined} />)}</div></Modal>
+  </div>;
 }

@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
-    "check": "tsc -b --pretty false"
+    "check": "tsc -b --pretty false",
+    "ledger:check": "node scripts/feature-ledger.mjs check",
+    "ledger:refresh": "node scripts/feature-ledger.mjs refresh"
   },
   "dependencies": {
     "@vitejs/plugin-react": "latest",

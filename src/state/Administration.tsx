@@ -22,14 +22,22 @@ export type UserRecord = {
 };
 export type GroupRecord = { id: string; name: string; clientId: string; userIds: string[]; workspaceIds: string[]; keywords: string; notes: string; createdOn: string; modifiedOn: string };
 
-export type SavedSearch = { id: string; name: string; query: string; includeFamily: boolean; folder: number };
+export type SavedSearch = {
+  id: string; name: string; query: string; includeFamily: boolean; folder: number;
+  folderName?: string; owner?: string; visibility?: "public" | "private"; selectedFields?: string[]; sort?: string;
+};
+export type DtSearchIndex = {
+  id: string; name: string; searchableSet: string; status: string; documents: string; updated: string;
+  searchableSetId?: string; searchableSetType?: "static" | "savedSearch";
+  order: string; email: string; skipMalicious: boolean; defaultSubindex: boolean; progress: number; stage: number;
+};
 type WorkspaceState = {
   exportJobs: ExportJob[];
   fields: ReturnType<typeof createFields>; layouts: LayoutRecord[]; fieldCategories: ReturnType<typeof createCategories>;
-  highlights: { name: string; terms: string; enabled: boolean }; savedSearches: SavedSearch[];
-  batchOwner: string | null; qcPassed: boolean; documentView: { query: string; folder: number; includeFamily: boolean; reportTerm: string | null };
+  highlights: { name: string; terms: string; enabled: boolean }; savedSearches: SavedSearch[]; dtSearchIndexes: DtSearchIndex[]; activeIndexId: string | null;
+  batchOwner: string | null; qcPassed: boolean; documentView: { query: string; folder: number; includeFamily: boolean; reportTerm: string | null; searchIndexId: string | null };
 };
-const newWorkspaceState = (): WorkspaceState => ({ exportJobs: [], fields: withExampleFields(createFields()), layouts: [], fieldCategories: createCategories(), highlights: { name: copy.modules.highlightDefault, terms: copy.modules.highlightTerms, enabled: true }, savedSearches: [], batchOwner: null, qcPassed: false, documentView: { query: copy.documents.searchValue, folder: 0, includeFamily: true, reportTerm: null } });
+const newWorkspaceState = (): WorkspaceState => ({ exportJobs: [], fields: withExampleFields(createFields()), layouts: [], fieldCategories: createCategories(), highlights: { name: copy.modules.highlightDefault, terms: copy.modules.highlightTerms, enabled: true }, savedSearches: [], dtSearchIndexes: copy.analytics.indexRows.map((row, index) => ({ ...row, id: `idx-${index + 1}`, order: String(index + 1), email: "admin@example.com", skipMalicious: true, defaultSubindex: true, progress: 100, stage: 4 })), activeIndexId: null, batchOwner: null, qcPassed: false, documentView: { query: copy.documents.searchValue, folder: 0, includeFamily: true, reportTerm: null, searchIndexId: null } });
 function useAdministrationState() {
   const [activeWorkspaceId, setActiveWorkspaceId] = useState<string | null>(null);
   const [workspaceStates, setWorkspaceStates] = useState<Record<string, WorkspaceState>>({});
@@ -43,13 +51,15 @@ function useAdministrationState() {
       return { ...current, [scope]: { ...previous, [key]: value } };
     });
   }
-  const { fields, layouts, fieldCategories, highlights, savedSearches, batchOwner, qcPassed, documentView } = state;
+  const { fields, layouts, fieldCategories, highlights, savedSearches, dtSearchIndexes, activeIndexId, batchOwner, qcPassed, documentView } = state;
   const setExportJobs = (action: SetStateAction<ExportJob[]>) => setScoped("exportJobs", action);
   const setFields = (action: SetStateAction<WorkspaceState["fields"]>) => setScoped("fields", action);
   const setLayouts = (action: SetStateAction<LayoutRecord[]>) => setScoped("layouts", action);
   const setFieldCategories = (action: SetStateAction<WorkspaceState["fieldCategories"]>) => setScoped("fieldCategories", action);
   const setHighlights = (action: SetStateAction<WorkspaceState["highlights"]>) => setScoped("highlights", action);
   const setSavedSearches = (action: SetStateAction<SavedSearch[]>) => setScoped("savedSearches", action);
+  const setDtSearchIndexes = (action: SetStateAction<DtSearchIndex[]>) => setScoped("dtSearchIndexes", action);
+  const setActiveIndexId = (action: SetStateAction<string | null>) => setScoped("activeIndexId", action);
   const setBatchOwner = (action: SetStateAction<string | null>) => setScoped("batchOwner", action);
   const setDocumentView = (action: SetStateAction<WorkspaceState["documentView"]>) => setScoped("documentView", action);
   const setQcPassed = (action: SetStateAction<boolean>) => setScoped("qcPassed", action);
@@ -59,7 +69,7 @@ function useAdministrationState() {
   const [users, setUsers] = useState<UserRecord[]>(() => copy.userManagement.testUsers.map(user => ({ ...user })));
   const [groups, setGroups] = useState<GroupRecord[]>(() => copy.userManagement.testGroups.map(group => ({ ...group, userIds: [...group.userIds], workspaceIds: [...group.workspaceIds] })));
   const [permissions, setPermissions] = useState<WorkspacePermissionStore>(() => Object.fromEntries(copy.workspaceManagement.workspaces.map(workspace => [workspace.id, Object.fromEntries(copy.userManagement.testGroups.filter(group => (group.workspaceIds as readonly string[]).includes(String(workspace.id))).map(group => [group.id, initialPermissions(group.name.includes("Managers"))]))])));
-  return { exportJobs: state.exportJobs, setExportJobs, documentView, setDocumentView, activeWorkspaceId, setActiveWorkspaceId, highlights, setHighlights, savedSearches, setSavedSearches, batchOwner, setBatchOwner, qcPassed, setQcPassed, layouts, setLayouts, fields, setFields, fieldCategories, setFieldCategories, permissions, setPermissions, clients, setClients, matters, setMatters, workspaces, setWorkspaces, users, setUsers, groups, setGroups };
+  return { exportJobs: state.exportJobs, setExportJobs, documentView, setDocumentView, activeWorkspaceId, setActiveWorkspaceId, highlights, setHighlights, savedSearches, setSavedSearches, dtSearchIndexes, setDtSearchIndexes, activeIndexId, setActiveIndexId, batchOwner, setBatchOwner, qcPassed, setQcPassed, layouts, setLayouts, fields, setFields, fieldCategories, setFieldCategories, permissions, setPermissions, clients, setClients, matters, setMatters, workspaces, setWorkspaces, users, setUsers, groups, setGroups };
 }
 
 const AdministrationContext = createContext<ReturnType<typeof useAdministrationState> | null>(null);
