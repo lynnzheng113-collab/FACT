@@ -15,9 +15,9 @@ const t = copy.fieldManagement, c = copy.common, w = copy.workspaceManagement;
 type Entity = "fields" | "categories" | "choices" | "layouts";
 type SaveMode = "save" | "new" | "back";
 type Draft = { id: string; name: string; type: string; order: string };
-type FieldPermission = { view: boolean; edit: boolean; delete: boolean; add: boolean };
+type FieldPermission = { view: boolean; edit: boolean; delete: boolean; add: boolean; security: boolean };
 const blank = (): Draft => ({ id: "", name: "", type: "", order: String(t.defaultOrder) });
-const defaultFieldPermission: FieldPermission = { view: true, edit: false, delete: false, add: false };
+const defaultFieldPermission: FieldPermission = { view: true, edit: false, delete: false, add: false, security: false };
 const typeName = (type: string) => t.typeOptions.find(option => option.id === type)?.label ?? t.empty;
 const details = (items: ReadonlyArray<readonly [string, string | number]>) => <dl className="detail-grid">{items.map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value === "" ? t.empty : value}</dd></div>)}</dl>;
 
@@ -79,7 +79,7 @@ export function FieldsPage({ notify }: { notify: (message: string) => void }) {
   const toggleFieldPermission = (key: keyof FieldPermission) => setPermissionDraft(current => {
     const next = { ...current, [key]: !current[key] };
     if (key !== "view" && next[key]) next.view = true;
-    if (key === "view" && !next.view) { next.edit = false; next.delete = false; next.add = false; }
+    if (key === "view" && !next.view) { next.edit = false; next.delete = false; next.add = false; next.security = false; }
     return next;
   });
   const saveFieldPermissions = () => {
@@ -216,7 +216,7 @@ export function FieldsPage({ notify }: { notify: (message: string) => void }) {
       <div className="field-permission-inheritance"><Toggle label={t.permissionOverride} checked={permissionOverride} onChange={() => setPermissionOverride(current => !current)} /><span>{t.permissionOverrideHint}</span></div>
       {!permissionGroups.length ? <p className="admin-empty">{t.permissionNoGroups}</p> : <div className="field-permission-layout">
         <section className="field-permission-groups"><Field label={t.permissionGroup}><select aria-label={t.permissionGroup} value={permissionGroupId} onChange={e => changePermissionGroup(e.target.value)}>{permissionGroups.map(group => <option key={group.id} value={group.id}>{group.name}</option>)}</select></Field><div className="field-permission-members"><strong>{t.permissionUsers}</strong>{permissionUsers.map(user => <span key={user.id}>{user.lastName}{copy.userManagement.nameSeparator}{user.firstName}{t.separator}{user.email}</span>)}{!permissionUsers.length && <span>{t.permissionNoUsers}</span>}</div><p className="admin-note">{t.permissionMembersHint}</p></section>
-        <section className="field-permission-actions"><h3>{t.permissionActionsTitle}</h3><p className="admin-note">{permissionGroup?.name ?? t.permissionGroup}</p>{(["view", "edit", "delete", "add"] as const).map(action => <label className="admin-check" key={action}><input type="checkbox" checked={permissionDraft[action]} onChange={() => toggleFieldPermission(action)} />{t.permissionActions[action]}</label>)}</section>
+        <section className="field-permission-actions"><h3>{t.permissionActionsTitle}</h3><p className="admin-note">{permissionGroup?.name ?? t.permissionGroup}</p>{(["view", "edit", "delete", "add", "security"] as const).map(action => <label className="admin-check" key={action}><input type="checkbox" checked={permissionDraft[action]} onChange={() => toggleFieldPermission(action)} />{t.permissionActions[action]}</label>)}</section>
       </div>}
     </Modal>
     <Modal open={bulkDeleteOpen} title={t.bulkDeleteTitle} onClose={() => setBulkDeleteOpen(false)} footer={<><Button onClick={() => setBulkDeleteOpen(false)}>{c.cancel}</Button><Button variant="danger" onClick={removeSelected}>{w.delete}</Button></>}><p>{t.bulkDeleteHint}</p></Modal>

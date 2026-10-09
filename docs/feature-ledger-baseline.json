@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "reviewedAt": "2026-10-09",
-  "reason": "统一基础权限复选框与特殊权限开关；Saved Search 文件夹增加右键移动与权限；Layout 列表增加序号、选择、编辑与权限图标；同步受影响证据行号。",
+  "reason": "删除 Layout 权限中的字段赋值区块；字段权限新增 Edit Security 复选框；保留 Layout 对象基础权限和特殊权限开关。",
   "affectedIds": [
     "FACT-M01-REQ-001",
     "FACT-M01-REQ-002",
@@ -135,16 +135,16 @@
     "src/components/UserForm.tsx": "52abb0b939e345efc64c174014d6915d91edbf49767d496892a9b1d177d942fa",
     "src/components/WorkspaceAdvanced.tsx": "ad6cdd8031f137be82b9839d4ebb7947b209594496b613d60a8b82f5acc3ee7a",
     "src/components/WorkspacePermissions.tsx": "82bb7b4148d2f5979fb8aeb0cab58f105ed83e244457433687d88d1921710afc",
-    "src/constants/copy.ts": "356deca1b7b4a68a9d5b1bbfe93e8924684057f86dea072a77f02d96ea1a0551",
+    "src/constants/copy.ts": "9379a9f0d582a833e72bf7032fc2f21275603ccb90648cef375b534a6bd11df9",
     "src/main.tsx": "00192230c902a8bc8730ac3c5ce29da318fc3072eeaa9eb8fec1d8faa21a18c9",
     "src/pages/AccessPages.tsx": "0347613aae4cd6e41291d1b1b94cba7651188d8a2dc2621042defbcaa5941662",
     "src/pages/AnalyticsPage.tsx": "bd808f39acd01b63a98cffacdce7535c38937d51b4823db01b4491f0065a6863",
     "src/pages/AuditPage.tsx": "b79f730553bbe82ed07adf90651f113f74747ddaacfb9f08a5f11a6bc415891f",
     "src/pages/DocumentsPage.tsx": "70ec33bde03472962b578030fe68c0bfb494268cea2f71b5ebe46e6eaf75728b",
     "src/pages/ExportPage.tsx": "cf9fabcbe9611f13eaaf722182c86b8d50e18e1cde8ca3214cc298507166986a",
-    "src/pages/FieldsPage.tsx": "e7f2b14b24c867f11e7b7fa952c5dc3aae2e8d61d99e7f01d84c492420b9c8a0",
+    "src/pages/FieldsPage.tsx": "e96c36f4415759742c7ce61aeac7a5eabcce1abedcf88c822c344d4b2df9fdcf",
     "src/pages/HomePage.tsx": "95618cbc89fb634bb7ebb64060c1447cf37f8fcc83c7e4b104e330918e8b3fb5",
-    "src/pages/LayoutsPage.tsx": "f1a2f89f71f7ce1c907c349ed1eae3566dc67049cc5bd9e8989cb8af1580b3c8",
+    "src/pages/LayoutsPage.tsx": "f03f24d24c951ded744b8913fe2bef5d62e76792c726cdc85416ce3446990a3d",
     "src/pages/LoginPage.tsx": "8398241a0e8cf1c652fd56c00402059081a0235235020a4b916d763dba0bc86d",
     "src/pages/ProcessingPage.tsx": "532cfbe5dce685862f3d0f23b7e4c86dd272aab0f3761a0a7f161ba5ba4f5743",
     "src/pages/ProcessingSupportPages.tsx": "212a2cb0d0f2a853578688f59d582fbc846b278798f0f20dc6f2c7d96499dabc",
@@ -180,7 +180,7 @@
     "tsconfig.node.json": "477a22e56a74a5ed799afa0ef521eae5d4d12cdc8a411465242c3c1d7f6ec72c",
     "vite.config.ts": "8a18c5e2038444028aa8afde616e9a899a477a4f5321f22a3d924649a10b40c1"
   },
-  "ledgerHash": "4512c3cab60f05255a7f3e200dcb83d12e30237c219d9a6de0d1162f318b4c39",
+  "ledgerHash": "5bea9cab08797d872a66f81f0b83b8f980f91d110af68a87f1c7b6fc8ef62a23",
   "featuresHash": "3e16808fb733e9d555d3c6ce14375b25eb04eaea018f8ba984fa13d3f081bbd4",
-  "markdownHash": "e4bb2dc3599f74c3426be4c06a444ff5f86ab0b934d83ce7a93a72bcdad86cbf"
+  "markdownHash": "430ea202c41e686617b529dcbc8e12c30ef29c4822a22ba843206870a44d8af7"
 }
