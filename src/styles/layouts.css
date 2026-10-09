@@ -33,3 +33,16 @@
 .layout-field-picker > .button { margin-top: var(--space-2); }
 .layout-field-list button:hover { background: var(--color-primary-soft); }
 .layout-field-list p { padding: var(--space-2); }
+
+.layout-preview-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-3) var(--space-5); align-items: start; }
+.layout-preview-grid .preview-field { width: auto; max-width: none; margin: var(--space-1) var(--space-0); }
+
+
+.layout-preview-grid, .layout-grid--spans { grid-auto-rows: var(--size-layout-span-row); align-items: stretch; }
+.layout-grid--spans .layout-item { min-width: var(--space-0); align-items: stretch; }
+.layout-grid--spans .layout-item__select { flex-wrap: wrap; }
+.layout-grid--spans .layout-item__select small { white-space: nowrap; }
+.layout-preview-grid .preview-field { grid-template-columns: minmax(var(--space-0), 1fr); gap: var(--space-1); min-width: var(--space-0); align-content: stretch; grid-template-rows: auto minmax(var(--space-0), 1fr); }
+.layout-preview-grid .preview-field > span { text-align: left; }
+.layout-preview-grid .preview-field > input, .layout-preview-grid .preview-field > select { height: 100%; min-height: var(--size-control); width: 100%; }
+.layout-builder > .layout-preview { z-index: 46; }

@@ -5,7 +5,7 @@ import { createId } from "./ids";
 export type LayoutItem = {
   id: string; fieldId: string; row: number; column: number;
   readOnly: boolean; showName: boolean; customLabel: string;
-  display: "text" | "dropdown" | "checkbox"; repeatColumns: number; allowCopy: boolean;
+  display: "text" | "dropdown" | "checkbox"; repeatColumns: number; rowSpan?: number; allowCopy: boolean;
 };
 export type LayoutSection = {
   id: string; name: string; help: string; collapsible: boolean; collapsed: boolean; items: LayoutItem[];
@@ -19,6 +19,20 @@ export function newLayoutItem(field: FieldRecord, row: number, column: number): 
   return { id: createId(), fieldId: field.id, row, column, readOnly: false, showName: true, customLabel: "", display: field.type === "multiple" ? "checkbox" : ["single", "singleObject", "multipleObject", "boolean"].includes(field.type) ? "dropdown" : "text", repeatColumns: copy.layoutManagement.defaultRepeatColumns, allowCopy: false };
 }
 export const sortedItems = (items: LayoutItem[]) => [...items].sort((a, b) => a.row - b.row || a.column - b.column);
+// The editor and preview share placement, including collision avoidance for spanning fields.
+export function placedItems(items: LayoutItem[]) {
+  const occupied = new Set<string>();
+  return sortedItems(items).map(item => {
+    const width = Math.max(1, Math.min(2, item.repeatColumns));
+    const height = Math.max(1, Math.min(4, item.rowSpan ?? 1));
+    const column = width === 2 ? 0 : Math.max(0, Math.min(1, item.column));
+    let row = Math.max(0, item.row);
+    const cells = (start: number) => Array.from({ length: height }, (_, y) => Array.from({ length: width }, (_, x) => `${start + y}:${column + x}`)).flat();
+    while (cells(row).some(cell => occupied.has(cell))) row++;
+    cells(row).forEach(cell => occupied.add(cell));
+    return { item, style: { gridColumn: `${column + 1} / span ${width}`, gridRow: `${row + 1} / span ${height}` } };
+  });
+}
 export function defaultSections(fields: FieldRecord[]): LayoutSection[] {
   const section = newSection();
   const control = fields.find(field => field.id === "control-number");

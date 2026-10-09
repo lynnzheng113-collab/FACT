@@ -1,8 +1,8 @@
 # FACT MVP 功能台账
 
-版本 v0.5 · 核对日期 2026-10-09 · 基准：原版
+版本 v1.2 · 核对日期 2026-10-09 · 基准：原版
 
-源码标识：v0.17 · 2026-10-04；核对基准提交：`16848c3e0116e15713c9d2a0c6c982773b72ee61`；本次含工作区未提交修改，已在各项中区分。
+源码标识：v0.17 · 2026-10-04；核对基准提交：`9ccc8659f9db5f65d95230f2baf97b99e27814ee`；本次含工作区未提交修改，已在各项中区分。
 
 本清单以最新原版源码为准，不以独立 MVP 版的 58 项截断；M0/M1/M2/条件必要仅为旧建议，确认列保留。
 
@@ -293,7 +293,7 @@
 - **人工确认：** 待确认；确认人：未填写；日期：未填写；说明：未填写
 - **来源：** 原版源码核对；不追加未经核实的 Relativity 来源编号
 - **核对：** 2026-10-08；已提交源码；2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败
-- **代码依据：** [src/pages/ProcessingPage.tsx:75](../src/pages/ProcessingPage.tsx#L75)（锚点：`function ProcessingSetDetail`）
+- **代码依据：** [src/pages/ProcessingPage.tsx:82](../src/pages/ProcessingPage.tsx#L82)（锚点：`function ProcessingSetDetail`）
 - **父项：** FACT-M04-REQ-001；本条为其细化，避免重复估时。
 
 ### FACT-M03-REQ-001 跨页面状态与真实存储
@@ -330,47 +330,47 @@
 ### FACT-M04-REQ-001 数据源与处理批次
 
 - **主责模块：** M04 处理与成像
-- **范围与入口：** 管理员／工作区；Processing
-- **现有操作与规则：** Processing Sets 搜索和详情；维护名称、配置、通知人及数据源表单
+- **范围与入口：** 管理员／工作区；Processing → Processing Sets → 新建或打开处理集
+- **现有操作与规则：** Processing Sets 总览显示 Inventory、Discover、Publish、Republish 等表头与状态筛选。Processing Sets 列表进入详情；维护名称、配置、通知人与数据源表单。详情采用左约 2/3 的基本设置、数据源列表及新建表单，右约 1/3 的阶段状态、统计与处理操作；左右独立向下排列。
 - **输出／状态：** 局部表单与固定数据源列表
 - **当前缺口：** 保存仅提示，新增集或源未写入列表，阶段计数为样例
 - **责任边界／依赖：** 数据源、处理集、文件及异常；接入结果登记到证据库后再处理
-- **建议验收：** 建议验收：每次导入生成批次，记录来源人、来源路径、时间、原文件标识和处理状态。
+- **建议验收：** 桌面 1536px 与 1280px 下保持约 2:1 两栏，无页面横向溢出；左侧数据源紧接基本设置，新建表单位于左侧；Inventory/Discover/Publish 数量与异常总数在横向阶段状态下方；移除三段重复阶段介绍，保留操作与报告入口。
 - **旧范围建议：** M0 / 自动；每次导入生成批次，记录来源人、来源路径、时间、原文件标识和处理状态。
-- **人工确认：** 待确认；确认人：未填写；日期：未填写；说明：未填写
+- **人工确认：** 待确认；确认人：未填写；日期：未填写；说明：2026-10-09
 - **来源：** REL-070
-- **核对：** 2026-10-08；已提交源码；2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败
-- **代码依据：** [src/pages/ProcessingPage.tsx:331](../src/pages/ProcessingPage.tsx#L331)（锚点：`export function`）
+- **核对：** 2026-10-09；HEAD 9ccc8659f9db5f65d95230f2baf97b99e27814ee + 未提交修改；2026-10-09 浏览器验证 1536×1000、1280×900：两栏、统计位置、重复说明移除、新建数据源位置及页面无横向溢出通过；前端演示，不代表后端验收。
+- **代码依据：** [src/pages/ProcessingPage.tsx:136](../src/pages/ProcessingPage.tsx#L136)（锚点：`processing-set-detail-grid`）；[src/styles/app.css:2196](../src/styles/app.css#L2196)（锚点：`.processing-set-detail-column`）
 
 ### FACT-M04-REQ-002 处理规则设置
 
 - **主责模块：** M04 处理与成像
 - **范围与入口：** 管理员／工作区；Processing
-- **现有操作与规则：** Processing Profile 编辑编号、盘点、DeNIST、时区、OCR语言、附件提取及去重等选项
+- **现有操作与规则：** Processing Settings 编辑编号、Inventory、DeNIST、时区、OCR、附件及去重等选项；Inclusion 提供包含特定文件、排除特定文件、不额外包含或排除三选项，前两项才在下方显示模式与扩展名；源目录选项文案为是否展示源文件夹结构。
 - **输出／状态：** 局部规则配置表单
 - **当前缺口：** 未驱动处理引擎；配置保存和版本追溯待实现
 - **责任边界／依赖：** 数据源、处理集、文件及异常；接入结果登记到证据库后再处理
-- **建议验收：** 建议验收：使用一套有版本的处理规则；时区、解包、去重等由内部确认，不开放全量设置页。
+- **建议验收：** 三种 Inclusion 选择正确控制下方字段显示；切换为不额外包含或排除后隐藏模式与扩展名；源文件夹结构文案与配置一致。
 - **旧范围建议：** M0 / 内配；使用一套有版本的处理规则；时区、解包、去重等由内部确认，不开放全量设置页。
-- **人工确认：** 待确认；确认人：未填写；日期：未填写；说明：未填写
+- **人工确认：** 待确认；确认人：未填写；日期：未填写；说明：2026-10-09
 - **来源：** REL-069
-- **核对：** 2026-10-08；已提交源码；2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败
-- **代码依据：** [src/pages/ProcessingPage.tsx:331](../src/pages/ProcessingPage.tsx#L331)（锚点：`export function`）
+- **核对：** 2026-10-09；HEAD 9ccc8659f9db5f65d95230f2baf97b99e27814ee + 本次待提交修改；2026-10-09 Playwright 浏览器回归通过：Inclusion、Inventory 日期/类型筛选及校验、Files 视图、布局占位与预览；仅前端样例交互，不代表后端验收。
+- **代码依据：** [src/pages/ProcessingPage.tsx:347](../src/pages/ProcessingPage.tsx#L347)（锚点：`export function`）
 
 ### FACT-M04-REQ-003 导入前盘点
 
 - **主责模块：** M04 处理与成像
 - **范围与入口：** 管理员／工作区；Processing
-- **现有操作与规则：** 处理集可点击可选 Inventory 并显示阶段与样例数量
+- **现有操作与规则：** 处理集运行 Inventory 后显示样例数量并启用 Filter Files；Date range 使用 Sort Date/Time，File Type 用包含/排除双列表选择。提供样例结果预览、重置、取消和应用；开始日期晚于结束日期时禁止应用；Discover 或 Publish 后禁用筛选入口。
 - **输出／状态：** 局部 inventoryDone 状态
-- **当前缺口：** 独立 Inventory 入口仍为占位，未实际扫描材料
+- **当前缺口：** 筛选当前仅作用于 7 条前端样例；真实 Inventory、Sort Date/Time 提取、筛选队列、处理数量联动及持久化尚未实现。
 - **责任边界／依赖：** 数据源、处理集、文件及异常；接入结果登记到证据库后再处理
-- **建议验收：** 建议验收：先将格式、体量检查并入上传流程；单独盘点、筛除、预估工作流后置。
+- **建议验收：** 验证日期上下限、单边日期、无日期样例与类型排除；无效日期禁止应用；取消保留旧配置、重置清空草稿、应用更新摘要；Inventory 前及 Discover/Publish 后禁止打开筛选。
 - **旧范围建议：** M1 / 后续；先将格式、体量检查并入上传流程；单独盘点、筛除、预估工作流后置。
-- **人工确认：** 待确认；确认人：未填写；日期：未填写；说明：未填写
+- **人工确认：** 待确认；确认人：未填写；日期：未填写；说明：2026-10-09
 - **来源：** REL-071
-- **核对：** 2026-10-08；已提交源码；2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败
-- **代码依据：** [src/pages/ProcessingPage.tsx:331](../src/pages/ProcessingPage.tsx#L331)（锚点：`export function`）
+- **核对：** 2026-10-09；HEAD 9ccc8659f9db5f65d95230f2baf97b99e27814ee + 本次待提交修改；2026-10-09 Playwright 浏览器回归通过：Inclusion、Inventory 日期/类型筛选及校验、Files 视图、布局占位与预览；仅前端样例交互，不代表后端验收。
+- **代码依据：** [src/pages/ProcessingPage.tsx:347](../src/pages/ProcessingPage.tsx#L347)（锚点：`export function`）；[src/components/InventoryFilters.tsx:14](../src/components/InventoryFilters.tsx#L14)（锚点：`export function InventoryFilters`）
 
 ### FACT-M04-REQ-004 文件识别与内容提取
 
@@ -385,7 +385,7 @@
 - **人工确认：** 待确认；确认人：未填写；日期：未填写；说明：未填写
 - **来源：** REL-064, REL-065, REL-066
 - **核对：** 2026-10-08；已提交源码；2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败
-- **代码依据：** [src/pages/ProcessingPage.tsx:331](../src/pages/ProcessingPage.tsx#L331)（锚点：`export function`）
+- **代码依据：** [src/pages/ProcessingPage.tsx:347](../src/pages/ProcessingPage.tsx#L347)（锚点：`export function`）
 
 ### FACT-M04-REQ-005 附件展开与父子关系
 
@@ -400,7 +400,7 @@
 - **人工确认：** 待确认；确认人：未填写；日期：未填写；说明：未填写
 - **来源：** REL-067, REL-073, REL-076, REL-386
 - **核对：** 2026-10-08；已提交源码；2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败
-- **代码依据：** [src/pages/ProcessingPage.tsx:331](../src/pages/ProcessingPage.tsx#L331)（锚点：`export function`）
+- **代码依据：** [src/pages/ProcessingPage.tsx:347](../src/pages/ProcessingPage.tsx#L347)（锚点：`export function`）
 
 ### FACT-M04-REQ-006 完全重复识别
 
@@ -415,7 +415,7 @@
 - **人工确认：** 待确认；确认人：未填写；日期：未填写；说明：未填写
 - **来源：** REL-075
 - **核对：** 2026-10-08；已提交源码；2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败
-- **代码依据：** [src/pages/ProcessingPage.tsx:331](../src/pages/ProcessingPage.tsx#L331)（锚点：`export function`）
+- **代码依据：** [src/pages/ProcessingPage.tsx:347](../src/pages/ProcessingPage.tsx#L347)（锚点：`export function`）
 
 ### FACT-M04-REQ-007 处理结果发布
 
@@ -430,7 +430,7 @@
 - **人工确认：** 待确认；确认人：未填写；日期：未填写；说明：未填写
 - **来源：** REL-074
 - **核对：** 2026-10-08；已提交源码；2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败
-- **代码依据：** [src/pages/ProcessingPage.tsx:331](../src/pages/ProcessingPage.tsx#L331)（锚点：`export function`）
+- **代码依据：** [src/pages/ProcessingPage.tsx:347](../src/pages/ProcessingPage.tsx#L347)（锚点：`export function`）
 
 ### FACT-M04-REQ-008 处理异常定位
 
@@ -445,7 +445,7 @@
 - **人工确认：** 待确认；确认人：未填写；日期：未填写；说明：未填写
 - **来源：** REL-077
 - **核对：** 2026-10-08；已提交源码；2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败
-- **代码依据：** [src/pages/ProcessingPage.tsx:331](../src/pages/ProcessingPage.tsx#L331)（锚点：`export function`）
+- **代码依据：** [src/pages/ProcessingPage.tsx:347](../src/pages/ProcessingPage.tsx#L347)（锚点：`export function`）
 
 ### FACT-M04-REQ-009 修复后重试
 
@@ -460,7 +460,7 @@
 - **人工确认：** 待确认；确认人：未填写；日期：未填写；说明：未填写
 - **来源：** REL-078
 - **核对：** 2026-10-08；已提交源码；2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败
-- **代码依据：** [src/pages/ProcessingPage.tsx:331](../src/pages/ProcessingPage.tsx#L331)（锚点：`export function`）
+- **代码依据：** [src/pages/ProcessingPage.tsx:347](../src/pages/ProcessingPage.tsx#L347)（锚点：`export function`）
 
 ### FACT-M04-REQ-010 加密文件处理
 
@@ -526,31 +526,31 @@
 
 - **主责模块：** M04 处理与成像
 - **范围与入口：** 管理员／工作区（实例审计和用户管理位于平台）；Processing 首页
-- **现有操作与规则：** 按入口进入处理集、规则、源、文件、异常、密码库和报告；可从处理集跳盘点或发现报告
+- **现有操作与规则：** Processing 目录提供处理集、数据源、文件、异常、设置和报告入口；处理集右栏上方显示横向阶段状态及下方数量统计，下方集中 Inventory、筛选、Discover、重试、Publish 按钮与报告、异常链接；移除三个重复阶段说明折叠块。
 - **输出／状态：** 页面导航与阶段入口
-- **当前缺口：** 部分 Inventory 仍占位；导航顺序不等于后端状态机
+- **当前缺口：** 阶段运行与统计仍为前端演示；真实处理队列、状态机、异常重试及报表需后端实现。
 - **责任边界／依赖：** 按该模块维护对象；权限、任务、审计通过公共接口接入
-- **建议验收：** 建议验收：按入口进入处理集、规则、源、文件、异常、密码库和报告；可从处理集跳盘点或发现报告；失败保留输入并说明原因；记录对象 ID 与版本
+- **建议验收：** 详情右栏显示状态、下方统计和处理操作；无重复阶段说明；Inventory 后可打开筛选，Discover/Publish 后不可修改；报告与异常入口仍可跳转。
 - **旧范围建议：** 待确认 / 待确认；新增核对项；本期实现深度待确认，原型出现不等于已批准
 - **人工确认：** 待确认；确认人：未填写；日期：未填写；说明：未填写
 - **来源：** 原版源码核对；不追加未经核实的 Relativity 来源编号
-- **核对：** 2026-10-08；已提交源码；2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败
-- **代码依据：** [src/pages/ProcessingPage.tsx:22](../src/pages/ProcessingPage.tsx#L22)（锚点：`function Directory`）
+- **核对：** 2026-10-09；HEAD 9ccc8659f9db5f65d95230f2baf97b99e27814ee + 未提交修改；2026-10-09 浏览器验证 1536×1000、1280×900：两栏、统计位置、重复说明移除、新建数据源位置及页面无横向溢出通过；前端演示，不代表后端验收。
+- **代码依据：** [src/pages/ProcessingPage.tsx:23](../src/pages/ProcessingPage.tsx#L23)（锚点：`function Directory`）；[src/pages/ProcessingPage.tsx:148](../src/pages/ProcessingPage.tsx#L148)（锚点：`processing-set-console`）
 
 ### FACT-M04-REQ-015 文件视图、异常处置与导出
 
 - **主责模块：** M04 处理与成像
 - **范围与入口：** 管理员／工作区（实例审计和用户管理位于平台）；Processing > Files / File Exceptions
-- **现有操作与规则：** 切换全部、异常及已删除视图；筛选、详情、重试、忽略、撤销忽略、保存过滤和导出 CSV
+- **现有操作与规则：** Files 保留 All Files、Current Files with Exceptions、Deleted Files 三个视图；移除 All Files with Exceptions 页面入口；保留筛选、详情、重试、忽略、撤销忽略、保存过滤及导出 CSV。
 - **输出／状态：** 文件状态、局部历史和可下载样例 CSV
 - **当前缺口：** 下载原件及重新发布仍提示；重试不完成实际处理
 - **责任边界／依赖：** 数据源、处理集、文件及异常；接入结果登记到证据库后再处理
-- **建议验收：** 建议验收：切换全部、异常及已删除视图；筛选、详情、重试、忽略、撤销忽略、保存过滤和导出 CSV；失败保留输入并说明原因；记录对象 ID 与版本
+- **建议验收：** 三种保留视图可切换，All Files with Exceptions 不再出现；现有筛选、异常操作及导出入口仍可使用；实际重试、原件下载及重新发布待后端实现。
 - **旧范围建议：** 待确认 / 待确认；新增核对项；本期实现深度待确认，原型出现不等于已批准
-- **人工确认：** 待确认；确认人：未填写；日期：未填写；说明：未填写
+- **人工确认：** 待确认；确认人：未填写；日期：未填写；说明：2026-10-09
 - **来源：** 原版源码核对；不追加未经核实的 Relativity 来源编号
-- **核对：** 2026-10-08；已提交源码；2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败
-- **代码依据：** [src/pages/ProcessingPage.tsx:194](../src/pages/ProcessingPage.tsx#L194)（锚点：`function FilesPage`）
+- **核对：** 2026-10-09；HEAD 9ccc8659f9db5f65d95230f2baf97b99e27814ee + 本次待提交修改；2026-10-09 Playwright 浏览器回归通过：Inclusion、Inventory 日期/类型筛选及校验、Files 视图、布局占位与预览；仅前端样例交互，不代表后端验收。
+- **代码依据：** [src/pages/ProcessingPage.tsx:211](../src/pages/ProcessingPage.tsx#L211)（锚点：`function FilesPage`）
 - **父项：** FACT-M04-REQ-008；本条为其细化，避免重复估时。
 
 ### FACT-M04-REQ-016 处理报告选择、生成及历史
@@ -1028,31 +1028,31 @@
 
 - **主责模块：** M06 审阅配置与作业
 - **范围与入口：** 管理员／工作区；Review Setup > Layouts
-- **现有操作与规则：** 布局画布添加或移除分区、放置和移除字段、调整位置、编辑字段属性
+- **现有操作与规则：** 工作区预置初级律师与高级律师两条可编辑布局；画布支持分区及字段编排。字段占用列数（宽度）与行数（高度）分别配置，在双列网格中共享定位规则，跨行列字段自动避让；编辑器可直接预览未保存草稿。
 - **输出／状态：** 布局 sections/items 配置
 - **当前缺口：** 实际 Review 尚未读取布局；编辑器效果不等于审阅联通
 - **责任边界／依赖：** 字段定义与 Layout；实际审阅读取和写入需由 REV 接入
-- **建议验收：** 建议验收：首版固定分区及字段顺序；自由拖拽、布局编辑器暂不接入生产功能。
+- **建议验收：** 初次进入列表有两条预置布局；验证字段 3 行 × 2 列、相邻字段避让、未保存预览以及保存后重新预览；配置与预览占位一致。
 - **旧范围建议：** M2 / 后续；首版固定分区及字段顺序；自由拖拽、布局编辑器暂不接入生产功能。
-- **人工确认：** 待确认；确认人：未填写；日期：未填写；说明：未填写
+- **人工确认：** 待确认；确认人：未填写；日期：未填写；说明：2026-10-09
 - **来源：** REL-118, SUP-011
-- **核对：** 2026-10-08；已提交源码；2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败
-- **代码依据：** [src/pages/LayoutsPage.tsx:19](../src/pages/LayoutsPage.tsx#L19)（锚点：`export function`）；[src/components/LayoutBuilder.tsx:11](../src/components/LayoutBuilder.tsx#L11)（锚点：`export function LayoutBuilder`）
+- **核对：** 2026-10-09；HEAD 9ccc8659f9db5f65d95230f2baf97b99e27814ee + 本次待提交修改；2026-10-09 Playwright 浏览器回归通过：Inclusion、Inventory 日期/类型筛选及校验、Files 视图、布局占位与预览；仅前端样例交互，不代表后端验收。
+- **代码依据：** [src/pages/LayoutsPage.tsx:19](../src/pages/LayoutsPage.tsx#L19)（锚点：`export function`）；[src/components/LayoutBuilder.tsx:12](../src/components/LayoutBuilder.tsx#L12)（锚点：`export function LayoutBuilder`）；[src/state/layouts.ts:23](../src/state/layouts.ts#L23)（锚点：`export function placedItems`）
 
 ### FACT-M06-REQ-009 字段显示与只读规则
 
 - **主责模块：** M06 审阅配置与作业
 - **范围与入口：** 管理员／工作区；Review Setup > Layouts
-- **现有操作与规则：** 布局字段配置只读、显示方式、别名及允许复制
+- **现有操作与规则：** 布局字段配置只读、显示方式、别名、允许复制及行列占位；重复列数改为字段占用列数（宽度），新增占用行数（高度）；编辑画布和预览按相同布局规则呈现。
 - **输出／状态：** Layout item 属性
 - **当前缺口：** 审阅页固定表单，未统一执行配置与服务端校验
 - **责任边界／依赖：** 字段定义与 Layout；实际审阅读取和写入需由 REV 接入
-- **建议验收：** 建议验收：保留必要的可见、只读、必填规则；由固定配置驱动，服务端同时校验。
+- **建议验收：** 字段宽高、只读、名称与复制配置在布局预览中一致；跨行列字段不重叠；真实审阅和服务端执行仍待接入。
 - **旧范围建议：** M0 / 内配；保留必要的可见、只读、必填规则；由固定配置驱动，服务端同时校验。
-- **人工确认：** 待确认；确认人：未填写；日期：未填写；说明：未填写
+- **人工确认：** 待确认；确认人：未填写；日期：未填写；说明：2026-10-09
 - **来源：** REL-118
-- **核对：** 2026-10-08；已提交源码；2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败
-- **代码依据：** [src/pages/LayoutsPage.tsx:19](../src/pages/LayoutsPage.tsx#L19)（锚点：`export function`）；[src/components/LayoutBuilder.tsx:11](../src/components/LayoutBuilder.tsx#L11)（锚点：`export function LayoutBuilder`）
+- **核对：** 2026-10-09；HEAD 9ccc8659f9db5f65d95230f2baf97b99e27814ee + 本次待提交修改；2026-10-09 Playwright 浏览器回归通过：Inclusion、Inventory 日期/类型筛选及校验、Files 视图、布局占位与预览；仅前端样例交互，不代表后端验收。
+- **代码依据：** [src/pages/LayoutsPage.tsx:19](../src/pages/LayoutsPage.tsx#L19)（锚点：`export function`）；[src/components/LayoutBuilder.tsx:12](../src/components/LayoutBuilder.tsx#L12)（锚点：`export function LayoutBuilder`）
 
 ### FACT-M06-REQ-010 表单说明与折叠
 
@@ -1067,7 +1067,7 @@
 - **人工确认：** 待确认；确认人：未填写；日期：未填写；说明：未填写
 - **来源：** SUP-011
 - **核对：** 2026-10-08；已提交源码；2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败
-- **代码依据：** [src/pages/LayoutsPage.tsx:19](../src/pages/LayoutsPage.tsx#L19)（锚点：`export function`）；[src/components/LayoutBuilder.tsx:11](../src/components/LayoutBuilder.tsx#L11)（锚点：`export function LayoutBuilder`）
+- **代码依据：** [src/pages/LayoutsPage.tsx:19](../src/pages/LayoutsPage.tsx#L19)（锚点：`export function`）；[src/components/LayoutBuilder.tsx:12](../src/components/LayoutBuilder.tsx#L12)（锚点：`export function LayoutBuilder`）
 
 ### FACT-M06-REQ-011 表单排序与切换
 
@@ -1127,7 +1127,7 @@
 - **人工确认：** 待确认；确认人：未填写；日期：未填写；说明：未填写
 - **来源：** REL-120
 - **核对：** 2026-10-08；已提交源码；2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败
-- **代码依据：** [src/pages/LayoutsPage.tsx:19](../src/pages/LayoutsPage.tsx#L19)（锚点：`export function`）；[src/components/LayoutBuilder.tsx:11](../src/components/LayoutBuilder.tsx#L11)（锚点：`export function LayoutBuilder`）
+- **代码依据：** [src/pages/LayoutsPage.tsx:19](../src/pages/LayoutsPage.tsx#L19)（锚点：`export function`）；[src/components/LayoutBuilder.tsx:12](../src/components/LayoutBuilder.tsx#L12)（锚点：`export function LayoutBuilder`）
 
 ### FACT-M06-REQ-015 文档批量标注
 
@@ -1893,3 +1893,10 @@
 - 2026-10-09 / v0.5：统一基础权限复选框与特殊权限开关；Saved Search 文件夹增加右键移动与权限；Layout 列表增加序号、选择、编辑与权限图标；同步受影响证据行号。
 - 2026-10-09 / v0.5：删除 Layout 权限中的字段赋值区块；字段权限新增 Edit Security 复选框；保留 Layout 对象基础权限和特殊权限开关。
 - 2026-10-09 / v0.5：保存 Saved Search 的所有者与可见性合并为是否公开复选框；公开状态继续写入 Saved Search 的 public/private。
+- 2026-10-09 / v0.5：处理设置包含选项联动、源文件夹结构文案、处理集总览官方表头与筛选、处理集新建左右布局、默认初级律师和高级律师布局
+- 2026-10-09 / v0.5：处理设置包含选项联动、源文件夹结构文案、处理集总览官方表头与筛选、处理集新建左右布局、默认初级律师和高级律师布局
+- 2026-10-09 / v0.5：修正Inclusion联动纵向顺序；Inventory完成后提供官方Date range和File Type筛选；移除All Files with Exceptions入口；重命名布局字段占用列数并在预览按列位置与列宽展示
+- 2026-10-09 / v0.5：修正Inclusion条件内容纵向展开；Inventory完成后提供官方Date range和File Type组合筛选及样例结果；移除All Files with Exceptions入口；布局字段改为占用行数与占用列数并在编辑器/预览同步避让展示
+- 2026-10-09 / v0.5：处理集详情页改为左侧约三分之二、右侧约三分之一；阶段数量统计移到横向状态下方；移除与处理文件按钮重复的Inventory/Discover/Publish说明卡
+- 2026-10-09 / v1.1：处理集详情改为独立约2比1两栏，数量统计下置并移除三段重复介绍；桌面布局及新建数据源位置通过浏览器验证，业务状态规则保持。同步Excel现有确认值与实际HEAD。
+- 2026-10-09 / v1.2：提交前完成处理设置、Inventory日期类型筛选、Files视图、默认律师布局及行列占位的语义核对；浏览器回归通过，保留人工确认及真实后端未完成边界。

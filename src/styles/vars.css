@@ -1,4 +1,6 @@
 :root {
+  --size-processing-sidebar-min: 320px;
+  --size-layout-span-row: 82px;
   --color-brand: #ef5b25;
   --color-brand-dark: #c94212;
   --color-brand-soft: #fff1eb;
