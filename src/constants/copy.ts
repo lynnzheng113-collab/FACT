@@ -3984,6 +3984,7 @@ export const copy = {
     savedSearchOwnerMe: "当前用户 / Me",
     savedSearchOwnerAdmin: "管理员 / Administrator",
     savedSearchVisibility: "可见性 / Visibility",
+    savedSearchPublicToggle: "是否公开 / Public",
     savedSearchPublic: "公开 / Public",
     savedSearchPrivate: "私有 / Private",
     savedSearchFolder: "保存到文件夹 / Save to folder",

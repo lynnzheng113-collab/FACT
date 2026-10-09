@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "reviewedAt": "2026-10-09",
-  "reason": "删除 Layout 权限中的字段赋值区块；字段权限新增 Edit Security 复选框；保留 Layout 对象基础权限和特殊权限开关。",
+  "reason": "保存 Saved Search 的所有者与可见性合并为是否公开复选框；公开状态继续写入 Saved Search 的 public/private。",
   "affectedIds": [
     "FACT-M01-REQ-001",
     "FACT-M01-REQ-002",
@@ -135,12 +135,12 @@
     "src/components/UserForm.tsx": "52abb0b939e345efc64c174014d6915d91edbf49767d496892a9b1d177d942fa",
     "src/components/WorkspaceAdvanced.tsx": "ad6cdd8031f137be82b9839d4ebb7947b209594496b613d60a8b82f5acc3ee7a",
     "src/components/WorkspacePermissions.tsx": "82bb7b4148d2f5979fb8aeb0cab58f105ed83e244457433687d88d1921710afc",
-    "src/constants/copy.ts": "9379a9f0d582a833e72bf7032fc2f21275603ccb90648cef375b534a6bd11df9",
+    "src/constants/copy.ts": "cd35f720b2d66919e2d4f4ebd2a2deb52e7d2ab71275843bd85c6cacf6cd423c",
     "src/main.tsx": "00192230c902a8bc8730ac3c5ce29da318fc3072eeaa9eb8fec1d8faa21a18c9",
     "src/pages/AccessPages.tsx": "0347613aae4cd6e41291d1b1b94cba7651188d8a2dc2621042defbcaa5941662",
     "src/pages/AnalyticsPage.tsx": "bd808f39acd01b63a98cffacdce7535c38937d51b4823db01b4491f0065a6863",
     "src/pages/AuditPage.tsx": "b79f730553bbe82ed07adf90651f113f74747ddaacfb9f08a5f11a6bc415891f",
-    "src/pages/DocumentsPage.tsx": "70ec33bde03472962b578030fe68c0bfb494268cea2f71b5ebe46e6eaf75728b",
+    "src/pages/DocumentsPage.tsx": "1a98eb914434867eb2040b3eca934dbccfac5baa939423b82b5589d0bb8f808f",
     "src/pages/ExportPage.tsx": "cf9fabcbe9611f13eaaf722182c86b8d50e18e1cde8ca3214cc298507166986a",
     "src/pages/FieldsPage.tsx": "e96c36f4415759742c7ce61aeac7a5eabcce1abedcf88c822c344d4b2df9fdcf",
     "src/pages/HomePage.tsx": "95618cbc89fb634bb7ebb64060c1447cf37f8fcc83c7e4b104e330918e8b3fb5",
@@ -180,7 +180,7 @@
     "tsconfig.node.json": "477a22e56a74a5ed799afa0ef521eae5d4d12cdc8a411465242c3c1d7f6ec72c",
     "vite.config.ts": "8a18c5e2038444028aa8afde616e9a899a477a4f5321f22a3d924649a10b40c1"
   },
-  "ledgerHash": "5bea9cab08797d872a66f81f0b83b8f980f91d110af68a87f1c7b6fc8ef62a23",
-  "featuresHash": "3e16808fb733e9d555d3c6ce14375b25eb04eaea018f8ba984fa13d3f081bbd4",
-  "markdownHash": "430ea202c41e686617b529dcbc8e12c30ef29c4822a22ba843206870a44d8af7"
+  "ledgerHash": "a661cbaacf7190735dacaa0500626f9373c51b5fb0c4b33360175a37c18eabf4",
+  "featuresHash": "6e6d9bf76bfc2eb2949a37fad73964d7daec982bbba133089451c673c95ce43b",
+  "markdownHash": "5c174b23b516dd1cef8b75baef792c922845a4f66746786413a925538d819030"
 }

@@ -838,7 +838,7 @@
 - **人工确认：** 待确认；确认人：未填写；日期：未填写；说明：未填写
 - **来源：** 原版源码核对；不追加未经核实的 Relativity 来源编号
 - **核对：** 2026-10-08；含未提交工作区修改；2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败
-- **代码依据：** [src/pages/DocumentsPage.tsx:27](../src/pages/DocumentsPage.tsx#L27)（锚点：`const [sampleOpen`）
+- **代码依据：** [src/pages/DocumentsPage.tsx:26](../src/pages/DocumentsPage.tsx#L26)（锚点：`const [sampleOpen`）
 
 ### FACT-M05-REQ-018 Saved Search 文件夹与访问设置
 
@@ -853,7 +853,7 @@
 - **人工确认：** 待确认；确认人：未填写；日期：未填写；说明：未填写
 - **来源：** 原版源码核对；不追加未经核实的 Relativity 来源编号
 - **核对：** 2026-10-08；含未提交工作区修改；2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败
-- **代码依据：** [src/pages/DocumentsPage.tsx:38](../src/pages/DocumentsPage.tsx#L38)（锚点：`const [moveOpen`）
+- **代码依据：** [src/pages/DocumentsPage.tsx:37](../src/pages/DocumentsPage.tsx#L37)（锚点：`const [moveOpen`）
 - **父项：** FACT-M05-REQ-005；本条为其细化，避免重复估时。
 
 ### FACT-M05-REQ-019 保管人查询条件选择
@@ -869,7 +869,7 @@
 - **人工确认：** 待确认；确认人：未填写；日期：未填写；说明：未填写
 - **来源：** 原版源码核对；不追加未经核实的 Relativity 来源编号
 - **核对：** 2026-10-08；含未提交工作区修改；2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败
-- **代码依据：** [src/pages/DocumentsPage.tsx:36](../src/pages/DocumentsPage.tsx#L36)（锚点：`const [custodianOpen`）
+- **代码依据：** [src/pages/DocumentsPage.tsx:35](../src/pages/DocumentsPage.tsx#L35)（锚点：`const [custodianOpen`）
 - **父项：** FACT-M05-REQ-004；本条为其细化，避免重复估时。
 
 ### FACT-M05-REQ-020 索引可搜索集、构建与激活配置
@@ -1892,3 +1892,4 @@
 - 2026-10-09 / v0.5：统一权限控件和条目入口：基础对象权限使用复选框，文档操作和字段赋值等特殊权限使用开关；Saved Search 文件夹支持右键权限与移动；Layout 列表增加序号、选择、编辑和权限图标。
 - 2026-10-09 / v0.5：统一基础权限复选框与特殊权限开关；Saved Search 文件夹增加右键移动与权限；Layout 列表增加序号、选择、编辑与权限图标；同步受影响证据行号。
 - 2026-10-09 / v0.5：删除 Layout 权限中的字段赋值区块；字段权限新增 Edit Security 复选框；保留 Layout 对象基础权限和特殊权限开关。
+- 2026-10-09 / v0.5：保存 Saved Search 的所有者与可见性合并为是否公开复选框；公开状态继续写入 Saved Search 的 public/private。
