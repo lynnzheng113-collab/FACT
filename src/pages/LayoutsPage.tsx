@@ -1,13 +1,14 @@
 import { useRef, useState } from "react";
-import { Plus, Search } from "lucide-react";
+import { Pencil, Plus, Search, ShieldCheck } from "lucide-react";
 import { copy } from "../constants/copy";
 import { useAdministration } from "../state/Administration";
 import { fieldTimestamp } from "../state/fields";
 import { createId } from "../state/ids";
 import { defaultSections, type LayoutRecord } from "../state/layouts";
-import { Button, Field, Modal, Panel, Toggle } from "../components/UI";
+import { Button, Field, IconButton, Modal, Panel, Toggle } from "../components/UI";
 import { LayoutBuilder } from "../components/LayoutBuilder";
 import { LayoutPreview } from "../components/LayoutPreview";
+import { ItemSecurityEditor, type ItemPermissionDraft } from "../components/ItemSecurityEditor";
 import "../styles/layouts.css";
 
 const t = copy.layoutManagement, f = copy.fieldManagement, c = copy.common, w = copy.workspaceManagement;
@@ -16,7 +17,7 @@ const blank = (): Draft => ({ id: "", name: "", order: "", copyPrevious: false, 
 const detail = (items: Array<[string, string | number]>) => <dl className="detail-grid">{items.map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value === "" ? f.empty : value}</dd></div>)}</dl>;
 
 export function LayoutsPage({ notify }: { notify: (message: string) => void }) {
-  const { layouts, setLayouts, fields } = useAdministration();
+  const { layouts, setLayouts, fields, groups, activeWorkspaceId } = useAdministration();
   const [view, setView] = useState<"list" | "form" | "detail">("list");
   const [selectedId, setSelectedId] = useState("");
   const [draft, setDraft] = useState<Draft>(blank);
@@ -26,6 +27,10 @@ export function LayoutsPage({ notify }: { notify: (message: string) => void }) {
   const [builderOpen, setBuilderOpen] = useState(false);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const [securityOpen, setSecurityOpen] = useState(false);
+  const [securityDraft, setSecurityDraft] = useState<ItemPermissionDraft>({});
+  const [securityIncluded, setSecurityIncluded] = useState<string[]>([]);
+  const [checkedLayoutIds, setCheckedLayoutIds] = useState<string[]>([]);
   const history = useRef<HTMLDivElement>(null);
   const selected = layouts.find(layout => layout.id === selectedId);
   const sorted = [...layouts].sort((a, b) => a.order - b.order || a.name.localeCompare(b.name));
@@ -50,7 +55,7 @@ export function LayoutsPage({ notify }: { notify: (message: string) => void }) {
   return <div className="layouts-page">
     {view === "list" && <>
       <div className="admin-toolbar"><Button variant="primary" icon={<Plus size={17} />} onClick={() => { setDraft(blank()); setView("form"); setError(""); }}>{t.new}</Button><strong>{t.all}</strong><label className="admin-search"><Search size={16} /><input aria-label={t.filter} placeholder={t.filter} value={search} onChange={e => setSearch(e.target.value)} /></label></div>
-      <Panel className="table-panel admin-list"><div className="table-scroll"><table><thead><tr>{t.columns.map(label => <th key={label}>{label}</th>)}</tr></thead><tbody>{sorted.filter(layout => layout.name.toLowerCase().includes(search.toLowerCase())).map(layout => <tr key={layout.id}><td>{f.document}</td><td><button className="table-link" onClick={() => open(layout.id)}>{layout.name}</button></td><td>{layout.order}</td><td>{layout.copyPrevious ? copy.userManagement.yes : copy.userManagement.no}</td></tr>)}{!sorted.some(layout => layout.name.toLowerCase().includes(search.toLowerCase())) && <tr><td colSpan={t.columns.length} className="admin-empty">{copy.userManagement.noData}</td></tr>}</tbody></table></div></Panel>
+      <Panel className="table-panel admin-list"><div className="table-scroll"><table><thead><tr><th className="field-table-index">{f.index}</th><th className="field-table-selection"><input type="checkbox" aria-label={f.selectFields} checked={sorted.length > 0 && sorted.every(layout => checkedLayoutIds.includes(layout.id))} onChange={event => setCheckedLayoutIds(event.target.checked ? sorted.map(layout => layout.id) : [])} /></th><th className="field-table-icon">{f.editColumn}</th><th className="field-table-icon">{f.permissionColumn}</th>{t.columns.map(label => <th key={label}>{label}</th>)}</tr></thead><tbody>{sorted.filter(layout => layout.name.toLowerCase().includes(search.toLowerCase())).map((layout, index) => <tr key={layout.id}><td className="field-table-index">{index + 1}</td><td className="field-table-selection"><input type="checkbox" aria-label={`${f.selectField}: ${layout.name}`} checked={checkedLayoutIds.includes(layout.id)} onChange={event => setCheckedLayoutIds(current => event.target.checked ? [...new Set([...current, layout.id])] : current.filter(id => id !== layout.id))} /></td><td className="field-table-icon"><IconButton label={`${f.fieldEdit}: ${layout.name}`} onClick={() => { open(layout.id); setView("form"); }}><Pencil size={16} /></IconButton></td><td className="field-table-icon"><IconButton label={`${f.fieldPermissions}: ${layout.name}`} onClick={() => { open(layout.id); setSecurityOpen(true); }}><ShieldCheck size={16} /></IconButton></td><td>{f.document}</td><td><button className="table-link" onClick={() => open(layout.id)}>{layout.name}</button></td><td>{layout.order}</td><td>{layout.copyPrevious ? copy.userManagement.yes : copy.userManagement.no}</td></tr>)}{!sorted.some(layout => layout.name.toLowerCase().includes(search.toLowerCase())) && <tr><td colSpan={t.columns.length + 4} className="admin-empty">{copy.userManagement.noData}</td></tr>}</tbody></table></div></Panel>
     </>}
     {view === "form" && <form noValidate onSubmit={e => { e.preventDefault(); save("save"); }}>
       <div className="admin-actions"><Button variant="primary" type="submit">{c.save}</Button><Button onClick={() => save("new")}>{w.saveAndNew}</Button><Button onClick={() => save("back")}>{w.saveAndBack}</Button><Button onClick={() => draft.id ? open(draft.id) : back()}>{c.cancel}</Button></div>
@@ -66,12 +71,13 @@ export function LayoutsPage({ notify }: { notify: (message: string) => void }) {
       <Panel title={w.other}><div className="admin-identity-form field-form"><Field label={w.keywords}><input aria-label={w.keywords} value={draft.keywords} onChange={e => change("keywords", e.target.value)} /></Field><Field label={w.notes}><textarea aria-label={w.notes} value={draft.notes} onChange={e => change("notes", e.target.value)} /></Field></div></Panel>
     </form>}
     {view === "detail" && selected && <>
-      <div className="admin-actions"><Button variant="primary" onClick={() => { setDraft({ ...selected, order: String(selected.order) }); setView("form"); }}>{c.edit}</Button><Button onClick={() => setDeleteOpen(true)}>{w.delete}</Button><Button onClick={back}>{c.back}</Button><span title={f.advancedUnavailable}><Button disabled>{w.editPermissions}</Button></span><Button onClick={() => history.current?.scrollIntoView({ behavior: "smooth", block: "center" })}>{w.viewAudit}</Button></div>
+      <div className="admin-actions"><Button variant="primary" onClick={() => { setDraft({ ...selected, order: String(selected.order) }); setView("form"); }}>{c.edit}</Button><Button onClick={() => setDeleteOpen(true)}>{w.delete}</Button><Button onClick={back}>{c.back}</Button><Button onClick={() => setSecurityOpen(true)}>{w.editPermissions}</Button><Button onClick={() => history.current?.scrollIntoView({ behavior: "smooth", block: "center" })}>{w.viewAudit}</Button></div>
       <div className="layout-detail"><div><Panel title={t.information}>{detail([[f.objectType, f.document], [w.name, selected.name], [f.order, selected.order], [t.copyPrevious, selected.copyPrevious ? copy.userManagement.yes : copy.userManagement.no], [t.overwrite, t.disabled], [t.applications, f.empty]])}</Panel><Panel title={w.other}>{detail([[w.keywords, selected.keywords], [w.notes, selected.notes]])}</Panel><div ref={history}><Panel title={w.recordHistory}>{detail([[w.createdBy, copy.workspace.user], [w.createdOn, selected.createdOn], [w.lastModifiedBy, copy.workspace.user], [w.lastModifiedOn, selected.modifiedOn]])}</Panel></div></div><Panel title={t.build}><div className="layout-detail-actions"><Button variant="primary" onClick={() => setBuilderOpen(true)}>{t.build}</Button><Button onClick={() => setPreviewOpen(true)}>{t.preview}</Button></div></Panel></div>
     </>}
     <Modal open={orderOpen} title={f.orderReference} onClose={() => setOrderOpen(false)} footer={<Button onClick={() => setOrderOpen(false)}>{c.close}</Button>}><p>{t.orderReferenceHint}</p><table><thead><tr><th>{w.name}</th><th>{f.order}</th></tr></thead><tbody>{sorted.map(layout => <tr key={layout.id}><td>{layout.name}</td><td>{layout.order}</td></tr>)}{!sorted.length && <tr><td colSpan={2}>{copy.userManagement.noData}</td></tr>}</tbody></table></Modal>
     <Modal open={deleteOpen} title={t.deleteTitle} onClose={() => setDeleteOpen(false)} footer={<><Button onClick={() => setDeleteOpen(false)}>{c.cancel}</Button><Button variant="danger" onClick={() => { setLayouts(current => current.filter(layout => layout.id !== selectedId)); setDeleteOpen(false); back(); notify(f.deleted); }}>{w.delete}</Button></>}><p>{t.deleteHint}</p></Modal>
     {builderOpen && selected && <LayoutBuilder layout={selected} fields={fields} onClose={() => setBuilderOpen(false)} onSave={sections => { setLayouts(current => current.map(layout => layout.id === selectedId ? { ...layout, sections, modifiedOn: fieldTimestamp() } : layout)); notify(t.saved); }} />}
     {previewOpen && selected && <LayoutPreview layout={selected} fields={fields} onClose={() => setPreviewOpen(false)} />}
+    {selected && <ItemSecurityEditor open={securityOpen} title={copy.itemSecurity.layout} itemName={selected.name} workspaceName={activeWorkspaceId ?? copy.workspaceManagement.workspace} groups={groups.filter(group => !activeWorkspaceId || group.workspaceIds.includes(activeWorkspaceId))} initialIncludedIds={securityIncluded.length ? securityIncluded : groups.filter(group => !activeWorkspaceId || group.workspaceIds.includes(activeWorkspaceId)).map(group => group.id)} initialPermissions={securityDraft} sections={[{ id: "layout", label: copy.itemSecurity.layout, rows: [{ id: "view", label: copy.itemSecurity.view }, { id: "edit", label: copy.itemSecurity.edit }, { id: "delete", label: copy.itemSecurity.delete }, { id: "add", label: copy.itemSecurity.add }, { id: "security", label: copy.itemSecurity.security }] }, { id: "fields", label: copy.itemSecurity.layoutFields, rows: [{ id: "assignFieldValues", label: copy.itemSecurity.assignFieldValues }, ...fields.slice(0, 6).map(field => ({ id: `field.${field.id}`, label: `${field.name} · ${copy.itemSecurity.assignFieldValues}` }))] }]} onClose={() => setSecurityOpen(false)} onSave={(includedIds, permissions) => { setSecurityIncluded(includedIds); setSecurityDraft(permissions); setSecurityOpen(false); notify(copy.permissionManagement.saved); }} />}
   </div>;
 }
