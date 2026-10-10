@@ -29,14 +29,14 @@ function PrototypeApp() {
   const [reviewOrigin, setReviewOrigin] = useState<PageId>("documents");
   const [rawImportOpen, setRawImportOpen] = useState(false);
   const [otherTab, setOtherTab] = useState<string>(copy.tasks.title);
-  const [scopeOpen, setScopeOpen] = useState(false), [notificationsOpen, setNotificationsOpen] = useState(false), [helpOpen, setHelpOpen] = useState(false), [userOpen, setUserOpen] = useState(false);
+  const [notificationsOpen, setNotificationsOpen] = useState(false), [helpOpen, setHelpOpen] = useState(false), [userOpen, setUserOpen] = useState(false);
   const [toast, setToast] = useState<string | null>(null), [audit, setAudit] = useState<AuditRecord[]>(createAuditSamples);
   const { workspaces, activeWorkspaceId, setActiveWorkspaceId, qcPassed, setQcPassed } = useAdministration();
   const workspace = workspaces.find(item => item.id === activeWorkspaceId);
   useEffect(() => { if (!toast) return; const timer = window.setTimeout(() => setToast(null), 3200); return () => window.clearTimeout(timer); }, [toast]);
   const record = (action: string, actor = role) => { if (!actor) return; const account = copy.access.accounts[actor]; setAudit(current => [{ id: createId(), timestamp: new Date().toISOString(), user: account.name, userId: account.id, action, workspaceId: "admin", workspaceName: copy.audit.adminCase, objectType: copy.audit.userType, objectId: account.id, objectName: account.name, executionTime: 0, changes: [], details: action === copy.audit.login ? copy.audit.loginDetail : copy.audit.logoutDetail, source: "session" }, ...current]); };
   const notify = (message: string) => { setToast(message); };
-  const closeOverlays = () => { setNotificationsOpen(false); setHelpOpen(false); setUserOpen(false); setScopeOpen(false); };
+  const closeOverlays = () => { setNotificationsOpen(false); setHelpOpen(false); setUserOpen(false); };
   const navigate = (nextPage: PageId) => { if (!role || !canNavigate(role, Boolean(workspace), nextPage)) return setToast(copy.access.denied); if (nextPage === "review") setReviewOrigin(page === "batches" ? "batches" : page === "other" ? "other" : "documents"); if (nextPage !== "home") setRawImportOpen(false); setPage(nextPage); closeOverlays(); window.scrollTo({ top: 0, behavior: "auto" }); };
   const enterWorkspace = (id: string) => { const target = workspaces.find(item => item.id === id); if (!target || !role) return; setActiveWorkspaceId(id); setPage(role === "admin" ? "home" : "documents"); setRawImportOpen(false); setOtherTab(copy.tasks.title); closeOverlays(); setToast(null); window.scrollTo(0, 0); };
   const leaveWorkspace = () => { setActiveWorkspaceId(null); setPage("workspaces"); setRawImportOpen(false); closeOverlays(); setToast(null); };
@@ -60,5 +60,5 @@ function PrototypeApp() {
     production: <ProductionPage navigate={navigate} notify={notify} qcPassed={qcPassed} />,
     tasks: <TasksPage notify={notify} />, other,
   } satisfies Record<PageId, ReactNode>;
-  return <AppShell page={page} role={role} workspace={workspace} onLeave={leaveWorkspace} onLogout={logout} reviewOrigin={reviewOrigin} onPageChange={navigate} scopeOpen={scopeOpen} setScopeOpen={setScopeOpen} notificationsOpen={notificationsOpen} setNotificationsOpen={setNotificationsOpen} helpOpen={helpOpen} setHelpOpen={setHelpOpen} userOpen={userOpen} setUserOpen={setUserOpen}><div key={`${role}:${activeWorkspaceId ?? "platform"}`}>{canNavigate(role, Boolean(workspace), page) ? content[page] : null}</div><Toast message={toast} tone={toast && ([copy.review.validation, copy.documents.lockedMessage, copy.redaction.blocked, copy.production.blocked, copy.access.denied] as readonly string[]).includes(toast) ? "danger" : "success"} onClose={() => setToast(null)} /></AppShell>;
+  return <AppShell page={page} role={role} workspace={workspace} onLeave={leaveWorkspace} onLogout={logout} reviewOrigin={reviewOrigin} onPageChange={navigate} notificationsOpen={notificationsOpen} setNotificationsOpen={setNotificationsOpen} helpOpen={helpOpen} setHelpOpen={setHelpOpen} userOpen={userOpen} setUserOpen={setUserOpen}><div key={`${role}:${activeWorkspaceId ?? "platform"}`}>{canNavigate(role, Boolean(workspace), page) ? content[page] : null}</div><Toast message={toast} tone={toast && ([copy.review.validation, copy.documents.lockedMessage, copy.redaction.blocked, copy.production.blocked, copy.access.denied] as readonly string[]).includes(toast) ? "danger" : "success"} onClose={() => setToast(null)} /></AppShell>;
 }

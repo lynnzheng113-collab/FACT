@@ -3,7 +3,7 @@ import {
   Bell,
   ChevronDown,
   ClipboardCheck,
-  FileSearch,
+  ArrowLeft,
   Files,
   FolderCog,
   HelpCircle,
@@ -20,7 +20,7 @@ import {
 import { copy, type PageId } from "../constants/copy";
 import { navigationFor, activeModule, type Role } from "../state/navigation";
 import type { WorkspaceRecord } from "../state/Administration";
-import { Badge, Drawer, IconButton } from "./UI";
+import { Button, IconButton } from "./UI";
 
 const iconMap: Record<PageId, typeof Home> = {
   audit: ClipboardCheck, reviewSetup: FolderCog, other: Menu, batches: ClipboardCheck,
@@ -42,8 +42,6 @@ export function AppShell({
   role, workspace, onLeave, onLogout, reviewOrigin,
   onPageChange,
   children,
-  scopeOpen,
-  setScopeOpen,
   notificationsOpen,
   setNotificationsOpen,
   helpOpen,
@@ -55,8 +53,6 @@ export function AppShell({
   role: Role; workspace?: WorkspaceRecord; onLeave: () => void; onLogout: () => void; reviewOrigin: PageId;
   onPageChange: (page: PageId) => void;
   children: ReactNode;
-  scopeOpen: boolean;
-  setScopeOpen: (open: boolean) => void;
   notificationsOpen: boolean;
   setNotificationsOpen: (open: boolean) => void;
   helpOpen: boolean;
@@ -88,27 +84,21 @@ export function AppShell({
             );
           })}
         </nav>
-        {role === "admin" && <IconButton label={copy.common.openMenu} onClick={() => setScopeOpen(true)}>
-          <Menu size={20} />
-        </IconButton>}
       </aside>
 
       <div className="app-shell__main">
         <header className="topbar">
-          <button type="button" className="workspace-switcher" title={copy.access.leave} onClick={onLeave}>
-            <span className="workspace-switcher__client">{workspace?.clientName ?? (role === "admin" ? copy.access.platform : copy.access.selection)}</span>
-            <strong>{workspace?.name ?? copy.workspace.allWorkspaces}</strong>
-            <ChevronDown size={16} aria-hidden="true" />
-          </button>
+          <div className="workspace-navigation">
+            {workspace && <Button className="workspace-return" icon={<ArrowLeft size={18} aria-hidden="true" />} onClick={onLeave}>{copy.access.leave}</Button>}
+            <div className="workspace-switcher">
+              <span className="workspace-switcher__client">{workspace?.clientName ?? (role === "admin" ? copy.access.platform : copy.access.selection)}</span>
+              <strong>{workspace?.name ?? copy.workspace.allWorkspaces}</strong>
+            </div>
+          </div>
           <div className="topbar__tools">
             {workspace && <button type="button" className="global-search" onClick={() => onPageChange("documents")}>
               <Search size={16} aria-hidden="true" />
               <span>{copy.common.search}</span>
-            </button>}
-            {role === "admin" && <button type="button" className="scope-button" onClick={() => setScopeOpen(true)}>
-              <FileSearch size={17} aria-hidden="true" />
-              <span>{copy.common.scope}</span>
-              <Badge tone="info">{copy.scope.totalNumber}</Badge>
             </button>}
             <IconButton label={copy.common.notifications} onClick={() => setNotificationsOpen(!notificationsOpen)} active={notificationsOpen}>
               <Bell size={19} />
@@ -156,7 +146,7 @@ export function AppShell({
           )}
         </header>
 
-        <div className="scope-context"><span>{copy.access.roles[role]}</span><span>{workspace ? copy.access.workspaceScope : copy.access.platformScope}</span>{workspace && <button type="button" onClick={onLeave}>{copy.access.leave}</button>}</div>
+        <div className="scope-context"><span>{copy.access.roles[role]}</span><span>{workspace ? copy.access.workspaceScope : copy.access.platformScope}</span></div>
         <main className="page-canvas">{children}</main>
         <footer className="prototype-footer">
           <span>{copy.meta.prototype}</span>
@@ -166,26 +156,6 @@ export function AppShell({
         </footer>
       </div>
 
-      <Drawer open={scopeOpen} title={copy.scope.title} onClose={() => setScopeOpen(false)}>
-        <div className="scope-summary">
-          <Badge tone="info">{copy.scope.total}</Badge>
-          <Badge tone="danger">{copy.scope.p0}</Badge>
-          <Badge tone="warning">{copy.scope.p1}</Badge>
-        </div>
-        <p>{copy.scope.intro}</p>
-        <div className="scope-list">
-          {copy.scope.groups.map((group) => (
-            <button type="button" key={group.ids} onClick={() => setScopeOpen(false)}>
-              <span><strong>{group.title}</strong><small>{group.ids}</small></span>
-              <Badge tone={group.count.includes("P0") ? "danger" : "warning"}>{group.count}</Badge>
-            </button>
-          ))}
-        </div>
-        <div className="scope-boundary">
-          <h3>{copy.scope.boundaryTitle}</h3>
-          <p>{copy.scope.boundary}</p>
-        </div>
-      </Drawer>
     </div>
   );
 }

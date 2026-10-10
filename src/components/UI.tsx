@@ -65,23 +65,13 @@ export function Badge({ children, tone = "neutral" }: { children: ReactNode; ton
   return <span className={`badge badge--${tone}`}>{children}</span>;
 }
 
-export function PriorityBadge({ priority }: { priority: "P0" | "P1" }) {
-  return (
-    <span className={`priority priority--${priority.toLowerCase()}`}>
-      {priority === "P0" ? copy.common.priorityP0 : copy.common.priorityP1}
-    </span>
-  );
-}
-
 export function PageHeader({
   title,
   subtitle,
-  ids,
-  priorities = ["P0", "P1"],
   actions,
 }: {
   title: string;
-  subtitle: string;
+  subtitle?: string;
   ids: string;
   priorities?: Array<"P0" | "P1">;
   actions?: ReactNode;
@@ -89,14 +79,8 @@ export function PageHeader({
   return (
     <header className="page-header">
       <div className="page-header__copy">
-        <div className="page-header__eyebrow">
-          {priorities.map((priority) => (
-            <PriorityBadge key={priority} priority={priority} />
-          ))}
-          <span className="feature-ids">{ids}</span>
-        </div>
         <h1>{title}</h1>
-        <p>{subtitle}</p>
+        {subtitle && <p>{subtitle}</p>}
       </div>
       {actions && <div className="page-header__actions">{actions}</div>}
     </header>

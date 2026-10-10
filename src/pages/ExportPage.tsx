@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { ArrowDown, ArrowLeft, ArrowUp, Database, Download, Folder, GripVertical, PackageCheck, Plus, Rocket, Search, Trash2, X } from "lucide-react";
+import { ArrowDown, ArrowLeft, ArrowUp, Database, Download, Folder, GripVertical, PackageCheck, Plus, Search, Trash2, X } from "lucide-react";
 import { copy } from "../constants/copy";
 import { Badge, Button, Field, IconButton, Panel, Toggle } from "../components/UI";
 import { TransferList } from "../components/TransferList";
@@ -33,7 +33,7 @@ function Summary({ config }: { config: ExportConfig }) {
   const rows = (items: [string, string][]) => <dl className="export-summary">{items.map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value || t.unset}</dd></div>)}</dl>;
   return <div className="export-sections">
     <Panel title={t.dataSource}>{rows([[t.jobName, config.jobName], [t.source, `${workflow.label}${t.separator}${config.source}`], [t.profile, config.profile === "local" ? config.profileName : t.none]])}</Panel>
-    <Panel title={t.locationFiles}>{rows([[t.express, config.express ? t.active : t.inactive], [t.locationType, config.location === "local" ? t.local : t.staging], ...(config.location === "local" && config.express ? [[t.selectFolder, config.folder] as [string, string]] : []), [t.addresses, config.addresses]])}</Panel>
+    <Panel title={t.locationFiles}>{rows([[t.locationType, config.location === "local" ? t.local : t.staging], ...(config.location === "local" ? [[t.selectFolder, config.folder] as [string, string]] : []), [t.addresses, config.addresses]])}</Panel>
     <Panel title={t.dataSettings}>{rows([[t.dataFormat, config.format], [t.encoding, config.encoding], [t.regional, config.region], [t.nested, yesNo(config.nested)]])}</Panel>
     <Panel title={t.selectedFields} subtitle={t.fieldCount(config.fields.length)}><ol className="export-field-summary">{config.fields.map(id => <li key={id}>{t.fields.find(field => field.id === id)?.label}</li>)}</ol></Panel>
     {config.workflow !== "rdo" && <Panel title={t.steps.files}>{rows([[t.nativeToggle, yesNo(config.natives)], [t.imageToggle, yesNo(config.images)], ...(config.images ? [[t.imageFormat, config.imageFormat], [t.fileType, config.fileType]] as [string, string][] : [])])}</Panel>}
@@ -89,7 +89,7 @@ function ExportWizard({ onClose, onSubmit }: { onClose: () => void; onSubmit: (c
   const cancel = () => step === "workflow" ? onClose() : setDiscard(true);
   const go = (next: ExportStep) => { setStep(next); setError(""); };
   const next = () => { const message = validateExport(config, step); if (message) { setError(message); return; } go(steps[index + 1]); };
-  const submit = () => { for (const item of steps) { const message = validateExport(config, item); if (message) { go(item); setError(message); return; } } onSubmit({ ...config, jobName: config.jobName.trim(), addresses: config.addresses.trim(), folder: config.location === "local" && config.express ? config.folder : "", profileName: config.profile === "local" ? config.profileName : "" }); };
+  const submit = () => { for (const item of steps) { const message = validateExport(config, item); if (message) { go(item); setError(message); return; } } onSubmit({ ...config, jobName: config.jobName.trim(), addresses: config.addresses.trim(), folder: config.location === "local" ? config.folder : "", profileName: config.profile === "local" ? config.profileName : "" }); };
   const save = () => downloadJson({ kind: "relativity-prototype-export", version: 2, config }, t.profileFilename);
   const openFolder = () => { setFolderDraft(config.folder); setFolderError(""); setFolderPicker(true); };
   const confirmFolder = () => { if (!validExportFolder(folderDraft)) { setFolderError(t.folderInvalid); return; } update("folder", folderDraft.trim().replaceAll("/", "\\")); setFolderPicker(false); };
@@ -123,7 +123,6 @@ function ExportWizard({ onClose, onSubmit }: { onClose: () => void; onSubmit: (c
         {step === "workflow" && <>
           <div className="export-mode"><Badge tone="info">{copy.common.export}</Badge></div>
           <div className="export-workflows">{t.workflows.map(item => { const Icon = workflowIcons[item.id]; return <button key={item.id} className="export-workflow" onClick={() => { setConfig(current => ({ ...current, workflow: item.id, source: "", namedAfter: item.id !== "production" && current.namedAfter === "bates" ? "control" : current.namedAfter, namePrefix: item.id === "production" ? current.namePrefix : "control", fields: (item.id === "production" ? t.fields.slice(0, 5) : item.id === "rdo" ? t.fields.filter(field => field.id === "custodian") : t.fields.filter(field => ["control", "date", "custodian", "title"].includes(field.id))).map(field => field.id) })); go("settings"); }}><Icon size={30} /><strong>{item.label}</strong><span>{item.description}</span></button>; })}</div>
-          <div className="export-express"><Rocket size={23} /><strong>{t.express}</strong><Badge tone={config.express ? "success" : "neutral"}>{config.express ? t.active : t.inactive}</Badge><Button onClick={() => update("express", !config.express)}>{config.express ? t.deactivate : t.activate}</Button></div>
         </>}
         {step === "settings" && <div className="export-sections">
           <Panel title={t.dataSource}><div className="export-form">
@@ -132,7 +131,7 @@ function ExportWizard({ onClose, onSubmit }: { onClose: () => void; onSubmit: (c
             {config.profile === "local" && <Field label={t.uploadProfile} hint={t.profileHint} required><input ref={profileInput} hidden type="file" aria-label={t.uploadProfile} accept=".ie,.json" onChange={event => { void loadProfile(event.target.files?.[0]); event.target.value = ""; }} /><div className="export-inline">{config.profileName ? <><span>{config.profileName}</span><Button onClick={clearProfile}>{copy.common.clear}</Button></> : <Button onClick={() => profileInput.current?.click()}>{t.chooseProfile}</Button>}</div>{profileNotice && <p role="status" className="export-note">{profileNotice}</p>}</Field>}
             <Field label={workflow.label} required><select aria-label={t.source} value={config.source} onChange={event => update("source", event.target.value)}><option value="">{t.choose}</option>{[...new Set([...sourceOptions, ...(config.source ? [config.source] : [])])].map(value => <option key={value}>{value}</option>)}</select></Field>
           </div></Panel>
-          <Panel title={t.locationFiles}><RadioOptions label={t.locationType} value={config.location} options={[{ value: "local", label: t.local }, { value: "staging", label: t.staging }]} onChange={value => update("location", value as ExportConfig["location"])} /><p className="export-note">{config.location === "staging" ? t.folderModeStaging : config.express ? t.folderModeLocal : t.browserDownload}</p></Panel>
+          <Panel title={t.locationFiles}><RadioOptions label={t.locationType} value={config.location} options={[{ value: "local", label: t.local }, { value: "staging", label: t.staging }]} onChange={value => update("location", value as ExportConfig["location"])} /><p className="export-note">{config.location === "staging" ? t.folderModeStaging : t.folderModeLocal}</p></Panel>
           <Panel title={t.notifications}><Field label={t.addresses}><textarea aria-label={t.addresses} placeholder={t.addressPlaceholder} value={config.addresses} onChange={event => update("addresses", event.target.value)} /></Field></Panel>
         </div>}
         {step === "folder" && <Panel title={t.steps.folder}><Field label={t.folderPath} required hint={t.folderHint}><div className="export-inline"><Folder size={19} /><input aria-label={t.folderPath} placeholder={t.folderPlaceholder} value={config.folder} onChange={event => update("folder", event.target.value)} /><Button onClick={openFolder}>{config.folder ? t.changeFolder : t.select}</Button>{config.folder && <Button onClick={() => update("folder", "")}>{copy.common.clear}</Button>}</div></Field></Panel>}

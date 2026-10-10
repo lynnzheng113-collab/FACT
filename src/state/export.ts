@@ -2,7 +2,7 @@ import { copy } from "../constants/copy";
 
 export type ExportWorkflow = "production" | "search" | "folder" | "rdo";
 export type ExportConfig = {
-  workflow: ExportWorkflow; jobName: string; source: string; express: boolean;
+  workflow: ExportWorkflow; jobName: string; source: string;
   profile: "none" | "local"; profileName: string; location: "local" | "staging";
   addresses: string; folder: string; format: string; startLine: string; encoding: string;
   region: string; nested: boolean; fields: string[]; natives: boolean; images: boolean;
@@ -15,7 +15,7 @@ export type ExportConfig = {
 export type ExportJob = { id: string; config: ExportConfig; started: number; finishes: number; owner: string };
 const t = copy.exportPage;
 export function newExportConfig(): ExportConfig {
-  return { workflow: "production", jobName: t.jobNameValue, source: "", express: true,
+  return { workflow: "production", jobName: t.jobNameValue, source: "",
     profile: "none", profileName: "", location: "staging", addresses: "", folder: "",
     format: t.formats[1], startLine: t.defaults.startLine, encoding: t.encodings[0], region: t.regions[0],
     nested: false, fields: t.fields.slice(0, 5).map(field => field.id), natives: true, images: true,
@@ -26,7 +26,7 @@ export function newExportConfig(): ExportConfig {
 }
 export type ExportStep = keyof typeof t.steps;
 export function exportSteps(config: ExportConfig): ExportStep[] {
-  return ["workflow", "settings", ...(config.location === "local" && config.express ? ["folder" as const] : []), "load", "fields", ...(config.workflow === "rdo" ? [] : ["files" as const, "naming" as const, "text" as const]), "summary"];
+  return ["workflow", "settings", ...(config.location === "local" ? ["folder" as const] : []), "load", "fields", ...(config.workflow === "rdo" ? [] : ["files" as const, "naming" as const, "text" as const]), "summary"];
 }
 export function validExportFolder(value: string): boolean {
   const path = value.trim().replaceAll("/", "\\");

@@ -4,7 +4,7 @@ import { copy } from "../constants/copy";
 import { useAdministration } from "../state/Administration";
 import { fieldTimestamp, type FieldRecord, type FieldCategory } from "../state/fields";
 import { createId } from "../state/ids";
-import { Button, Field, IconButton, Modal, PageHeader, Panel, Tabs, Toggle } from "../components/UI";
+import { Button, Field, IconButton, Modal, Panel, Tabs, Toggle } from "../components/UI";
 import { LayoutsPage } from "./LayoutsPage";
 import { FieldChoices } from "../components/FieldChoices";
 import { TransferList } from "../components/TransferList";
@@ -175,9 +175,8 @@ export function FieldsPage({ notify }: { notify: (message: string) => void }) {
   </tr>)}{!rows.length && <tr><td colSpan={t.columns.length + 4} className="admin-empty">{copy.userManagement.noData}</td></tr>}</tbody></table></div>;
   const history = activeRecord && <div ref={historyRef}><Panel title={w.recordHistory}>{details([[w.createdBy, activeRecord.createdOn ? copy.workspace.user : t.empty], [w.createdOn, activeRecord.createdOn], [w.lastModifiedBy, activeRecord.modifiedOn ? copy.workspace.user : t.empty], [w.lastModifiedOn, activeRecord.modifiedOn]])}</Panel></div>;
   const settings = <><Panel><div className="tabs"><span className="field-settings">{t.fieldSettings}</span><button type="button" disabled title={t.advancedUnavailable}>{t.advancedSettings}</button></div>{details(t.settings)}</Panel><Panel title={t.dashboard}>{details(t.dashboardSettings)}</Panel></>;
-  return <div className="page users-admin fields-admin">
-    <PageHeader title={t.title} subtitle={t.subtitle} ids={t.ids} priorities={[]} />
-    <Tabs items={[t.choices, t.categories, t.fields, t.layouts]} active={t[entity]} onChange={label => { setEntity(label === t.layouts ? "layouts" : label === t.fields ? "fields" : label === t.categories ? "categories" : "choices"); setSelectedId(""); setFilter(""); back(); }} />
+  return <Panel title={t.title}><div className="page users-admin fields-admin">
+    <Tabs items={[t.categories, t.fields, t.choices, t.layouts]} active={t[entity]} onChange={label => { setEntity(label === t.layouts ? "layouts" : label === t.fields ? "fields" : label === t.categories ? "categories" : "choices"); setSelectedId(""); setFilter(""); back(); }} />
     {entity !== "choices" && entity !== "layouts" && view === "list" && <>
       <div className="admin-toolbar"><Button variant="primary" icon={<Plus size={17} />} onClick={startNew}>{entity === "fields" ? t.newField : t.newCategory}</Button><strong>{entity === "fields" ? t.allFields : t.allCategories}</strong>{entity === "fields" && checked.length > 0 && <div className="field-bulk-actions"><Button icon={<Copy size={15} />} onClick={copySelected}>{t.copySelected}</Button><Button icon={<Download size={15} />} onClick={exportSelected}>{t.exportList}</Button><Button variant="danger" icon={<Trash2 size={15} />} onClick={() => setBulkDeleteOpen(true)}>{t.deleteSelected}</Button></div>}<label className="admin-search"><Search size={16} /><input aria-label={entity === "fields" ? t.filterFields : t.filterCategories} placeholder={entity === "fields" ? t.filterFields : t.filterCategories} value={filter} onChange={e => setFilter(e.target.value)} /></label></div>
       <Panel className="table-panel admin-list">{entity === "fields" ? fieldTable(fields.filter(field => `${field.name} ${typeName(field.type)}`.toLowerCase().includes(filter.toLowerCase()))) : <div className="table-scroll"><table><thead><tr>{t.categoryColumns.map(label => <th key={label}>{label}</th>)}</tr></thead><tbody>{sortedCategories.filter(category => category.name.toLowerCase().includes(filter.toLowerCase())).map(category => <tr key={category.id}><td><button className="table-link" onClick={() => openRecord(category.id)}>{category.name}</button></td><td>{category.order}</td><td><div className="field-links">{category.fieldIds.map(id => fields.find(field => field.id === id)).filter((field): field is FieldRecord => !!field).map(field => <button key={field.id} className="table-link" onClick={() => openRecord(field.id, "fields")}>{field.name}</button>)}</div></td></tr>)}{!sortedCategories.some(category => category.name.toLowerCase().includes(filter.toLowerCase())) && <tr><td colSpan={t.categoryColumns.length} className="admin-empty">{copy.userManagement.noData}</td></tr>}</tbody></table></div>}</Panel>
@@ -221,5 +220,5 @@ export function FieldsPage({ notify }: { notify: (message: string) => void }) {
     </Modal>
     <Modal open={bulkDeleteOpen} title={t.bulkDeleteTitle} onClose={() => setBulkDeleteOpen(false)} footer={<><Button onClick={() => setBulkDeleteOpen(false)}>{c.cancel}</Button><Button variant="danger" onClick={removeSelected}>{w.delete}</Button></>}><p>{t.bulkDeleteHint}</p></Modal>
     <Modal open={deleteOpen} title={t.deleteTitle} onClose={() => setDeleteOpen(false)} footer={<><Button onClick={() => setDeleteOpen(false)}>{c.cancel}</Button><Button variant="danger" onClick={remove}>{w.delete}</Button></>}><p>{entity === "fields" ? t.deleteFieldHint : t.deleteCategoryHint}</p></Modal>
-  </div>;
+  </div></Panel>;
 }
