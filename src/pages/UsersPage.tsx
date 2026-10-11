@@ -10,9 +10,11 @@ import { PermissionPreview } from "../components/PermissionPreview";
 import { initialPermissions, type PermissionSet } from "../state/permissions";
 import { WorkspacePermissions } from "../components/WorkspacePermissions";
 import { createId } from "../state/ids";
+import { AccountStatus, InvitationResult, UserAccount } from "../components/UserAccount";
+import { inviteUser } from "../state/userAccounts";
 
 type Entity = "users" | "groups";
-type SaveMode = "save" | "new" | "back";
+type SaveMode = "save" | "new" | "back" | "invite";
 const text = copy.userManagement;
 const common = copy.workspaceManagement;
 const fullName = (user: UserRecord) => `${user.lastName}${text.nameSeparator}${user.firstName}`;
@@ -61,16 +63,18 @@ export function UsersPage({ notify, status }: { notify: (message: string) => voi
   const openSecurityPreview = () => { const group = previewGroups[0]; const workspace = group ? workspaces.find(item => group.workspaceIds.includes(item.id)) : undefined; setPreviewGroupId(group?.id ?? ""); setPreviewWorkspaceId(workspace?.id ?? ""); setPreviewOpen(true); };
   const openPermissionEditor = () => { openSecurityPreview(); };
   const openRecord = (id: string) => { setSelectedId(id); setView("detail"); setSection(0); setCheckedMembers([]); const group = groups.find(item => item.id === id); const user = users.find(item => item.id === id); setWorkspaceDraft(group ? [...group.workspaceIds] : []); setGroupMembershipDraft(user ? groups.filter(item => item.userIds.includes(user.id)).map(item => item.id) : []); };
-  const openNew = () => { setUserForm(blankUser()); setGroupForm(newGroup()); setError(""); setSection(0); setView("form"); };
+  const openNew = () => { setUserForm(blankUser()); setGroupForm(newGroup()); setError(""); setSection(0); setSelectedId(""); setGroupMembershipDraft([]); setView("form"); };
   const back = () => { setView("list"); setError(""); setSection(0); };
   const edit = () => { if (selectedUser) setUserForm({ ...selectedUser }); if (selectedGroup) setGroupForm({ ...selectedGroup }); setError(""); setSection(0); setView("form"); };
   const commit = (mode: SaveMode) => {
     let id: string;
     if (entity === "users") {
       id = userForm.id || createId();
-      const record = { ...userForm, id, firstName: userForm.firstName.trim(), lastName: userForm.lastName.trim(), email: userForm.email.trim(), createdOn: userForm.createdOn || now(), modifiedOn: now() };
+      const base: UserRecord = { ...userForm, accountStage: userForm.accountStage ?? (userForm.id ? "active" : "draft"), id, firstName: userForm.firstName.trim(), lastName: userForm.lastName.trim(), email: userForm.email.trim(), createdOn: userForm.createdOn || now(), modifiedOn: now() };
+      const record = mode === "invite" ? inviteUser(base) : base;
+      if (!userForm.id) setGroups(current => current.map(group => groupMembershipDraft.includes(group.id) ? { ...group, userIds: [...group.userIds, id], modifiedOn: now() } : group));
       setUsers(current => record.id === userForm.id ? current.map(item => item.id === record.id ? record : item) : [...current, record]);
-      notify(text.userSaved);
+      notify(mode === "invite" ? text.account.inviteDone : text.userSaved);
     } else {
       id = groupForm.id || String(Math.max(text.idStart - 1, ...groups.map(group => Number(group.id)).filter(Number.isFinite)) + 1);
       const record = { ...groupForm, id, name: groupForm.name.trim(), createdOn: groupForm.createdOn || now(), modifiedOn: now() };
@@ -90,7 +94,8 @@ export function UsersPage({ notify, status }: { notify: (message: string) => voi
       if (users.some(user => user.id !== userForm.id && user.email.toLowerCase() === userForm.email.trim().toLowerCase())) return setError(text.duplicateEmail);
       if (userForm.trustedIPs.split(/\r?\n/).map(ip => ip.trim()).filter(Boolean).some(ip => !validIP(ip))) return setError(text.invalidIPs);
       if (userForm.disableOn && Number.isNaN(Date.parse(`${userForm.disableOn}Z`))) return setError(text.invalidDate);
-      if (userForm.access && !users.find(user => user.id === userForm.id)?.access) return setPendingSave(mode);
+      if (mode === "invite" && !userForm.access) return setError(text.account.disabledInvite);
+      if (userForm.id && userForm.access && !users.find(user => user.id === userForm.id)?.access) return setPendingSave(mode);
     } else {
       if (!groupForm.name.trim() || !groupForm.clientId) { setSection(0); return setError(text.requiredHint); }
       if (groups.some(group => group.id !== groupForm.id && group.clientId === groupForm.clientId && group.name.toLowerCase() === groupForm.name.trim().toLowerCase())) return setError(text.duplicateGroup);
@@ -106,6 +111,7 @@ export function UsersPage({ notify, status }: { notify: (message: string) => voi
     }
     setDeleteOpen(false); back(); notify(text.deleted);
   };
+  const userColumns = [...text.columns.users, text.account.status, text.account.inviteTime, text.account.result, text.account.actions];
   const visibleUsers = users.filter(user => `${fullName(user)} ${user.email} ${clientName(user.clientId)}`.toLowerCase().includes(search.toLowerCase()));
   const visibleGroups = groups.filter(group => `${group.name} ${clientName(group.clientId)}`.toLowerCase().includes(search.toLowerCase()));
   const detail = (items: Array<[string, string]>) => <dl className="detail-grid">{items.map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value || common.notProvided}</dd></div>)}</dl>;
@@ -116,16 +122,16 @@ export function UsersPage({ notify, status }: { notify: (message: string) => voi
     <Tabs items={[text.users, text.groups, copy.userStatus.title]} active={text[entity]} onChange={label => { if (label === copy.userStatus.title) { setStatusOpen(true); return; } setEntity(label === text.users ? "users" : "groups"); back(); setSearch(""); setSelectedId(""); }} />
     {view === "list" && <>
       <div className="admin-toolbar"><Button variant="primary" icon={<Plus size={17} />} onClick={openNew}>{entity === "users" ? text.newUser : text.newGroup}</Button><strong>{entity === "users" ? text.allUsers : text.allGroups}</strong><label className="admin-search"><Search size={16} /><input aria-label={entity === "users" ? text.searchUsers : text.searchGroups} placeholder={entity === "users" ? text.searchUsers : text.searchGroups} value={search} onChange={e => setSearch(e.target.value)} /></label></div>
-      <Panel className="table-panel admin-list"><div className="table-scroll"><table><thead><tr>{text.columns[entity].map(label => <th key={label}>{label}</th>)}</tr></thead><tbody>
-        {entity === "users" ? visibleUsers.map(user => <tr key={user.id}><td><button className="table-link" onClick={() => openRecord(user.id)}>{fullName(user)}</button></td><td>{clientName(user.clientId)}</td><td>{user.email}</td><td>{clientName(user.clientId)}</td><td>{user.type}</td><td>{copy.workspace.user}</td><td>{user.createdOn}</td></tr>) : visibleGroups.map(group => <tr key={group.id}><td>{group.id}</td><td><button className="table-link" onClick={() => openRecord(group.id)}>{group.name}</button></td><td>{clientName(group.clientId)}</td></tr>)}
-        {!(entity === "users" ? visibleUsers : visibleGroups).length && <tr><td colSpan={text.columns[entity].length} className="admin-empty"><Users size={24} /><p>{search ? text.noData : entity === "users" ? text.noUsers : text.noGroups}</p></td></tr>}
+      <Panel className="table-panel admin-list"><div className="table-scroll"><table><thead><tr>{(entity === "users" ? userColumns : text.columns.groups).map(label => <th key={label}>{label}</th>)}</tr></thead><tbody>
+        {entity === "users" ? visibleUsers.map(user => <tr key={user.id}><td><button className="table-link" onClick={() => openRecord(user.id)}>{fullName(user)}</button></td><td>{clientName(user.clientId)}</td><td>{user.email}</td><td>{clientName(user.clientId)}</td><td>{user.type}</td><td>{copy.workspace.user}</td><td>{user.createdOn}</td><td><AccountStatus user={user} /></td><td>{user.invitedAt ? new Date(user.invitedAt).toLocaleString(text.dateLocale, { hour12: false }) : text.account.dash}</td><td><InvitationResult user={user} /></td><td><UserAccount user={user} compact notify={notify} /></td></tr>) : visibleGroups.map(group => <tr key={group.id}><td>{group.id}</td><td><button className="table-link" onClick={() => openRecord(group.id)}>{group.name}</button></td><td>{clientName(group.clientId)}</td></tr>)}
+        {!(entity === "users" ? visibleUsers : visibleGroups).length && <tr><td colSpan={entity === "users" ? userColumns.length : text.columns.groups.length} className="admin-empty"><Users size={24} /><p>{search ? text.noData : entity === "users" ? text.noUsers : text.noGroups}</p></td></tr>}
       </tbody></table></div><div className="admin-list-footer">{text.total} {(entity === "users" ? visibleUsers : visibleGroups).length}</div></Panel>
     </>}
     {view === "form" && <>
-      <div className="admin-actions"><Button variant="primary" onClick={() => save("save")}>{copy.common.save}</Button><Button onClick={() => save("new")}>{common.saveAndNew}</Button><Button onClick={() => save("back")}>{common.saveAndBack}</Button><Button onClick={() => selectedId && (userForm.id || groupForm.id) ? openRecord(selectedId) : back()}>{copy.common.cancel}</Button></div>
+      <div className="admin-actions">{entity === "users" && !userForm.id && <Button variant="primary" onClick={() => save("invite")}>{text.account.createInvite}</Button>}<Button variant="primary" onClick={() => save("save")}>{copy.common.save}</Button><Button onClick={() => save("new")}>{common.saveAndNew}</Button><Button onClick={() => save("back")}>{common.saveAndBack}</Button><Button onClick={() => selectedId && (userForm.id || groupForm.id) ? openRecord(selectedId) : back()}>{copy.common.cancel}</Button></div>
       {error && <div role="alert" className="form-alert">{error}</div>}
       <Tabs items={tabs} active={tabs[section]} onChange={label => setSection(tabs.indexOf(label))} />
-      {entity === "users" ? <UserForm value={userForm} onChange={setUserForm} /> : <Panel title={tabs[section]}><div className="admin-identity-form"><Field label={common.name} required><input aria-label={common.name} value={groupForm.name} onChange={e => setGroupForm({ ...groupForm, name: e.target.value })} /></Field><Field label={common.client} required><ClientPicker value={groupForm.clientId} onChange={id => setGroupForm({ ...groupForm, clientId: id })} /></Field></div><OtherDetails keywords={groupForm.keywords} notes={groupForm.notes} onChange={(key, value) => setGroupForm({ ...groupForm, [key]: value })} /></Panel>}
+      {entity === "users" ? <><UserForm value={userForm} onChange={setUserForm} />{!userForm.id && <Panel title={text.groups} subtitle={text.account.groupHint}><div className="permission-checks">{groups.map(group => <label className="admin-check" key={group.id}><input type="checkbox" checked={groupMembershipDraft.includes(group.id)} onChange={event => setGroupMembershipDraft(current => event.target.checked ? [...current, group.id] : current.filter(id => id !== group.id))} />{group.name}</label>)}</div></Panel>}</> : <Panel title={tabs[section]}><div className="admin-identity-form"><Field label={common.name} required><input aria-label={common.name} value={groupForm.name} onChange={e => setGroupForm({ ...groupForm, name: e.target.value })} /></Field><Field label={common.client} required><ClientPicker value={groupForm.clientId} onChange={id => setGroupForm({ ...groupForm, clientId: id })} /></Field></div><OtherDetails keywords={groupForm.keywords} notes={groupForm.notes} onChange={(key, value) => setGroupForm({ ...groupForm, [key]: value })} /></Panel>}
     </>}
     {view === "detail" && (selectedUser || selectedGroup) && <>
       <div className="admin-actions"><Button variant="primary" onClick={edit}>{copy.common.edit}</Button><Button onClick={() => setDeleteOpen(true)}>{common.delete}</Button><Button onClick={back}>{copy.common.back}</Button><Button onClick={openSecurityPreview}>{text.previewSecurity}</Button><Button onClick={openPermissionEditor} disabled={!previewGroups.some(group => group.workspaceIds.length)}>{copy.permissionManagement.edit}</Button><Button onClick={() => setSection(1)}>{common.viewAudit}</Button></div>
@@ -134,6 +140,7 @@ export function UsersPage({ notify, status }: { notify: (message: string) => voi
         {section === 0 && (entity === "users" && selectedUser ? detail([[text.firstName, selectedUser.firstName], [text.lastName, selectedUser.lastName], [text.email, selectedUser.email], [text.type, selectedUser.type], [common.client, clientName(selectedUser.clientId)], [text.relativityAccess, selectedUser.access ? text.enabled : text.disabled], [text.disableOn, selectedUser.disableOn], [text.trustedIPs, selectedUser.trustedIPs], [common.keywords, selectedUser.keywords], [common.notes, selectedUser.notes]]) : selectedGroup && detail([[common.name, selectedGroup.name], [common.client, clientName(selectedGroup.clientId)], [text.groupType, text.systemGroup], [common.keywords, selectedGroup.keywords], [common.notes, selectedGroup.notes]]))}
         {section === 1 && detail([[common.createdBy, copy.workspace.user], [common.createdOn, (selectedUser ?? selectedGroup)?.createdOn ?? ""], [common.lastModifiedBy, copy.workspace.user], [common.lastModifiedOn, (selectedUser ?? selectedGroup)?.modifiedOn ?? ""]])}
       </Panel>
+      {entity === "users" && selectedUser && section === 0 && <UserAccount user={selectedUser} notify={notify} />}
       {entity === "groups" && selectedGroup && <Panel title={text.users} className="table-panel" actions={<><Button onClick={() => { setMemberDraft([]); setPickerOpen(true); }}>{text.add}</Button><Button disabled={!checkedMembers.length} onClick={() => { setGroups(current => current.map(group => group.id === selectedId ? { ...group, userIds: group.userIds.filter(id => !checkedMembers.includes(id)), modifiedOn: now() } : group)); setCheckedMembers([]); notify(text.removed); }}>{text.remove}</Button></>}>
         <div className="table-scroll"><table><thead><tr><th><input type="checkbox" aria-label={text.selectAll} checked={selectedGroup.userIds.length > 0 && selectedGroup.userIds.every(id => checkedMembers.includes(id))} onChange={e => setCheckedMembers(e.target.checked ? selectedGroup.userIds : [])} /></th>{text.columns.members.map(label => <th key={label}>{label}</th>)}</tr></thead><tbody>
           {users.filter(user => selectedGroup.userIds.includes(user.id)).map(user => <tr key={user.id}><td><input type="checkbox" aria-label={fullName(user)} checked={checkedMembers.includes(user.id)} onChange={e => setCheckedMembers(current => e.target.checked ? [...current, user.id] : current.filter(id => id !== user.id))} /></td><td>{fullName(user)}</td><td>{user.email}</td><td>{user.type}</td></tr>)}

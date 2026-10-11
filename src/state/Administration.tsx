@@ -19,6 +19,8 @@ export type UserRecord = {
   changeViewer: boolean; documentSkip: boolean; shortcuts: boolean; pageLength: string;
   viewerPreference: string; searchOwner: string; notifications: string; showFilters: boolean;
   keywords: string; notes: string; createdOn: string; modifiedOn: string;
+  accountStage?: "draft" | "pending" | "active";
+  invitedAt?: string; inviteExpiresAt?: string; resetSentAt?: string; resetExpiresAt?: string; lastLoginAt?: string;
 };
 export type GroupRecord = { id: string; name: string; clientId: string; userIds: string[]; workspaceIds: string[]; keywords: string; notes: string; createdOn: string; modifiedOn: string };
 

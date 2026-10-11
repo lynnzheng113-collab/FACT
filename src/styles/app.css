@@ -1920,8 +1920,6 @@ textarea {
 .login-roles input { margin-top: var(--space-1); }
 .login-roles label > span { display: flex; flex-direction: column; gap: var(--space-1); }
 .login-roles small, .login-note { color: var(--color-ink-muted); font-size: var(--font-size-sm); }
-.login-glossary-link { color: var(--color-primary); font-size: var(--font-size-sm); font-weight: var(--weight-medium); text-align: center; text-decoration: none; }
-.login-glossary-link:hover { text-decoration: underline; }
 .scope-context { align-items: center; background: var(--color-surface-alt); border-bottom: var(--size-border) solid var(--color-border-soft); display: flex; gap: var(--space-3); min-height: var(--size-scope-context); padding: var(--space-1) var(--space-5); }
 .scope-context span { color: var(--color-ink-muted); font-size: var(--font-size-xs); }
 .scope-context span:first-child { color: var(--color-primary); font-weight: var(--weight-medium); }
