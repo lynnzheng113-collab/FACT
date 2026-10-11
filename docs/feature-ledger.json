@@ -5505,6 +5505,14 @@
       "ids": [
         "FACT-P01-REQ-001"
       ]
+    },
+    {
+      "date": "2026-10-11",
+      "version": 1.7,
+      "summary": "按原型当前中英术语更新术语表，区分业务 Presentation 与产品 Representation，并同步制作、导出和文件表示翻译",
+      "ids": [
+        "FACT-P01-REQ-001"
+      ]
     }
   ]
 }

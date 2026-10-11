@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "reviewedAt": "2026-10-11",
-  "reason": "新增登录页专业术语表链接并发布站内静态术语表；不改变认证、权限或业务流程，已完成类型检查和生产构建核对",
+  "reason": "按原型当前中英术语更新术语表，区分业务 Presentation 与产品 Representation，并同步制作、导出和文件表示翻译",
   "affectedIds": [
     "FACT-P01-REQ-001"
   ],
@@ -9,7 +9,7 @@
     "index.html": "31131ed4d242933ebacf8334005b92db5c725c9081aa00738e2e6cfa9ba1647a",
     "package-lock.json": "aceee2b5557b9b4ff5d4d779d8549b00f7f3511887a552482001ee1ced604566",
     "package.json": "d47b175cfb71e266ed8334a847960c8b2e093e286aac885e46e0f44931b8482e",
-    "public/eDiscovery-glossary.html": "b3aaef55476198036984155a64880a01883e875c42497c52b3c8b5512cad603d",
+    "public/eDiscovery-glossary.html": "0f06fba7b38e2c4b4b9a401a8f040cba1f0964d5f05de4fa9ef9cf906a287cc6",
     "src/App.tsx": "592275ba314c152bc21b85596963a3abc0de9eded4f49407cb9b232b4ea185e3",
     "src/components/AppShell.tsx": "e9f5447fa8209d850adf17d9ddb489096d27c84dec16b51014fcf540a404704f",
     "src/components/FieldChoices.tsx": "d337ecfd23d537bae0a4f6b6521ff0193a6981f2f2876a12df22fa938d248a74",
@@ -69,7 +69,7 @@
     "tsconfig.node.json": "477a22e56a74a5ed799afa0ef521eae5d4d12cdc8a411465242c3c1d7f6ec72c",
     "vite.config.ts": "8a18c5e2038444028aa8afde616e9a899a477a4f5321f22a3d924649a10b40c1"
   },
-  "ledgerHash": "7b110aeb722e3581cb24ac0cd9f672c5177a2a7c1f9e2c9e3458b0e59fa64008",
+  "ledgerHash": "6079f07e8925a07f93788fe295f04dcb5d811c4a5d2fc9d33434853105a99916",
   "featuresHash": "0efda8aecc2597b5e65a99ede5bf29f6d518ba517cd63f312842324238e2dcaf",
-  "markdownHash": "345bacec480e18641b021ccbefcdf6da1587d05f3a5190754cda9c6391ec91b8"
+  "markdownHash": "9a842d1d0df1bde8a57e03b5b72b1d198c606ea875fee7aa3c20d395c7b35eae"
 }

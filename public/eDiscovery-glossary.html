@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>eDiscovery 专业术语表 v1.0 · 2026-09-20</title>
+<title>eDiscovery 专业术语表 v1.1 · 2026-10-11</title>
 <style>
 :root{--navy:#173847;--ink:#193744;--muted:#657881;--page:#f4f7f8;--gray:#e9eef0;--gray-line:#8fa2aa;--client:#c9554b;--client-bg:#fff3f1;--admin:#385f9f;--admin-bg:#eef5ff;--decision:#af7b1c;--decision-bg:#fff9e8;--green:#43815a;--green-bg:#eef8f1;--return:#b05b4e;--return-bg:#fff1ed}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--page);color:var(--ink);font:15px/1.65 "Microsoft YaHei","PingFang SC",Arial,sans-serif;overflow-x:hidden}header{background:var(--navy);color:#fff;padding:25px 28px 21px}header .inner,main{max-width:1500px;margin:0 auto}h1{margin:0;font-size:29px;line-height:1.25}header p{margin:7px 0 0;color:#d5e6eb}.toolbar{position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid #d5e0e4;padding:10px max(20px,calc((100vw - 1500px)/2));display:flex;align-items:center;gap:8px}.toolbar a,.toolbar button{border:1px solid #b8c8cf;background:#fff;color:#274c5d;border-radius:6px;padding:7px 11px;font:inherit;font-size:13px;text-decoration:none;cursor:pointer}.toolbar .spacer{flex:1}main{padding:21px 22px 48px}.intro{background:#fff;border-left:4px solid #32768a;padding:14px 17px;margin-bottom:15px;color:#3d5964}.intro strong{color:#173847}.legend{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 18px}.legend span{display:inline-flex;align-items:center;gap:6px;border:1px solid currentColor;border-radius:999px;padding:3px 10px;font-size:12px;font-weight:700}.legend i{width:9px;height:9px;border-radius:2px;background:currentColor}.client{color:var(--client)}.admin{color:var(--admin)}.gray{color:#66787f}.decision{color:var(--decision)}.section-title{text-align:center;font-size:23px;margin:18px 0 14px}.canvas{max-width:1440px;margin:0 auto;background:#fff;border:1px solid #d7e1e5;border-radius:8px;overflow:auto;box-shadow:0 3px 14px rgba(28,57,70,.06)}svg{display:block;width:1440px;height:2100px}.notes{max-width:1440px;margin:16px auto 0;color:var(--muted);font-size:13px}.notes strong{color:var(--ink)}.shot header,.shot .toolbar,.shot .intro,.shot .legend,.shot .notes{display:none}.shot main{max-width:none;padding:0}.shot .section-title{display:none}.shot .canvas{border:0;box-shadow:none;border-radius:0}.shot svg{width:1600px;height:2200px}@media print{header,.toolbar,.intro,.legend,.notes{display:none}.canvas{border:0;box-shadow:none;overflow:visible}.section-title{display:none}main{padding:0}}
@@ -13,10 +13,10 @@ svg{height:3000px!important}.shot svg{height:3100px!important}.shot .canvas{max-
 </style>
 </head>
 <body>
-<header><div class="inner"><h1>eDiscovery 专业术语表</h1><p>v1.0 · 2026-09-20 · 英文原文、中文初译与白话解释</p></div></header>
+<header><div class="inner"><h1>eDiscovery 专业术语表</h1><p>v1.1 · 2026-10-11 · 优先沿用 FACT 原型当前中英翻译；业务概念与产品对象按语境区分</p></div></header>
 <nav class="toolbar"><span class="spacer"></span><button id="printBtn" type="button">打印／导出 PDF</button></nav>
 <main class="glossary-page">
-<div class="glossary-head"><p>面向技术人员的业务词汇速查：先理解律师／调查团队在做什么，再理解系统为什么需要这些功能。中文为项目内初步翻译，具体含义仍需结合案件、辖区和交付协议确认。</p></div>
+<div class="glossary-head"><p>面向技术人员的业务词汇速查：先理解律师／调查团队在做什么，再理解系统为什么需要这些功能。术语优先沿用当前 FACT 原型的可见中英翻译；业务语境的 Presentation 与产品语境的 Representation 分开说明。具体含义仍需结合案件、辖区和交付协议确认。</p></div>
 <section class="glossary-group"><h3>一、案件与调查背景</h3><div class="term-grid">
 <article class="term-card client-term"><div class="term-en">Matter</div><div class="term-zh">案件／事项</div><p>一个诉讼、内部调查、监管响应或合规审查项目的业务单元。系统里的工作空间、文档和权限通常都围绕一个 Matter 组织。</p></article>
 <article class="term-card client-term"><div class="term-en">Internal Investigation</div><div class="term-zh">内部调查</div><p>企业调查员工行为、商业往来、舞弊、数据泄露或其他内部事件。重点不是先找“所有文件”，而是围绕调查问题建立证据范围。</p></article>
@@ -57,12 +57,12 @@ svg{height:3000px!important}.shot svg{height:3100px!important}.shot .canvas{max-
 </div></section>
 
 <section class="glossary-group"><h3>四、EDRM 生命周期与案件规则</h3><div class="term-grid">
-<article class="term-card client-term"><div class="term-en">EDRM</div><div class="term-zh">电子取证参考模型</div><p>Electronic Discovery Reference Model，把电子证据工作概括为 Information Governance、Identification、Preservation、Collection、Processing、Review、Analysis、Production 和 Presentation 等阶段。</p></article>
+<article class="term-card client-term"><div class="term-en">EDRM</div><div class="term-zh">电子取证参考模型</div><p>Electronic Discovery Reference Model，把电子证据工作概括为 Information Governance、Identification、Preservation、Collection、Processing、Review、Analysis、Production 和 Presentation 等阶段。这里的 Presentation 是 EDRM／法律业务阶段“证据呈示”，不是产品中某一份文件的 Representation（表示／文档表示）。</p></article>
 <article class="term-card client-term"><div class="term-en">Information Governance</div><div class="term-zh">信息治理</div><p>企业在日常经营中管理数据的规则，包括保存期限、访问权限、分类和删除政策，是案件发生前的数据基础。</p></article>
 <article class="term-card client-term"><div class="term-en">Identification</div><div class="term-zh">信息识别</div><p>先判断哪些人员、设备、邮箱、系统和时间范围可能包含相关数据，决定后续从哪里找。</p></article>
 <article class="term-card client-term"><div class="term-en">Review</div><div class="term-zh">审阅</div><p>由律师或调查团队逐份查看材料，并判断相关性、特权、保密性和后续处理方式。</p></article>
 <article class="term-card client-term"><div class="term-en">Analysis</div><div class="term-zh">分析</div><p>通过关系、主题、时间、语言或相似度等方法理解数据结构，帮助团队更快找到重要材料；分析结果仍需人工判断。</p></article>
-<article class="term-card client-term"><div class="term-en">Presentation</div><div class="term-zh">证据呈示</div><p>把已确认的证据在听证、庭审、调查访谈或报告中展示给法官、监管人员或其他接收方。</p></article>
+<article class="term-card client-term"><div class="term-en">Presentation</div><div class="term-zh">证据呈示</div><p>把已确认的证据在听证、庭审、调查访谈或报告中展示给法官、监管人员或其他接收方。它描述的是证据如何面向接收方呈示的业务阶段，不是文件在系统中的查看或导出版本。</p></article>
 <article class="term-card client-term"><div class="term-en">Discovery</div><div class="term-zh">证据开示／取证程序</div><p>法律程序中各方按照规则交换与争议有关的信息和证据。它不是单纯的文件搜索，而是有范围、义务和期限的程序。</p></article>
 <article class="term-card client-term"><div class="term-en">Discover</div><div class="term-zh">发现／定位材料</div><p>在产品或业务语境中，指通过搜索、筛选和分析找到可能相关的文档；它描述的是“找到材料”的动作，不等于最终认定相关。</p></article>
 <article class="term-card client-term"><div class="term-en">Legal Request</div><div class="term-zh">法律请求／监管请求</div><p>法院、监管机构或对方律师提出的材料和格式要求，决定什么范围的文档需要被识别、审阅和交付。</p></article>
@@ -115,9 +115,10 @@ svg{height:3000px!important}.shot svg{height:3100px!important}.shot .canvas{max-
 </div></section>
 
 <section class="glossary-group"><h3>七、数据处理、脱敏与交付细节</h3><div class="term-grid">
-<article class="term-card evidence-term"><div class="term-en">Native File</div><div class="term-zh">原生文件</div><p>保留原来格式的文件，例如 DOCX、XLSX、PPTX、MSG 或原始音视频文件。</p></article>
-<article class="term-card evidence-term"><div class="term-en">Image File</div><div class="term-zh">图像文件</div><p>把文档页面固定成 TIFF 或 PDF 等图像格式，方便在交付时保持页面外观一致。</p></article>
-<article class="term-card evidence-term"><div class="term-en">Text File</div><div class="term-zh">文本文件</div><p>与文档关联的可检索文字版本，接收方可以用它恢复全文搜索或辅助审阅。</p></article>
+<article class="term-card evidence-term"><div class="term-en">Native File</div><div class="term-zh">原始文件／原生文件</div><p>保留原来格式的文件，例如 DOCX、XLSX、PPTX、MSG 或原始音视频文件。原型查看器标签使用“原生 / Native”，导出语境使用“原始文件 / Natives”。</p></article>
+<article class="term-card evidence-term"><div class="term-en">Representation</div><div class="term-zh">表示／文档表示／文件表示</div><p>产品语境中，同一份文档可有多个可查看或交付的文件表示，例如 Native、Image、Extracted Text、PDF。原型中的“输出表示 / Output representations”“文件表示 / File representations”和“跨表示泄漏检查 / cross-representation leak checks”都指这个对象；它不是 EDRM 的 Presentation。</p></article>
+<article class="term-card evidence-term"><div class="term-en">Image File</div><div class="term-zh">图像文件／图像</div><p>把文档页面固定成 TIFF 或 PDF 等图像格式，方便在交付时保持页面外观一致；原型查看器和导出设置均使用“图像 / Image(s)”。</p></article>
+<article class="term-card evidence-term"><div class="term-en">Text File</div><div class="term-zh">文本文件／提取文本</div><p>与文档关联的可检索文字版本；原型中查看器、字段和文本优先级统一显示为“提取文本 / Extracted Text”。</p></article>
 <article class="term-card evidence-term"><div class="term-en">Structured Data</div><div class="term-zh">结构化数据</div><p>已经按字段和记录组织的数据，例如数据库表、交易记录或系统导出报表。</p></article>
 <article class="term-card evidence-term"><div class="term-en">Unstructured Data</div><div class="term-zh">非结构化数据</div><p>没有统一表格结构的内容，例如邮件、文档、聊天记录、图片、音频和视频。</p></article>
 <article class="term-card evidence-term"><div class="term-en">Container File</div><div class="term-zh">容器文件</div><p>里面还包含其他文件的载体，例如 PST、ZIP 或邮件归档；处理时通常需要展开其内容。</p></article>
@@ -134,7 +135,7 @@ svg{height:3000px!important}.shot svg{height:3100px!important}.shot .canvas{max-
 <article class="term-card delivery-term"><div class="term-en">Bates Prefix</div><div class="term-zh">Bates 前缀</div><p>加在 Bates 编号前面的案件或交付标识，用于区分不同案件、来源或制作卷。</p></article>
 <article class="term-card delivery-term"><div class="term-en">Confidentiality Legend</div><div class="term-zh">保密标识</div><p>印在交付页面上的保密级别或使用限制，例如 Confidential 或 Highly Confidential。</p></article>
 <article class="term-card delivery-term"><div class="term-en">Delivery Package</div><div class="term-zh">交付包</div><p>包含图像、原生文件、文本、DAT、OPT 和必要说明文件的完整输出集合。</p></article>
-<article class="term-card delivery-term"><div class="term-en">Production Validation</div><div class="term-zh">交付验证</div><p>导出后检查文件数量、页数、编号、字段、链接、遮盖和可打开性，确认交付包可以被接收方加载。</p></article>
+<article class="term-card delivery-term"><div class="term-en">Production Validation</div><div class="term-zh">制作校验／交付验证</div><p>在运行制作前及导出后检查范围、文件数量、页数、编号、字段、表示版本、链接、遮盖和可打开性；原型按钮使用“运行制作前校验 / Run pre-production validation”。</p></article>
 </div></section>
 
 <section class="glossary-group"><h3>八、脱敏、交付与质检</h3><div class="term-grid">
