@@ -16,6 +16,7 @@ export function LoginPage({ onLogin }: { onLogin: (role: Role) => void }) {
       </label>)}</div>
       <Field label={t.account}><input aria-label={t.account} readOnly value={t.accounts[role].name} /></Field>
       <Button type="submit" variant="primary">{t.enter}</Button><p className="login-note">{t.demo}</p>
+      <a className="login-glossary-link" href="./eDiscovery-glossary.html" target="_blank" rel="noreferrer">{t.glossaryLink}</a>
     </form>
   </main>;
 }

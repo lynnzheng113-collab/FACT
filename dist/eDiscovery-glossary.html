@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>eDiscovery 专业术语表 v1.0 · 2026-09-20</title>
+<style>
+:root{--navy:#173847;--ink:#193744;--muted:#657881;--page:#f4f7f8;--gray:#e9eef0;--gray-line:#8fa2aa;--client:#c9554b;--client-bg:#fff3f1;--admin:#385f9f;--admin-bg:#eef5ff;--decision:#af7b1c;--decision-bg:#fff9e8;--green:#43815a;--green-bg:#eef8f1;--return:#b05b4e;--return-bg:#fff1ed}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--page);color:var(--ink);font:15px/1.65 "Microsoft YaHei","PingFang SC",Arial,sans-serif;overflow-x:hidden}header{background:var(--navy);color:#fff;padding:25px 28px 21px}header .inner,main{max-width:1500px;margin:0 auto}h1{margin:0;font-size:29px;line-height:1.25}header p{margin:7px 0 0;color:#d5e6eb}.toolbar{position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid #d5e0e4;padding:10px max(20px,calc((100vw - 1500px)/2));display:flex;align-items:center;gap:8px}.toolbar a,.toolbar button{border:1px solid #b8c8cf;background:#fff;color:#274c5d;border-radius:6px;padding:7px 11px;font:inherit;font-size:13px;text-decoration:none;cursor:pointer}.toolbar .spacer{flex:1}main{padding:21px 22px 48px}.intro{background:#fff;border-left:4px solid #32768a;padding:14px 17px;margin-bottom:15px;color:#3d5964}.intro strong{color:#173847}.legend{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 18px}.legend span{display:inline-flex;align-items:center;gap:6px;border:1px solid currentColor;border-radius:999px;padding:3px 10px;font-size:12px;font-weight:700}.legend i{width:9px;height:9px;border-radius:2px;background:currentColor}.client{color:var(--client)}.admin{color:var(--admin)}.gray{color:#66787f}.decision{color:var(--decision)}.section-title{text-align:center;font-size:23px;margin:18px 0 14px}.canvas{max-width:1440px;margin:0 auto;background:#fff;border:1px solid #d7e1e5;border-radius:8px;overflow:auto;box-shadow:0 3px 14px rgba(28,57,70,.06)}svg{display:block;width:1440px;height:2100px}.notes{max-width:1440px;margin:16px auto 0;color:var(--muted);font-size:13px}.notes strong{color:var(--ink)}.shot header,.shot .toolbar,.shot .intro,.shot .legend,.shot .notes{display:none}.shot main{max-width:none;padding:0}.shot .section-title{display:none}.shot .canvas{border:0;box-shadow:none;border-radius:0}.shot svg{width:1600px;height:2200px}@media print{header,.toolbar,.intro,.legend,.notes{display:none}.canvas{border:0;box-shadow:none;overflow:visible}.section-title{display:none}main{padding:0}}
+svg{height:3000px!important}.shot svg{height:3100px!important}.shot .canvas{max-width:1600px;margin:0}
+.intro p{margin:0 0 10px}.intro p:last-child{margin-bottom:0}
+.page-view{display:block}.page-view[hidden]{display:none}.toolbar .nav-btn{border:1px solid #b8c8cf;background:#fff;color:#274c5d;border-radius:6px;padding:7px 11px;font:inherit;font-size:13px;cursor:pointer}.toolbar .nav-btn.active{background:#173847;color:#fff;border-color:#173847}.glossary-page{max-width:1440px;margin:0 auto}.glossary-head{background:#fff;border-left:4px solid #32768a;padding:16px 20px;margin-bottom:18px}.glossary-head h2{margin:0 0 5px;font-size:25px;color:#173847}.glossary-head p{margin:0;color:#657881}.glossary-group{margin:0 0 22px}.glossary-group h3{margin:0 0 10px;padding-bottom:6px;border-bottom:2px solid #d5e0e4;font-size:19px;color:#173847}.term-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.term-card{background:#fff;border:1px solid #d7e1e5;border-left:4px solid #8fa2aa;border-radius:7px;padding:13px 15px;min-height:126px}.term-card .term-en{font-size:17px;font-weight:700;color:#173847}.term-card .term-zh{display:inline-block;margin:4px 0 7px;color:#385f9f;font-weight:700}.term-card p{margin:0;color:#4d6068;font-size:14px;line-height:1.55}.term-card.client-term{border-left-color:#c9554b}.term-card.admin-term{border-left-color:#385f9f}.term-card.evidence-term{border-left-color:#43815a}.term-card.delivery-term{border-left-color:#af7b1c}.glossary-note{margin-top:12px;padding:12px 15px;background:#eef1f2;border-radius:6px;color:#657881;font-size:13px}.shot .glossary-page{display:none}@media(max-width:800px){.term-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header><div class="inner"><h1>eDiscovery 专业术语表</h1><p>v1.0 · 2026-09-20 · 英文原文、中文初译与白话解释</p></div></header>
+<nav class="toolbar"><span class="spacer"></span><button id="printBtn" type="button">打印／导出 PDF</button></nav>
+<main class="glossary-page">
+<div class="glossary-head"><p>面向技术人员的业务词汇速查：先理解律师／调查团队在做什么，再理解系统为什么需要这些功能。中文为项目内初步翻译，具体含义仍需结合案件、辖区和交付协议确认。</p></div>
+<section class="glossary-group"><h3>一、案件与调查背景</h3><div class="term-grid">
+<article class="term-card client-term"><div class="term-en">Matter</div><div class="term-zh">案件／事项</div><p>一个诉讼、内部调查、监管响应或合规审查项目的业务单元。系统里的工作空间、文档和权限通常都围绕一个 Matter 组织。</p></article>
+<article class="term-card client-term"><div class="term-en">Internal Investigation</div><div class="term-zh">内部调查</div><p>企业调查员工行为、商业往来、舞弊、数据泄露或其他内部事件。重点不是先找“所有文件”，而是围绕调查问题建立证据范围。</p></article>
+<article class="term-card client-term"><div class="term-en">Litigation</div><div class="term-zh">诉讼</div><p>争议已经进入法院程序。律师需要按请求和程序规则识别、保全、审阅并提交与争议事项有关的电子材料。</p></article>
+<article class="term-card client-term"><div class="term-en">Regulatory Investigation</div><div class="term-zh">监管调查</div><p>监管机构要求企业说明情况或提交材料。交付范围、格式、时间和保密要求往往由监管机构或调查协议约定。</p></article>
+<article class="term-card client-term"><div class="term-en">Compliance Review</div><div class="term-zh">合规审查</div><p>企业主动或被要求检查是否遵守法律、政策或合同义务，可能尚未进入诉讼，但数据处理逻辑与 eDiscovery 很相似。</p></article>
+<article class="term-card client-term"><div class="term-en">Early Case Assessment (ECA)</div><div class="term-zh">早期案件评估</div><p>在大规模审阅前先估算数据量、风险、关键人员和潜在证据，帮助律师决定案件策略和后续投入。</p></article>
+</div></section>
+
+<section class="glossary-group"><h3>二、人员、数据与证据来源</h3><div class="term-grid">
+<article class="term-card evidence-term"><div class="term-en">Custodian</div><div class="term-zh">数据保有人／相关人员</div><p>持有、控制或使用相关数据的人，不是“数据库管理员”。例如涉事员工、管理者、项目负责人或共享邮箱负责人。</p></article>
+<article class="term-card evidence-term"><div class="term-en">Data Source</div><div class="term-zh">数据源</div><p>数据实际存放的地方，例如邮箱、电脑、手机、云盘、聊天系统、数据库或业务应用。</p></article>
+<article class="term-card evidence-term"><div class="term-en">Preservation</div><div class="term-zh">证据保全</div><p>要求相关人员和系统暂停常规删除，先把可能与争议有关的数据保住。常见落实方式是发送 Legal Hold 通知。</p></article>
+<article class="term-card evidence-term"><div class="term-en">Legal Hold</div><div class="term-zh">法律保全通知</div><p>律师或企业向相关人员发出的保全要求，提醒他们不要删除、修改或覆盖可能相关的资料。</p></article>
+<article class="term-card evidence-term"><div class="term-en">Collection</div><div class="term-zh">数据采集</div><p>按已批准范围从原位置取得数据并安全保存，同时记录来源、时间、方法和例外。</p></article>
+<article class="term-card evidence-term"><div class="term-en">Forensic Image</div><div class="term-zh">法证镜像</div><p>对存储介质做尽可能完整的副本，可能包含普通文件拷贝看不到的已删除空间等信息；它只是特定采集方法，不是每个项目都必须使用。</p></article>
+<article class="term-card evidence-term"><div class="term-en">Chain of Custody</div><div class="term-zh">证据流转记录</div><p>记录证据从采集到交付经过了谁、什么时间、做了什么，用来证明材料来源清楚、过程可追溯。</p></article>
+<article class="term-card evidence-term"><div class="term-en">Hash</div><div class="term-zh">哈希值／数字指纹</div><p>由文件内容计算出的字符串。内容变化通常会导致 Hash 变化，因此可用于校验完整性、识别重复文件和追踪处理链路。</p></article>
+<article class="term-card evidence-term"><div class="term-en">Workspace</div><div class="term-zh">工作空间／案件空间</div><p>一个案件在 Relativity 中的独立工作区，里面集中放文档、搜索、审阅字段、权限和交付配置。</p></article>
+<article class="term-card evidence-term"><div class="term-en">Processing Set</div><div class="term-zh">处理集</div><p>一次数据处理作业的配置和数据集合，记录输入范围、处理规则、去重方式以及作业状态。</p></article>
+</div></section>
+
+<section class="glossary-group"><h3>三、筛选、审阅与法律判断</h3><div class="term-grid">
+<article class="term-card admin-term"><div class="term-en">Relevance</div><div class="term-zh">相关性</div><p>材料是否与案件问题、调查主题或监管请求有关。相关性由律师／调查团队判断，不是系统单独决定的技术属性。</p></article>
+<article class="term-card admin-term"><div class="term-en">Responsive</div><div class="term-zh">应响／与请求相关</div><p>材料落入已经定义的证据范围或交付请求，需要进入审阅、标记或制作流程。</p></article>
+<article class="term-card admin-term"><div class="term-en">Privilege</div><div class="term-zh">法律特权</div><p>某些律师沟通或法律工作成果可能依法不应向对方披露。系统可以提供字段和筛选，但最终判断由律师负责。</p></article>
+<article class="term-card admin-term"><div class="term-en">Processing</div><div class="term-zh">数据处理</div><p>把原始数据解析、展开、提取、去重并转换成可搜索、可打开、可审阅的记录。</p></article>
+<article class="term-card admin-term"><div class="term-en">Deduplication</div><div class="term-zh">去重</div><p>识别内容相同的文件，减少重复审阅；但仍要保留来源和 Family 关系，不能简单地把所有副本都删掉。</p></article>
+<article class="term-card admin-term"><div class="term-en">Family</div><div class="term-zh">文件家族／关联文档组</div><p>一组有业务关系的文档，最常见是一封邮件和它的附件。Family 表示同组关系，不自动等于完整父子树。</p></article>
+<article class="term-card admin-term"><div class="term-en">Search Index</div><div class="term-zh">搜索索引</div><p>为大量文本建立快速查找结构，类似给巨型档案建立目录；它让律师能用关键词、条件或布尔逻辑定位材料。</p></article>
+<article class="term-card admin-term"><div class="term-en">Saved Search</div><div class="term-zh">已保存搜索</div><p>保存查询条件，方便重复使用或交给其他人。它通常不是永久冻结的结果快照，数据变化时结果也可能变化。</p></article>
+<article class="term-card admin-term"><div class="term-en">Coding</div><div class="term-zh">编码／审阅标记</div><p>审阅员把判断写入结构化字段，例如相关／不相关、特权、主题、处理意见和评论。</p></article>
+<article class="term-card admin-term"><div class="term-en">Coding Panel</div><div class="term-zh">编码面板／审阅字段面板</div><p>审阅员在文档旁边填写判断的界面。它把相关性、特权、主题、处理意见和评论等字段集中起来，供律师逐份记录结论。</p></article>
+<article class="term-card admin-term"><div class="term-en">Batch</div><div class="term-zh">审阅批次</div><p>预先切好的一包待审文档任务，通常分配给某位审阅员或团队，用来控制工作量、领取状态和完成进度。</p></article>
+<article class="term-card admin-term"><div class="term-en">Review Queue</div><div class="term-zh">审阅队列</div><p>按项目规则持续向审阅员提供待审文档的任务入口。它可以动态产生任务，不等同于固定的一包 Batch。</p></article>
+<article class="term-card admin-term"><div class="term-en">Review Center</div><div class="term-zh">审阅中心</div><p>集中管理审阅任务、批次、进度和质量的工作区域，让项目负责人知道哪些文档待审、谁在处理以及是否有积压。</p></article>
+<article class="term-card admin-term"><div class="term-en">Viewer</div><div class="term-zh">文档查看器</div><p>展示文档内容、页面、附件和文本层的审阅界面。律师在这里阅读材料、缩放、滚动、高亮并确认文件是否正常加载。</p></article>
+</div></section>
+
+<section class="glossary-group"><h3>四、EDRM 生命周期与案件规则</h3><div class="term-grid">
+<article class="term-card client-term"><div class="term-en">EDRM</div><div class="term-zh">电子取证参考模型</div><p>Electronic Discovery Reference Model，把电子证据工作概括为 Information Governance、Identification、Preservation、Collection、Processing、Review、Analysis、Production 和 Presentation 等阶段。</p></article>
+<article class="term-card client-term"><div class="term-en">Information Governance</div><div class="term-zh">信息治理</div><p>企业在日常经营中管理数据的规则，包括保存期限、访问权限、分类和删除政策，是案件发生前的数据基础。</p></article>
+<article class="term-card client-term"><div class="term-en">Identification</div><div class="term-zh">信息识别</div><p>先判断哪些人员、设备、邮箱、系统和时间范围可能包含相关数据，决定后续从哪里找。</p></article>
+<article class="term-card client-term"><div class="term-en">Review</div><div class="term-zh">审阅</div><p>由律师或调查团队逐份查看材料，并判断相关性、特权、保密性和后续处理方式。</p></article>
+<article class="term-card client-term"><div class="term-en">Analysis</div><div class="term-zh">分析</div><p>通过关系、主题、时间、语言或相似度等方法理解数据结构，帮助团队更快找到重要材料；分析结果仍需人工判断。</p></article>
+<article class="term-card client-term"><div class="term-en">Presentation</div><div class="term-zh">证据呈示</div><p>把已确认的证据在听证、庭审、调查访谈或报告中展示给法官、监管人员或其他接收方。</p></article>
+<article class="term-card client-term"><div class="term-en">Discovery</div><div class="term-zh">证据开示／取证程序</div><p>法律程序中各方按照规则交换与争议有关的信息和证据。它不是单纯的文件搜索，而是有范围、义务和期限的程序。</p></article>
+<article class="term-card client-term"><div class="term-en">Discover</div><div class="term-zh">发现／定位材料</div><p>在产品或业务语境中，指通过搜索、筛选和分析找到可能相关的文档；它描述的是“找到材料”的动作，不等于最终认定相关。</p></article>
+<article class="term-card client-term"><div class="term-en">Legal Request</div><div class="term-zh">法律请求／监管请求</div><p>法院、监管机构或对方律师提出的材料和格式要求，决定什么范围的文档需要被识别、审阅和交付。</p></article>
+<article class="term-card client-term"><div class="term-en">Meet and Confer</div><div class="term-zh">双方协商会议</div><p>诉讼双方在案件早期协商数据范围、搜索词、保全方式、交付格式和争议处理规则。</p></article>
+<article class="term-card client-term"><div class="term-en">Scope</div><div class="term-zh">范围</div><p>案件中实际要处理的数据边界，例如哪些 Custodian、数据源、日期和主题包含或排除在外。</p></article>
+<article class="term-card client-term"><div class="term-en">Proportionality</div><div class="term-zh">比例原则</div><p>数据收集和审阅的成本、规模应与案件争议的重要性、金额和证据价值相称，不能无限制地收集所有数据。</p></article>
+<article class="term-card client-term"><div class="term-en">Defensible Process</div><div class="term-zh">可辩护流程</div><p>能够说明为什么这样保全、采集、筛选和交付，并能提供记录支持的流程，而不是只依赖“系统自动完成”。</p></article>
+</div></section>
+
+<section class="glossary-group"><h3>五、搜索、结果集与数据人口</h3><div class="term-grid">
+<article class="term-card admin-term"><div class="term-en">Review Population</div><div class="term-zh">审阅人口／待审文档集</div><p>被确定为需要律师或调查团队实际查看的一组文档。它通常来自搜索、筛选、去重和排除规则的组合。</p></article>
+<article class="term-card admin-term"><div class="term-en">Publish Population</div><div class="term-zh">发布人口／发布文档集</div><p>被发布到当前审阅工作区、审阅流程或下一阶段的文档集合。它表示“让这批文档可用”，不等于已经完成审阅。</p></article>
+<article class="term-card admin-term"><div class="term-en">Duplicate</div><div class="term-zh">重复文档</div><p>与另一份文档内容相同或高度相同的文档。系统会标记重复关系，但是否排除通常要结合来源和 Family 语境决定。</p></article>
+<article class="term-card admin-term"><div class="term-en">Exact Duplicate</div><div class="term-zh">完全重复</div><p>文件内容或处理 Hash 完全一致的副本。它可以减少重复审阅，但不能自动证明两个来源在业务上可以互相替代。</p></article>
+<article class="term-card admin-term"><div class="term-en">Near Duplicate</div><div class="term-zh">近似重复</div><p>内容大部分相似但并不完全相同的文档，例如同一份报告的不同版本；近似去重可能帮助发现版本变化。</p></article>
+<article class="term-card admin-term"><div class="term-en">Search Term</div><div class="term-zh">搜索词</div><p>律师或项目团队用来定位材料的词、短语、编号、人员名或其他条件，需要记录版本和使用依据。</p></article>
+<article class="term-card admin-term"><div class="term-en">Keyword Search</div><div class="term-zh">关键词检索</div><p>按一个或多个词查找文档文本或字段值，是最容易理解的检索方式，但可能受拼写、语言和文本质量影响。</p></article>
+<article class="term-card admin-term"><div class="term-en">Boolean Search</div><div class="term-zh">布尔检索</div><p>用 AND、OR、NOT 组合条件，控制结果必须同时满足、满足其一或排除某类词。</p></article>
+<article class="term-card admin-term"><div class="term-en">Conditional Search</div><div class="term-zh">条件检索</div><p>按日期、发件人、文件类型、Custodian、字段值等结构化条件筛选，而不只是搜索正文文字。</p></article>
+<article class="term-card admin-term"><div class="term-en">Concept Search</div><div class="term-zh">概念检索</div><p>按主题或语义查找与某个概念相关的文档，即使文档没有出现完全相同的关键词。</p></article>
+<article class="term-card admin-term"><div class="term-en">Email Threading</div><div class="term-zh">邮件线程</div><p>把同一封邮件往来中的重复引用和回复组织起来，帮助审阅员先看最有信息量的邮件。</p></article>
+<article class="term-card admin-term"><div class="term-en">Communication Analysis</div><div class="term-zh">沟通网络分析</div><p>从发件人、收件人和时间关系中观察人员之间的沟通网络，用于发现关键人物和异常联系。</p></article>
+<article class="term-card admin-term"><div class="term-en">Analytics</div><div class="term-zh">智能分析</div><p>对文档进行聚类、相似度、语言、主题或关系分析，目标是缩小人工审阅范围和提高定位速度。</p></article>
+<article class="term-card admin-term"><div class="term-en">Unique Hit</div><div class="term-zh">唯一命中</div><p>按指定统计口径，某个文档或 Family 中第一次、唯一一次被某个搜索词命中的结果，用于评估搜索词效果。</p></article>
+<article class="term-card admin-term"><div class="term-en">Family Group</div><div class="term-zh">文件家族组</div><p>标识哪些文档属于同一个邮件及附件组合。它说明组成员关系，不等于直接 Parent / Child 树。</p></article>
+<article class="term-card admin-term"><div class="term-en">Parent Document</div><div class="term-zh">父文档</div><p>直接包含或产生另一份文档的文档，例如带附件的邮件。Parent 是直接关系，不是整个 Family 的总称。</p></article>
+<article class="term-card admin-term"><div class="term-en">Child Document</div><div class="term-zh">子文档</div><p>由另一份文档直接带出或包含的文档，例如邮件附件或压缩包中的文件。</p></article>
+<article class="term-card admin-term"><div class="term-en">Include Family</div><div class="term-zh">包含文件家族</div><p>把命中文档的邮件、附件或其他 Family 成员一并加入结果，避免只审阅孤立的一页证据。</p></article>
+<article class="term-card admin-term"><div class="term-en">Sampling</div><div class="term-zh">抽样</div><p>从大批文档中抽取一部分进行检查，用于估计遗漏、验证搜索词或评估自动分类质量。</p></article>
+</div></section>
+
+<section class="glossary-group"><h3>六、Relativity 审阅、字段与项目管理</h3><div class="term-grid">
+<article class="term-card admin-term"><div class="term-en">Field</div><div class="term-zh">字段</div><p>文档记录上的一个信息项，例如相关性、特权、发件日期、Custodian 或 Bates 编号。</p></article>
+<article class="term-card admin-term"><div class="term-en">Choice Field</div><div class="term-zh">选项字段</div><p>预先配置好选项的字段，例如 Responsive / Not Responsive、Privileged / Not Privileged，帮助不同审阅员使用一致值。</p></article>
+<article class="term-card admin-term"><div class="term-en">Tag</div><div class="term-zh">标签</div><p>审阅员给文档加上的分类或判断标记，用来表示相关性、主题、风险或后续处理动作。</p></article>
+<article class="term-card admin-term"><div class="term-en">Comment</div><div class="term-zh">评论／审阅备注</div><p>审阅员写下的解释性文字，记录为什么做出某个判断，或提醒下一位审阅者关注什么。</p></article>
+<article class="term-card admin-term"><div class="term-en">Reviewer</div><div class="term-zh">审阅员</div><p>负责阅读文档并填写 Coding Panel 的人员，可能是律师、法律助理、调查人员或外包审阅团队。</p></article>
+<article class="term-card admin-term"><div class="term-en">Review Status</div><div class="term-zh">审阅状态</div><p>表示文档当前处于未开始、进行中、已完成、需要复核或被退回等状态。</p></article>
+<article class="term-card admin-term"><div class="term-en">Hot Document</div><div class="term-zh">关键文档／高价值文档</div><p>对案件特别重要、风险高或需要优先处理的文档，通常由律师或项目负责人标记。</p></article>
+<article class="term-card admin-term"><div class="term-en">Issue Coding</div><div class="term-zh">争议点编码</div><p>把文档与案件中的具体争议点、事实主题或法律问题关联起来，便于后续分析和引用。</p></article>
+<article class="term-card admin-term"><div class="term-en">Privilege Log</div><div class="term-zh">特权日志</div><p>对不交付但主张法律特权的文档保留说明，通常包括日期、参与人、文档类型和不披露理由。</p></article>
+<article class="term-card admin-term"><div class="term-en">Second-Level Review</div><div class="term-zh">二级复核</div><p>由更资深的律师或质量团队复查初审结果，重点关注特权、重大风险、关键文档和不一致判断。</p></article>
+<article class="term-card admin-term"><div class="term-en">Escalation</div><div class="term-zh">升级处理</div><p>审阅员遇到不确定、敏感或高风险文档时，将其转交给指定律师或专家决定。</p></article>
+<article class="term-card admin-term"><div class="term-en">Audit Trail</div><div class="term-zh">审计轨迹</div><p>记录谁在什么时候查看、修改、标记、导出或制作了文档，用来证明处理过程可追溯。</p></article>
+<article class="term-card admin-term"><div class="term-en">Document Control Number</div><div class="term-zh">文档控制编号</div><p>系统中用于唯一识别一条文档记录的编号，常用于搜索、任务分配、沟通和交付追踪。</p></article>
+<article class="term-card admin-term"><div class="term-en">Document Set</div><div class="term-zh">文档集</div><p>按搜索结果、条件或项目规则组织的一组文档，可以作为审阅、分析、发布或制作的输入。</p></article>
+<article class="term-card admin-term"><div class="term-en">Permission</div><div class="term-zh">权限</div><p>控制用户能看什么、改什么、导出什么。法律项目通常需要区分律师、管理员、审阅员和外部接收方。</p></article>
+<article class="term-card admin-term"><div class="term-en">Batch Priority</div><div class="term-zh">批次优先级</div><p>决定哪一批文档先分配给审阅员，例如先处理关键 Custodian、时间敏感材料或高风险主题。</p></article>
+<article class="term-card admin-term"><div class="term-en">QC Sampling</div><div class="term-zh">质检抽样</div><p>从已审阅或已制作的结果中抽查一部分，检查标签一致性、遗漏、遮盖和格式问题。</p></article>
+</div></section>
+
+<section class="glossary-group"><h3>七、数据处理、脱敏与交付细节</h3><div class="term-grid">
+<article class="term-card evidence-term"><div class="term-en">Native File</div><div class="term-zh">原生文件</div><p>保留原来格式的文件，例如 DOCX、XLSX、PPTX、MSG 或原始音视频文件。</p></article>
+<article class="term-card evidence-term"><div class="term-en">Image File</div><div class="term-zh">图像文件</div><p>把文档页面固定成 TIFF 或 PDF 等图像格式，方便在交付时保持页面外观一致。</p></article>
+<article class="term-card evidence-term"><div class="term-en">Text File</div><div class="term-zh">文本文件</div><p>与文档关联的可检索文字版本，接收方可以用它恢复全文搜索或辅助审阅。</p></article>
+<article class="term-card evidence-term"><div class="term-en">Structured Data</div><div class="term-zh">结构化数据</div><p>已经按字段和记录组织的数据，例如数据库表、交易记录或系统导出报表。</p></article>
+<article class="term-card evidence-term"><div class="term-en">Unstructured Data</div><div class="term-zh">非结构化数据</div><p>没有统一表格结构的内容，例如邮件、文档、聊天记录、图片、音频和视频。</p></article>
+<article class="term-card evidence-term"><div class="term-en">Container File</div><div class="term-zh">容器文件</div><p>里面还包含其他文件的载体，例如 PST、ZIP 或邮件归档；处理时通常需要展开其内容。</p></article>
+<article class="term-card evidence-term"><div class="term-en">De-NIST</div><div class="term-zh">排除常见系统文件</div><p>使用已知文件清单排除常见软件和操作系统文件，避免把没有案件价值的内容送入审阅。</p></article>
+<article class="term-card evidence-term"><div class="term-en">Extracted Text</div><div class="term-zh">提取文本</div><p>从电子文件内部读出的文字，用于搜索、预览和审阅；它不一定等同于原始文件的完整显示效果。</p></article>
+<article class="term-card evidence-term"><div class="term-en">Exception</div><div class="term-zh">处理例外</div><p>文件因损坏、加密、格式不支持或权限问题没有按预期处理，需要单独记录和补救。</p></article>
+<article class="term-card evidence-term"><div class="term-en">Password-Protected File</div><div class="term-zh">受密码保护的文件</div><p>没有密码无法打开或读取的文件，通常需要客户补充凭据或决定如何处理。</p></article>
+<article class="term-card evidence-term"><div class="term-en">Corrupted File</div><div class="term-zh">损坏文件</div><p>文件无法正常打开或解析，可能需要重新采集、修复或作为处理例外交给律师决定。</p></article>
+<article class="term-card delivery-term"><div class="term-en">Redaction Reason</div><div class="term-zh">遮盖理由</div><p>说明为什么遮盖某段内容，例如个人信息、商业秘密、法律特权或监管要求，便于复核和解释。</p></article>
+<article class="term-card delivery-term"><div class="term-en">Burn-in</div><div class="term-zh">烧制</div><p>把遮盖、编号或标识真正合成到输出图像或版面中，避免接收方通过文本层或其他版本看到被遮盖内容。</p></article>
+<article class="term-card delivery-term"><div class="term-en">Export</div><div class="term-zh">导出</div><p>按照确认的范围和格式生成交付文件包。导出不只是下载文件，还要保证字段、页面和关联文件能被接收系统正确读取。</p></article>
+<article class="term-card delivery-term"><div class="term-en">Production Protocol</div><div class="term-zh">交付制作协议</div><p>约定交付格式、编号规则、字段、图像要求、原生文件规则和特殊处理方式的说明。</p></article>
+<article class="term-card delivery-term"><div class="term-en">Production Volume</div><div class="term-zh">制作卷／交付批次</div><p>一次交付中包含的一组文档和页码范围，用于分批提交、追踪和核对。</p></article>
+<article class="term-card delivery-term"><div class="term-en">Bates Prefix</div><div class="term-zh">Bates 前缀</div><p>加在 Bates 编号前面的案件或交付标识，用于区分不同案件、来源或制作卷。</p></article>
+<article class="term-card delivery-term"><div class="term-en">Confidentiality Legend</div><div class="term-zh">保密标识</div><p>印在交付页面上的保密级别或使用限制，例如 Confidential 或 Highly Confidential。</p></article>
+<article class="term-card delivery-term"><div class="term-en">Delivery Package</div><div class="term-zh">交付包</div><p>包含图像、原生文件、文本、DAT、OPT 和必要说明文件的完整输出集合。</p></article>
+<article class="term-card delivery-term"><div class="term-en">Production Validation</div><div class="term-zh">交付验证</div><p>导出后检查文件数量、页数、编号、字段、链接、遮盖和可打开性，确认交付包可以被接收方加载。</p></article>
+</div></section>
+
+<section class="glossary-group"><h3>八、脱敏、交付与质检</h3><div class="term-grid">
+<article class="term-card delivery-term"><div class="term-en">Redaction</div><div class="term-zh">遮盖／涂黑处理</div><p>在仍要交付的文件上隐去个人信息、账号、联系方式、商业秘密等内容，同时保留其余证据价值。</p></article>
+<article class="term-card delivery-term"><div class="term-en">Redaction Markup</div><div class="term-zh">遮盖标记</div><p>审阅界面里标出要遮住的区域或文字。标记本身还不等于安全交付，必须在正式制作时烧制到输出文件。</p></article>
+<article class="term-card delivery-term"><div class="term-en">Production</div><div class="term-zh">正式制作／交付制作</div><p>按约定规则把获批文件生成固定、编号、可交付的版本，不是普通下载或导出列表。</p></article>
+<article class="term-card delivery-term"><div class="term-en">Production Set</div><div class="term-zh">制作集</div><p>一次正式制作所使用的文档范围、编号规则、数据来源、输出格式和作业状态的集合。</p></article>
+<article class="term-card delivery-term"><div class="term-en">Burn-in / Branding</div><div class="term-zh">烧制／版面标识</div><p>把遮盖、页码、Bates 编号、保密标识等真正合成到交付版面中，让接收方看到的是固定版本。</p></article>
+<article class="term-card delivery-term"><div class="term-en">Bates Number</div><div class="term-zh">贝茨编号／交付页码</div><p>按顺序印在正式交付页面上的唯一编号，方便律师、法院或监管方精确引用某一页。</p></article>
+<article class="term-card delivery-term"><div class="term-en">Load File</div><div class="term-zh">加载文件／导入索引文件</div><p>告诉接收系统每条文档的字段是什么、文件在哪里、页面如何对应的结构化文件。</p></article>
+<article class="term-card delivery-term"><div class="term-en">DAT / OPT</div><div class="term-zh">DAT 字段文件／OPT 图像对应文件</div><p>DAT 通常携带文档字段和生产编号；OPT 通常说明图像页属于哪份文档，是交付包的目录和装配说明。</p></article>
+<article class="term-card delivery-term"><div class="term-en">Quality Control (QC)</div><div class="term-zh">质量控制／质检</div><p>检查范围、文件可读性、遮盖、编号、格式和交付包完整性，确认没有明显遗漏或敏感信息泄露。</p></article>
+</div></section>
+<div class="glossary-note"><strong>阅读边界：</strong>术语表是面向产品和技术团队的初步业务映射，不替代律师意见、案件协议或当地法律要求。系统负责让数据可处理、可检索、可审阅、可交付，相关性、特权和最终披露范围仍由律师／客户决定。</div>
+</main>
+<script>document.getElementById('printBtn').onclick=()=>window.print();</script>
+</body>
+</html>

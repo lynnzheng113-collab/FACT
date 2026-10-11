@@ -99,6 +99,7 @@ export const copy = {
     flow: "选择身份 → 选择工作区 → 开始工作 / Choose role → Choose workspace → Start work",
     login: "登录 / Sign in", chooseRole: "选择演示身份 / Choose a demo role", account: "演示账户 / Demo account",
     enter: "登录并继续 / Sign in & continue", signOut: "退出登录 / Sign out",
+    glossaryLink: "专业术语表 / Glossary",
     demo: "演示登录，无需密码；不连接真实账户。 / Demo sign-in, no password required; no live accounts connected.",
     roles: { admin: "管理员 / Administrator", reviewer: "用户／律师 / User / Lawyer" },
     roleDescriptions: { admin: "管理用户、工作区与完整案件流程 / Manage users, workspaces and case workflows", reviewer: "选择工作区、审阅文档与批次 / Choose workspaces and review documents and batches" },

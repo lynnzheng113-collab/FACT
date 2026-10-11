@@ -551,7 +551,7 @@
         {
           "path": "src/styles/app.css",
           "anchor": ".processing-set-detail-column",
-          "line": 2190
+          "line": 2192
         }
       ],
       "parent": null,
@@ -3742,10 +3742,10 @@
       "parent": null,
       "level": "当前需求PRD",
       "reviewedAt": "2026-10-11",
-      "change": "2026-10-11 将MVP认证范围调整为邀请制+邮箱密码登录，暂不启用双因素验证；保留MFA扩展接口",
+      "change": "2026-10-11 将MVP认证范围调整为邀请制+邮箱密码登录，暂不启用双因素验证；保留MFA扩展接口；2026-10-11 为登录页增加公开专业术语表入口，链接至站内静态术语表；不改变认证或权限行为",
       "oldRow": null,
       "sourceState": "已提交源码",
-      "verification": "2026-10-11 静态核对当前PRD和原版源码；未进行真实认证联调"
+      "verification": "2026-10-11 静态核对当前PRD和原版源码；未进行真实认证联调；npm run check 与 npm run build 通过，术语表静态产物已复制到 dist"
     },
     {
       "id": "FACT-P01-REQ-002",
@@ -5487,6 +5487,23 @@
       "summary": "补充布局编辑器网格子项的收缩约束，确保列宽固定且内容不会把画布横向撑开；侧栏按钮换行规则保持不变。",
       "ids": [
         "FACT-M06-REQ-008"
+      ]
+    },
+    {
+      "date": "2026-10-11",
+      "version": 1.7,
+      "summary": "为 FACT-P01-REQ-001/002 补充当前原型截图、目标流程图和状态转换图；不改变MVP认证功能边界或验收口径",
+      "ids": [
+        "FACT-P01-REQ-001",
+        "FACT-P01-REQ-002"
+      ]
+    },
+    {
+      "date": "2026-10-11",
+      "version": 1.7,
+      "summary": "新增登录页专业术语表链接并发布站内静态术语表；不改变认证、权限或业务流程，已完成类型检查和生产构建核对",
+      "ids": [
+        "FACT-P01-REQ-001"
       ]
     }
   ]
