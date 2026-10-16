@@ -1,10 +1,10 @@
-import { copy, type PageId } from "../constants/copy";
+import { copy, workspaceTabIds, reviewerWorkspaceTabIds, type PageId } from "../constants/copy";
 
 export type Role = "admin" | "reviewer";
 export const platformPages: PageId[] = ["users", "workspaces", "audit", "other"];
-export const workspacePages: PageId[] = ["home", "reviewSetup", "processing", "documents", "analytics", "redaction", "production", "other"];
+export const workspacePages: PageId[] = [...workspaceTabIds];
 export function navigationFor(role: Role, inWorkspace: boolean) {
-  const ids: PageId[] = role === "admin" ? (inWorkspace ? workspacePages : platformPages) : (inWorkspace ? ["documents", "batches"] : ["workspaces"]);
+  const ids: PageId[] = role === "admin" ? (inWorkspace ? workspacePages : platformPages) : (inWorkspace ? [...reviewerWorkspaceTabIds] : ["workspaces"]);
   return ids.map(id => copy.navigation.find(item => item.id === id)!);
 }
 export function canNavigate(role: Role, inWorkspace: boolean, page: PageId) {

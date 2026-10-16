@@ -9,8 +9,8 @@ export function initialPermissions(templateManager = false): PermissionSet {
   const flags: Record<string, boolean> = {};
   for (const id of ["batch", "field", "folder", "dashboard", "layout", "document", "redaction", "massOperation", "list", "search", "searchIndex", "tab", "searchFolder", "view", "workspace"]) flags[`object.${id}.view`] = true;
   flags["tab.documents"] = true;
-  // Only the visible navigation and review library of the manager template are evidenced.
-  if (templateManager) for (const id of ["reviewQueues", "reviewCenter", "reviewManagement"]) flags[`tab.${id}`] = true;
+  // Review-related defaults use the same tab IDs as workspace navigation.
+  if (templateManager) for (const id of ["reviewSetup", "other"]) flags[`tab.${id}`] = true;
   return { reviewCenter: templateManager, role: "reviewer", flags };
 }
 
@@ -18,8 +18,8 @@ export function setReviewFeature(current: PermissionSet, enabled: boolean, role 
   const flags = { ...current.flags };
   flags["object.reviewCoding.view"] = enabled;
   flags["object.reviewQueue.view"] = enabled;
-  flags["tab.reviewQueues"] = enabled;
-  flags["tab.reviewCenter"] = enabled && role === "powerUser";
+  flags["tab.other"] = enabled;
+  flags["tab.reviewSetup"] = enabled && role === "powerUser";
   flags["object.document.edit"] = enabled && role === "powerUser";
   if (enabled && role === "powerUser") flags["tab.documents"] = true;
   for (const id of ["folders", "fieldTree", "savedSearches", "documentPreview"]) flags[`other.${id}`] = enabled;
@@ -41,10 +41,7 @@ export function permissionChanges(before: PermissionSet, after: PermissionSet) {
     ...t.objectRows.map(row => ({ label: row.label, before: objectValue(before, row.id), after: objectValue(after, row.id) })),
     ...t.documentActions.map(row => boolChange(row.label, `document.${row.id}`)),
   ];
-  const settingRows = t.settingSections.flatMap(section => section.items.flatMap(row => [
-    boolChange(row.label, `other.${row.id}`),
-    ...("children" in row ? row.children.map(child => boolChange(child.label, `other.${child.id}`)) : []),
-  ]));
+  const settingRows = t.settingSections.flatMap(section => section.items.map(row => boolChange(row.label, `other.${row.id}`)));
   return [
     { id: "objects", title: t.objects, rows: objects },
     { id: "tabs", title: t.tabs, rows: t.tabRows.map(row => boolChange(row.label, `tab.${row.id}`)) },

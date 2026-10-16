@@ -1,3 +1,23 @@
+const navigation = [
+    { id: "audit", label: "审计 / Audit", short: "审计\nAudit" },
+    { id: "reviewSetup", label: "审阅配置 / Review Setup", short: "审阅配置\nReview Setup" },
+    { id: "other", label: "其他 / Other", short: "其他\nOther" },
+    { id: "batches", label: "审阅批次 / Review Batches", short: "审阅批次\nReview Batches" },
+    { id: "workspaces", label: "工作区 / Workspaces", short: "工作区\nWorkspaces" },
+    { id: "users", label: "用户与组管理 / User and Group Management", short: "用户与组\nUsers & Groups" },
+    { id: "fields", label: "字段与布局 / Fields & Layouts", short: "字段与布局\nFields & Layouts" },
+    { id: "home", label: "概览 / Overview", short: "概览\nOverview" },
+    { id: "processing", label: "处理 / Processing", short: "处理\nProcessing" },
+    { id: "documents", label: "文档 / Documents", short: "文档\nDocuments" },
+    { id: "analytics", label: "搜索与分析 / Search & Analytics", short: "搜索与分析\nSearch & Analytics" },
+    { id: "review", label: "审阅 / Review", short: "审阅\nReview" },
+    { id: "redaction", label: "遮盖 / Redact", short: "遮盖\nRedact" },
+    { id: "production", label: "制作 / Production", short: "制作\nProduction" },
+    { id: "tasks", label: "任务中心 / Task Center", short: "任务\nTasks" },
+  ] as const;
+export const workspaceTabIds = ["home", "reviewSetup", "processing", "documents", "analytics", "redaction", "production", "other"] as const;
+export const reviewerWorkspaceTabIds = ["documents", "batches"] as const;
+
 export const copy = {
   meta: {
     title: "证据审阅平台原型 | Evidence Review Platform Prototype",
@@ -76,23 +96,7 @@ export const copy = {
     userOptions: "用户选项 / User options",
     openImport: "打开导入 / Open import",
   },
-  navigation: [
-    { id: "audit", label: "审计 / Audit", short: "审计\nAudit" },
-    { id: "reviewSetup", label: "审阅配置 / Review Setup", short: "审阅配置\nReview Setup" },
-    { id: "other", label: "其他 / Other", short: "其他\nOther" },
-    { id: "batches", label: "审阅批次 / Review Batches", short: "审阅批次\nReview Batches" },
-    { id: "workspaces", label: "工作区 / Workspaces", short: "工作区\nWorkspaces" },
-    { id: "users", label: "用户与组管理 / User and Group Management", short: "用户与组\nUsers & Groups" },
-    { id: "fields", label: "字段与布局 / Fields & Layouts", short: "字段与布局\nFields & Layouts" },
-    { id: "home", label: "概览 / Overview", short: "概览\nOverview" },
-    { id: "processing", label: "处理 / Processing", short: "处理\nProcessing" },
-    { id: "documents", label: "文档 / Documents", short: "文档\nDocuments" },
-    { id: "analytics", label: "搜索与分析 / Search & Analytics", short: "搜索与分析\nSearch & Analytics" },
-    { id: "review", label: "审阅 / Review", short: "审阅\nReview" },
-    { id: "redaction", label: "成像与遮盖 / Imaging & Redact", short: "遮盖\nRedact" },
-    { id: "production", label: "制作与导出 / Production & Export", short: "制作\nProduction" },
-    { id: "tasks", label: "任务中心 / Task Center", short: "任务\nTasks" },
-  ],
+  navigation,
   access: {
     title: "证据审阅平台 / Evidence Review Platform",
     intro: "从工作区管理到证据审阅，按角色进入你的工作。 / Enter your workspace and review workflow with the right role.",
@@ -1015,11 +1019,7 @@ export const copy = {
       { id: "redactDocument", label: "遮盖文档 / Redact Document" }, { id: "highlightDocument", label: "高亮文档 / Highlight Document" },
       { id: "addImage", label: "添加图像 / Add Image" }, { id: "deleteImage", label: "删除图像 / Delete Image" }, { id: "newDocument", label: "新建文档 / New Document" },
     ],
-    tabRows: [
-      { id: "reviewQueues", label: "审阅队列 / Review Queues" }, { id: "documents", label: "文档 / Documents" },
-      { id: "reviewCenter", label: "审阅中心 / Review Center" }, { id: "lists", label: "列表 / Lists" },
-      { id: "reviewManagement", label: "审阅管理 / Review Management" },
-    ],
+    tabRows: workspaceTabIds.map(id => navigation.find(item => item.id === id)!),
     settingSections: [
       { id: "browserNavigation", label: "浏览器／导航 / Browser/Navigation", items: [
         { id: "folders", label: "文件夹 / Folders" }, { id: "savedSearches", label: "已保存搜索 / Saved Search" }, { id: "documentPreview", label: "文档预览 / Document Preview" },
@@ -1032,9 +1032,7 @@ export const copy = {
       ] },
       { id: "admin", label: "管理操作（限工作区）/ Admin Operations (Workspace-scoped)", items: [
         { id: "pivotChart", label: "使用透视图表（Widget）/ Use Pivot Chart (Widget)" }, { id: "quickNav", label: "使用快速导航 / Use Quick Nav" },
-        { id: "sample", label: "使用抽样 / Use Sample", children: [
-          { id: "sampleFixed", label: "定数抽样 / Fixed-count Sampling" }, { id: "samplePercentage", label: "百分比抽样 / Percentage Sampling" }, { id: "sampleStatistical", label: "统计抽样 / Statistical Sampling" },
-        ] },
+        { id: "sample", label: "使用抽样 / Use Sample" },
         { id: "viewAllAudits", label: "查看全部审计 / View All Audits" }, { id: "viewBatchPane", label: "查看批次窗格 / View Batch Pane" }, { id: "viewUserStatus", label: "查看用户状态 / View User Status" },
         { id: "viewWorkspaceDetail", label: "查看工作区详情 / View Workspace Detail" }, { id: "allowExport", label: "允许导出 / Allow Export" }, { id: "allowImport", label: "允许导入 / Allow Import" }, { id: "assignBatches", label: "分配批次 / Assign Batches" },
       ] },
@@ -1052,6 +1050,8 @@ export const copy = {
     previewAs: "正在以此组成员身份预览 / Previewing as a member of", exitPreview: "退出预览 / Exit Preview", previewPages: "页面预览 / Page Preview", previewSettings: "权限设置 / Permission Settings",
     previewSettingsHint: "以下内容是该组在此工作区的只读权限快照。 / Read-only permission snapshot for this group in this workspace.",
     previewGroup: "预览组 / Preview Group", previewWorkspace: "预览工作区 / Preview Workspace", openPreview: "打开预览 / Open Preview", previewUnavailable: "没有可预览的组或工作区。 / No group or workspace is available to preview.",
+    noBatches: "尚未分配审阅批次。 / No review batches assigned.",
+    previewTabHint: "此处仅预览标签可见性，页面内容请在工作区中查看。 / This preview shows tab visibility only; view page content in the workspace.",
     noTabs: "此组没有可预览的标签。 / No visible tabs for this group.", noObjectAccess: "此组无权查看此对象。 / This group cannot view this object.",
     noQueues: "没有可用队列 / No Queues Available", noAssignedQueues: "尚未分配任何队列。 / You have not been added to any queues.", noWorkspaceQueues: "工作区内没有审阅队列。 / No review queues in workspace.",
     library: "审阅库 / Review Library", queueTemplates: "队列模板 / Queue Templates", queueType: "队列类型 / Queue Type", savedSearch: "已保存搜索 / Saved Search", prioritized: "优先审阅 / Prioritized Review",
