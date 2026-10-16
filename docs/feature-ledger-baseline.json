@@ -1,10 +1,9 @@
 {
   "schemaVersion": 1,
   "reviewedAt": "2026-10-16",
-  "reason": "用户确认Tab权限仅保留工作区侧栏八项，遮盖与制作同名，取消审阅批次独立权限选项；本地浏览器八项搜索保存预览、紧凑排版和抽样单开关验证通过，准备提交并发布GitHub",
+  "reason": "批量操作新增14项菜单、文档选择约束与范围预览；保留具体批量执行和权限联动缺口，未改变人工范围确认。",
   "affectedIds": [
-    "FACT-P01-REQ-005",
-    "FACT-P01-REQ-006"
+    "FACT-M06-REQ-015"
   ],
   "files": {
     "index.html": "31131ed4d242933ebacf8334005b92db5c725c9081aa00738e2e6cfa9ba1647a",
@@ -13,6 +12,7 @@
     "public/eDiscovery-glossary.html": "0f06fba7b38e2c4b4b9a401a8f040cba1f0964d5f05de4fa9ef9cf906a287cc6",
     "src/App.tsx": "592275ba314c152bc21b85596963a3abc0de9eded4f49407cb9b232b4ea185e3",
     "src/components/AppShell.tsx": "e9f5447fa8209d850adf17d9ddb489096d27c84dec16b51014fcf540a404704f",
+    "src/components/BulkOperations.tsx": "b86329554c623d26a014ac2f98cde1ea497c26fe299f916b3d9c9c072433bbd5",
     "src/components/FieldChoices.tsx": "d337ecfd23d537bae0a4f6b6521ff0193a6981f2f2876a12df22fa938d248a74",
     "src/components/InventoryFilters.tsx": "f46371a061fac67f0e81c8c03cde2676e0a247808409467dbb8344cd077949f7",
     "src/components/ItemSecurityEditor.tsx": "a94292f5962380b1a4af33d102c560f75d9d444eae6a0b5c1836597b645e6c57",
@@ -26,12 +26,12 @@
     "src/components/UserForm.tsx": "52abb0b939e345efc64c174014d6915d91edbf49767d496892a9b1d177d942fa",
     "src/components/WorkspaceAdvanced.tsx": "ad6cdd8031f137be82b9839d4ebb7947b209594496b613d60a8b82f5acc3ee7a",
     "src/components/WorkspacePermissions.tsx": "82bb7b4148d2f5979fb8aeb0cab58f105ed83e244457433687d88d1921710afc",
-    "src/constants/copy.ts": "2c4533aa1893af139d515ba765ede841f89d17425246059cf62ddfa287c02e15",
+    "src/constants/copy.ts": "727b6ead24af1a5c9fa48d7b80d6d7325f65d2f75813939c3d0c3e5979c6ff4d",
     "src/main.tsx": "00192230c902a8bc8730ac3c5ce29da318fc3072eeaa9eb8fec1d8faa21a18c9",
     "src/pages/AccessPages.tsx": "0347613aae4cd6e41291d1b1b94cba7651188d8a2dc2621042defbcaa5941662",
     "src/pages/AnalyticsPage.tsx": "bd808f39acd01b63a98cffacdce7535c38937d51b4823db01b4491f0065a6863",
     "src/pages/AuditPage.tsx": "b79f730553bbe82ed07adf90651f113f74747ddaacfb9f08a5f11a6bc415891f",
-    "src/pages/DocumentsPage.tsx": "924c0cffed20d90869159462f8ac16b6a2ffeb5056e271d501604bb056aeb3aa",
+    "src/pages/DocumentsPage.tsx": "835e41906f45fa286a6f528fda0f0feea2c043222031501422c20dea730ba1a0",
     "src/pages/ExportPage.tsx": "da26b136e5e554d3407dcfba5df878ccb802fd03500e4bf3055a2e9cb9a59c43",
     "src/pages/FieldsPage.tsx": "7af52a50c60cea7b95ed065895a51d1cc1293b76c02b5f6609386ce20d24a448",
     "src/pages/HomePage.tsx": "95618cbc89fb634bb7ebb64060c1447cf37f8fcc83c7e4b104e330918e8b3fb5",
@@ -58,21 +58,21 @@
     "src/state/navigation.ts": "86349ce029332523001def7be61629b52ea8d700a1d04d40159a19b0ab4a64c6",
     "src/state/permissions.ts": "cafb0d78ce6e780b6a3c2b54e3c40f17f81f834f777ad284804f25162e488098",
     "src/state/userAccounts.ts": "328618a3a5b839ad11c9f8c9f54b9abd9b86db30586d19512169c8413df3bab5",
-    "src/styles/app.css": "878f34ac821fc943186de1c3a08b2d475505f7dbd50e160ca0d160e7604c2f17",
+    "src/styles/app.css": "6bd0ab4adbfc3d140d23542011d3a5f124acabf67940057a7665028d5d915237",
     "src/styles/audit.css": "e07a3363f2f6a501fbe8097f4cf8b537bbe266eba671c16c0198880b66a16f6b",
     "src/styles/export.css": "477d40b51c0fe99cc14f3968f3c334e65bc6b00f1aa2b463cd1cae4ab0938ebf",
     "src/styles/fields.css": "6d87756b35c7a99a71f742d5c6709fd4c96e153d48e9290973ca3bda671e27ea",
     "src/styles/layouts.css": "fc62bdc29858970c32d4a5221af9339cb76a81458ea685510a70202b1eb0471e",
     "src/styles/permissions.css": "9a1b880bcc17c3d0ef6163416b2f07ca0dbb4efa7bdeb77861461ba92e807d70",
     "src/styles/users.css": "a457b2cf31035bad4dc5df998f2f71ca95bcc9a193dfaccad60c73483cf2c5af",
-    "src/styles/vars.css": "8c83352eebe1ee52acc6ef79544a4d3334150592998807b50a82876040d9df1a",
+    "src/styles/vars.css": "98834190767252a7654ff9d5d0a5b3d9bb1f4928c8b56cb3b3c87a2d6912f1d3",
     "src/vite-env.d.ts": "65996936fbb042915f7b74a200fcdde7e410f32a669b1ab9597cfaa4b0faddb5",
     "tsconfig.app.json": "815745f3dd013b9b615ee86b9ee280e8da38374454aa1910fceeb35468ff198b",
     "tsconfig.json": "770b4140bbb581e2dfd9ea9946ffc9c75a1d86ba7d2db5f77c83e37cbdf9d808",
     "tsconfig.node.json": "477a22e56a74a5ed799afa0ef521eae5d4d12cdc8a411465242c3c1d7f6ec72c",
     "vite.config.ts": "8a18c5e2038444028aa8afde616e9a899a477a4f5321f22a3d924649a10b40c1"
   },
-  "ledgerHash": "08b2005a6df32bd34d5f6983fe91c0dfd9542e28cb34568d231ada4899940300",
-  "featuresHash": "4a9c5edba134e47d40c1bbcabf06c55ff346f90d7dd27ca919562ae1e5cd5ef7",
-  "markdownHash": "ef959203e3baaab65db3b9900165c4dbe8f03c1c3a75a1d6cf41e8f8ad905524"
+  "ledgerHash": "72ff1dfff870a695c6af39bacf4ee851655ea39ad3834474840140ecd3a469e0",
+  "featuresHash": "3185e4c8ce327ca5efb579d1638fe3753bc3a0f15dd9ce2a425ae5d69c83e96a",
+  "markdownHash": "5cfa1ba1d612170c169f431591f1dca66fed34aab604b147c197c259a50f2af3"
 }

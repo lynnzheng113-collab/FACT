@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "version": "1.10",
+  "version": "1.12",
   "reviewedAt": "2026-10-16",
   "basis": {
     "edition": "原版",
     "prototypeLabel": "v0.17 · 2026-10-04",
-    "commit": "1a8db2ab6ce89fc0e6ad5e2baca735e2ccef74da",
+    "commit": "7b05d948bbdc91d9c27bf88905d76f59bb54bae9",
     "latestCommitDate": "2026-10-12",
     "includesWorkingTree": true,
     "scopeNote": "本清单以最新原版源码为准，不以独立 MVP 版的 58 项截断；M0/M1/M2/条件必要仅为旧建议，确认列保留。"
@@ -552,7 +552,7 @@
         {
           "path": "src/styles/app.css",
           "anchor": ".processing-set-detail-column",
-          "line": 2190
+          "line": 2220
         }
       ],
       "parent": null,
@@ -1191,7 +1191,7 @@
         {
           "path": "src/pages/DocumentsPage.tsx",
           "anchor": "export function",
-          "line": 13
+          "line": 14
         }
       ],
       "parent": null,
@@ -1228,7 +1228,7 @@
         {
           "path": "src/pages/DocumentsPage.tsx",
           "anchor": "export function",
-          "line": 13
+          "line": 14
         }
       ],
       "parent": null,
@@ -1265,7 +1265,7 @@
         {
           "path": "src/pages/DocumentsPage.tsx",
           "anchor": "export function",
-          "line": 13
+          "line": 14
         }
       ],
       "parent": null,
@@ -1302,7 +1302,7 @@
         {
           "path": "src/pages/DocumentsPage.tsx",
           "anchor": "export function",
-          "line": 13
+          "line": 14
         }
       ],
       "parent": null,
@@ -1339,7 +1339,7 @@
         {
           "path": "src/pages/DocumentsPage.tsx",
           "anchor": "export function",
-          "line": 13
+          "line": 14
         }
       ],
       "parent": null,
@@ -1376,7 +1376,7 @@
         {
           "path": "src/pages/DocumentsPage.tsx",
           "anchor": "export function",
-          "line": 13
+          "line": 14
         }
       ],
       "parent": null,
@@ -1413,7 +1413,7 @@
         {
           "path": "src/pages/DocumentsPage.tsx",
           "anchor": "export function",
-          "line": 13
+          "line": 14
         }
       ],
       "parent": null,
@@ -1450,7 +1450,7 @@
         {
           "path": "src/pages/DocumentsPage.tsx",
           "anchor": "export function",
-          "line": 13
+          "line": 14
         }
       ],
       "parent": null,
@@ -1487,7 +1487,7 @@
         {
           "path": "src/pages/DocumentsPage.tsx",
           "anchor": "export function",
-          "line": 13
+          "line": 14
         }
       ],
       "parent": null,
@@ -1783,7 +1783,7 @@
         {
           "path": "src/pages/DocumentsPage.tsx",
           "anchor": "const [sampleOpen",
-          "line": 26
+          "line": 27
         }
       ],
       "parent": null,
@@ -1820,7 +1820,7 @@
         {
           "path": "src/pages/DocumentsPage.tsx",
           "anchor": "const [moveOpen",
-          "line": 37
+          "line": 38
         }
       ],
       "parent": "FACT-M05-REQ-005",
@@ -1857,7 +1857,7 @@
         {
           "path": "src/pages/DocumentsPage.tsx",
           "anchor": "const [custodianOpen",
-          "line": 35
+          "line": 36
         }
       ],
       "parent": "FACT-M05-REQ-004",
@@ -2529,8 +2529,8 @@
       "legacyPriority": "M1",
       "legacyForm": "后续",
       "legacyScope": "批量标注先后置；若实际审阅量要求纳入，须确认作用范围、预览数量和修改记录。",
-      "prototypeStatus": "静态核对：前端演示／局部交互",
-      "gap": "无批量修改表单、执行和审计",
+      "prototypeStatus": "前端交互：批量操作菜单与范围预览已核对",
+      "gap": "实际编辑、替换、导出等配置、执行、审计与权限开关联动仍待实现",
       "finalPriority": "待确认",
       "confirmedBy": null,
       "confirmedDate": null,
@@ -2539,25 +2539,30 @@
       "basis": "原型现有",
       "module": "M06 审阅配置与作业",
       "role": "管理员、用户／律师／工作区",
-      "entry": "Documents",
-      "behavior": "选择文档后 Mass Edit 按钮启用",
-      "output": "仅批量入口",
+      "entry": "文档 / Documents > 批量操作 / Mass Operations > 具体操作",
+      "behavior": "点击批量操作展开14项菜单，名称顺序复用权限设置；未选择文档可浏览，选项禁用；选择当前结果内文档后启用；点击选项预览所选文档范围。支持外部点击、Esc、Tab离开收起及方向键/Home/End导航。",
+      "output": "批量操作菜单和文档范围预览；不执行数据修改或导出",
       "boundary": "文档结果与查询定义；文档身份与关联由 M03 提供，批量标注调用 M06",
-      "acceptance": "建议验收：批量标注先后置；若实际审阅量要求纳入，须确认作用范围、预览数量和修改记录。",
+      "acceptance": "14项名称顺序与权限设置一致；未选择文档时选项禁用，已选择时启用且范围限当前结果；键盘及收起行为正常；预览明确不修改或导出文档。具体执行流程待后续验收。",
       "evidence": [
         {
           "path": "src/pages/DocumentsPage.tsx",
-          "anchor": "export function",
-          "line": 13
+          "anchor": "<BulkOperations",
+          "line": 118
+        },
+        {
+          "path": "src/components/BulkOperations.tsx",
+          "anchor": "export function BulkOperations",
+          "line": 8
         }
       ],
       "parent": null,
       "level": "原有功能",
-      "reviewedAt": "2026-10-08",
-      "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
+      "reviewedAt": "2026-10-16",
+      "change": "从统一静态入口扩展为14项可展开菜单及操作范围预览。",
       "oldRow": 48,
-      "sourceState": "含未提交工作区修改",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "sourceState": "原版 HEAD 7b05d94；含本轮未提交修改",
+      "verification": "类型检查通过；管理员及律师双角色、14项菜单、选择条件、范围预览、键盘、外部点击和1600/1280桌面视口核对通过；未验证实际执行或权限引擎。"
     },
     {
       "id": "FACT-M06-REQ-016",
@@ -5736,6 +5741,22 @@
       "ids": [
         "FACT-P01-REQ-005",
         "FACT-P01-REQ-006"
+      ]
+    },
+    {
+      "date": "2026-10-16",
+      "version": "1.11",
+      "summary": "文档页统一入口更名为批量操作，保留选择启用条件；编辑和替换等具体动作仍为待实现能力，未改变范围确认。",
+      "ids": [
+        "FACT-M06-REQ-015"
+      ]
+    },
+    {
+      "date": "2026-10-16",
+      "version": "1.12",
+      "summary": "批量操作新增14项菜单、文档选择约束与范围预览；保留具体批量执行和权限联动缺口，未改变人工范围确认。",
+      "ids": [
+        "FACT-M06-REQ-015"
       ]
     }
   ]

@@ -1,8 +1,8 @@
 # FACT MVP 功能台账
 
-版本 v1.10 · 核对日期 2026-10-16 · 基准：原版
+版本 v1.12 · 核对日期 2026-10-16 · 基准：原版
 
-源码标识：v0.17 · 2026-10-04；核对基准提交：`1a8db2ab6ce89fc0e6ad5e2baca735e2ccef74da`；本次含工作区未提交修改，已在各项中区分。
+源码标识：v0.17 · 2026-10-04；核对基准提交：`7b05d948bbdc91d9c27bf88905d76f59bb54bae9`；本次含工作区未提交修改，已在各项中区分。
 
 本清单以最新原版源码为准，不以独立 MVP 版的 58 项截断；M0/M1/M2/条件必要仅为旧建议，确认列保留。
 
@@ -94,7 +94,7 @@
 |FACT-M06-REQ-012|表单预览|M06 审阅配置与作业|原有功能|静态核对：前端演示／局部交互|待确认|
 |FACT-M06-REQ-013|表单接入审阅面板|M06 审阅配置与作业|原有功能|未接通／待开发|待确认|
 |FACT-M06-REQ-014|允许复制的字段配置|M06 审阅配置与作业|原有功能|静态核对：前端演示／局部交互|待确认|
-|FACT-M06-REQ-015|文档批量标注|M06 审阅配置与作业|原有功能|静态核对：前端演示／局部交互|待确认|
+|FACT-M06-REQ-015|文档批量标注|M06 审阅配置与作业|原有功能|前端交互：批量操作菜单与范围预览已核对|待确认|
 |FACT-M06-REQ-016|审阅任务分配与领取|M06 审阅配置与作业|原有功能|静态核对：前端演示／局部交互|待确认|
 |FACT-M06-REQ-017|文档内容查看|M06 审阅配置与作业|原有功能|静态核对：前端演示／局部交互|待确认|
 |FACT-M06-REQ-018|文档内定位与缩放|M06 审阅配置与作业|原有功能|静态核对：前端演示／局部交互|待确认|
@@ -344,7 +344,7 @@
 - **人工确认：** 待确认；确认人：未填写；日期：未填写；说明：2026-10-09
 - **来源：** REL-070
 - **核对：** 2026-10-09；HEAD 9ccc8659f9db5f65d95230f2baf97b99e27814ee + 未提交修改；2026-10-09 浏览器验证 1536×1000、1280×900：两栏、统计位置、重复说明移除、新建数据源位置及页面无横向溢出通过；前端演示，不代表后端验收。
-- **代码依据：** [src/pages/ProcessingPage.tsx:136](../src/pages/ProcessingPage.tsx#L136)（锚点：`processing-set-detail-grid`）；[src/styles/app.css:2190](../src/styles/app.css#L2190)（锚点：`.processing-set-detail-column`）
+- **代码依据：** [src/pages/ProcessingPage.tsx:136](../src/pages/ProcessingPage.tsx#L136)（锚点：`processing-set-detail-grid`）；[src/styles/app.css:2220](../src/styles/app.css#L2220)（锚点：`.processing-set-detail-column`）
 
 ### FACT-M04-REQ-002 处理规则设置
 
@@ -602,7 +602,7 @@
 - **人工确认：** 待确认；确认人：未填写；日期：未填写；说明：未填写
 - **来源：** REL-135, REL-137
 - **核对：** 2026-10-08；含未提交工作区修改；2026-10-08 静态源码核对；已完成类型检查，待浏览器回归；仍为前端内存演示
-- **代码依据：** [src/pages/DocumentsPage.tsx:13](../src/pages/DocumentsPage.tsx#L13)（锚点：`export function`）
+- **代码依据：** [src/pages/DocumentsPage.tsx:14](../src/pages/DocumentsPage.tsx#L14)（锚点：`export function`）
 
 ### FACT-M05-REQ-002 文档总清单
 
@@ -617,7 +617,7 @@
 - **人工确认：** 待确认；确认人：未填写；日期：未填写；说明：未填写
 - **来源：** REL-116
 - **核对：** 2026-10-11；未提交源码；2026-10-11 类型检查与生产构建通过；本地预览 HTTP 200；未进行真实后端联调
-- **代码依据：** [src/pages/DocumentsPage.tsx:13](../src/pages/DocumentsPage.tsx#L13)（锚点：`export function`）
+- **代码依据：** [src/pages/DocumentsPage.tsx:14](../src/pages/DocumentsPage.tsx#L14)（锚点：`export function`）
 
 ### FACT-M05-REQ-003 文件夹浏览
 
@@ -632,7 +632,7 @@
 - **人工确认：** 待确认；确认人：未填写；日期：未填写；说明：未填写
 - **来源：** REL-116
 - **核对：** 2026-10-08；含未提交工作区修改；2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败
-- **代码依据：** [src/pages/DocumentsPage.tsx:13](../src/pages/DocumentsPage.tsx#L13)（锚点：`export function`）
+- **代码依据：** [src/pages/DocumentsPage.tsx:14](../src/pages/DocumentsPage.tsx#L14)（锚点：`export function`）
 
 ### FACT-M05-REQ-004 组合条件编辑
 
@@ -647,7 +647,7 @@
 - **人工确认：** 待确认；确认人：未填写；日期：未填写；说明：未填写
 - **来源：** REL-136
 - **核对：** 2026-10-08；含未提交工作区修改；2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败
-- **代码依据：** [src/pages/DocumentsPage.tsx:13](../src/pages/DocumentsPage.tsx#L13)（锚点：`export function`）
+- **代码依据：** [src/pages/DocumentsPage.tsx:14](../src/pages/DocumentsPage.tsx#L14)（锚点：`export function`）
 
 ### FACT-M05-REQ-005 搜索方案保存
 
@@ -662,7 +662,7 @@
 - **人工确认：** 待确认；确认人：未填写；日期：未填写；说明：未填写
 - **来源：** REL-138
 - **核对：** 2026-10-08；含未提交工作区修改；2026-10-08 静态源码核对；已完成类型检查，待浏览器回归；仍为前端内存演示
-- **代码依据：** [src/pages/DocumentsPage.tsx:13](../src/pages/DocumentsPage.tsx#L13)（锚点：`export function`）
+- **代码依据：** [src/pages/DocumentsPage.tsx:14](../src/pages/DocumentsPage.tsx#L14)（锚点：`export function`）
 
 ### FACT-M05-REQ-006 连同附件和父邮件查看
 
@@ -677,7 +677,7 @@
 - **人工确认：** 待确认；确认人：未填写；日期：未填写；说明：未填写
 - **来源：** REL-130, REL-076
 - **核对：** 2026-10-08；含未提交工作区修改；2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败
-- **代码依据：** [src/pages/DocumentsPage.tsx:13](../src/pages/DocumentsPage.tsx#L13)（锚点：`export function`）
+- **代码依据：** [src/pages/DocumentsPage.tsx:14](../src/pages/DocumentsPage.tsx#L14)（锚点：`export function`）
 
 ### FACT-M05-REQ-007 索引覆盖提示
 
@@ -692,7 +692,7 @@
 - **人工确认：** 待确认；确认人：未填写；日期：未填写；说明：未填写
 - **来源：** REL-373
 - **核对：** 2026-10-08；含未提交工作区修改；2026-10-08 静态源码核对；已完成类型检查，待浏览器回归；仍为前端内存演示
-- **代码依据：** [src/pages/DocumentsPage.tsx:13](../src/pages/DocumentsPage.tsx#L13)（锚点：`export function`）
+- **代码依据：** [src/pages/DocumentsPage.tsx:14](../src/pages/DocumentsPage.tsx#L14)（锚点：`export function`）
 
 ### FACT-M05-REQ-008 列表字段与视图配置
 
@@ -707,7 +707,7 @@
 - **人工确认：** 待确认；确认人：未填写；日期：未填写；说明：未填写
 - **来源：** SUP-012
 - **核对：** 2026-10-08；含未提交工作区修改；2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败
-- **代码依据：** [src/pages/DocumentsPage.tsx:13](../src/pages/DocumentsPage.tsx#L13)（锚点：`export function`）
+- **代码依据：** [src/pages/DocumentsPage.tsx:14](../src/pages/DocumentsPage.tsx#L14)（锚点：`export function`）
 
 ### FACT-M05-REQ-009 可配置统计看板
 
@@ -722,7 +722,7 @@
 - **人工确认：** 待确认；确认人：未填写；日期：未填写；说明：未填写
 - **来源：** SUP-013, REL-148
 - **核对：** 2026-10-08；含未提交工作区修改；2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败
-- **代码依据：** [src/pages/DocumentsPage.tsx:13](../src/pages/DocumentsPage.tsx#L13)（锚点：`export function`）
+- **代码依据：** [src/pages/DocumentsPage.tsx:14](../src/pages/DocumentsPage.tsx#L14)（锚点：`export function`）
 
 ### FACT-M05-REQ-010 搜索索引构建与维护
 
@@ -842,7 +842,7 @@
 - **人工确认：** 待确认；确认人：未填写；日期：未填写；说明：未填写
 - **来源：** 原版源码核对；不追加未经核实的 Relativity 来源编号
 - **核对：** 2026-10-08；含未提交工作区修改；2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败
-- **代码依据：** [src/pages/DocumentsPage.tsx:26](../src/pages/DocumentsPage.tsx#L26)（锚点：`const [sampleOpen`）
+- **代码依据：** [src/pages/DocumentsPage.tsx:27](../src/pages/DocumentsPage.tsx#L27)（锚点：`const [sampleOpen`）
 
 ### FACT-M05-REQ-018 Saved Search 文件夹与访问设置
 
@@ -857,7 +857,7 @@
 - **人工确认：** 待确认；确认人：未填写；日期：未填写；说明：未填写
 - **来源：** 原版源码核对；不追加未经核实的 Relativity 来源编号
 - **核对：** 2026-10-08；含未提交工作区修改；2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败
-- **代码依据：** [src/pages/DocumentsPage.tsx:37](../src/pages/DocumentsPage.tsx#L37)（锚点：`const [moveOpen`）
+- **代码依据：** [src/pages/DocumentsPage.tsx:38](../src/pages/DocumentsPage.tsx#L38)（锚点：`const [moveOpen`）
 - **父项：** FACT-M05-REQ-005；本条为其细化，避免重复估时。
 
 ### FACT-M05-REQ-019 保管人查询条件选择
@@ -873,7 +873,7 @@
 - **人工确认：** 待确认；确认人：未填写；日期：未填写；说明：未填写
 - **来源：** 原版源码核对；不追加未经核实的 Relativity 来源编号
 - **核对：** 2026-10-08；含未提交工作区修改；2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败
-- **代码依据：** [src/pages/DocumentsPage.tsx:35](../src/pages/DocumentsPage.tsx#L35)（锚点：`const [custodianOpen`）
+- **代码依据：** [src/pages/DocumentsPage.tsx:36](../src/pages/DocumentsPage.tsx#L36)（锚点：`const [custodianOpen`）
 - **父项：** FACT-M05-REQ-004；本条为其细化，避免重复估时。
 
 ### FACT-M05-REQ-020 索引可搜索集、构建与激活配置
@@ -1136,17 +1136,17 @@
 ### FACT-M06-REQ-015 文档批量标注
 
 - **主责模块：** M06 审阅配置与作业
-- **范围与入口：** 管理员、用户／律师／工作区；Documents
-- **现有操作与规则：** 选择文档后 Mass Edit 按钮启用
-- **输出／状态：** 仅批量入口
-- **当前缺口：** 无批量修改表单、执行和审计
+- **范围与入口：** 管理员、用户／律师／工作区；文档 / Documents > 批量操作 / Mass Operations > 具体操作
+- **现有操作与规则：** 点击批量操作展开14项菜单，名称顺序复用权限设置；未选择文档可浏览，选项禁用；选择当前结果内文档后启用；点击选项预览所选文档范围。支持外部点击、Esc、Tab离开收起及方向键/Home/End导航。
+- **输出／状态：** 批量操作菜单和文档范围预览；不执行数据修改或导出
+- **当前缺口：** 实际编辑、替换、导出等配置、执行、审计与权限开关联动仍待实现
 - **责任边界／依赖：** 文档结果与查询定义；文档身份与关联由 M03 提供，批量标注调用 M06
-- **建议验收：** 建议验收：批量标注先后置；若实际审阅量要求纳入，须确认作用范围、预览数量和修改记录。
+- **建议验收：** 14项名称顺序与权限设置一致；未选择文档时选项禁用，已选择时启用且范围限当前结果；键盘及收起行为正常；预览明确不修改或导出文档。具体执行流程待后续验收。
 - **旧范围建议：** M1 / 后续；批量标注先后置；若实际审阅量要求纳入，须确认作用范围、预览数量和修改记录。
 - **人工确认：** 待确认；确认人：未填写；日期：未填写；说明：未填写
 - **来源：** REL-144
-- **核对：** 2026-10-08；含未提交工作区修改；2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败
-- **代码依据：** [src/pages/DocumentsPage.tsx:13](../src/pages/DocumentsPage.tsx#L13)（锚点：`export function`）
+- **核对：** 2026-10-16；原版 HEAD 7b05d94；含本轮未提交修改；类型检查通过；管理员及律师双角色、14项菜单、选择条件、范围预览、键盘、外部点击和1600/1280桌面视口核对通过；未验证实际执行或权限引擎。
+- **代码依据：** [src/pages/DocumentsPage.tsx:118](../src/pages/DocumentsPage.tsx#L118)（锚点：`<BulkOperations`）；[src/components/BulkOperations.tsx:8](../src/components/BulkOperations.tsx#L8)（锚点：`export function BulkOperations`）
 
 ### FACT-M06-REQ-016 审阅任务分配与领取
 
@@ -1948,3 +1948,5 @@
 - 2026-10-12 / v1.8：完成 P01 REQ-005/006 两份十段式 PRD；同步权限编辑、复制、预览的当前原型证据、官方来源、验收边界和服务端缺口
 - 2026-10-16 / v1.9：Tab可见性与工作区导航同源；其他设置独立双列紧凑布局；抽样仅保留使用开关，方法在文档抽样配置；浏览器验证编辑保存及预览通过，保留既有PRD与人工确认
 - 2026-10-16 / v1.10：用户确认Tab权限仅保留工作区侧栏八项，遮盖与制作同名，取消审阅批次独立权限选项；本地浏览器八项搜索保存预览、紧凑排版和抽样单开关验证通过，准备提交并发布GitHub
+- 2026-10-16 / v1.11：文档页统一入口更名为批量操作，保留选择启用条件；编辑和替换等具体动作仍为待实现能力，未改变范围确认。
+- 2026-10-16 / v1.12：批量操作新增14项菜单、文档选择约束与范围预览；保留具体批量执行和权限联动缺口，未改变人工范围确认。

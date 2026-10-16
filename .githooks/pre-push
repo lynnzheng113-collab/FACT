@@ -3,6 +3,11 @@ set -eu
 root=$(git rev-parse --show-toplevel)
 cd "$root"
 node scripts/feature-ledger.mjs check
+node scripts/ui-elements.mjs check --source
+if ! git diff HEAD --quiet -- docs/ui-elements.json; then
+  echo '推送前请先提交已核对的界面元素登记。' >&2
+  exit 1
+fi
 if ! git diff HEAD --quiet -- src public package.json package-lock.json index.html vite.config.ts tsconfig.json tsconfig.app.json tsconfig.node.json docs/feature-ledger.json docs/FEATURE_LEDGER.md docs/feature-ledger-baseline.json; then
   echo '推送前请先将已核对的源码和功能台账一并提交，工作区仍有未提交差异。' >&2
   exit 1

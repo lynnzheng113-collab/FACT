@@ -4,6 +4,13 @@ root=$(git rev-parse --show-toplevel)
 cd "$root"
 node scripts/feature-ledger.mjs check
 node scripts/feature-ledger.mjs check --staged
+node scripts/ui-elements.mjs check --source
+# 元素登记与已核对工作区一起暂存；停用身份也必须保留。
+git ls-files --error-unmatch docs/ui-elements.json >/dev/null || { echo '元素登记尚未暂存：docs/ui-elements.json' >&2; exit 1; }
+if ! git diff --quiet -- docs/ui-elements.json; then
+  echo '请将已核对的界面元素登记一并暂存。' >&2
+  exit 1
+fi
 # 校验工作区后，再要求源码和台账文件与暂存内容一致，防止只暂存代码遗漏台账。
 if ! git diff --quiet -- src public package.json package-lock.json index.html vite.config.ts tsconfig.json tsconfig.app.json tsconfig.node.json docs/feature-ledger.json docs/FEATURE_LEDGER.md docs/feature-ledger-baseline.json; then
   echo '请将已核对的源码和功能台账一起暂存；当前暂存内容与核对工作区不一致。' >&2
