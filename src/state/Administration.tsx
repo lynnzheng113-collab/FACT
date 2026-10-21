@@ -27,11 +27,13 @@ export type GroupRecord = { id: string; name: string; clientId: string; userIds:
 export type SavedSearch = {
   id: string; name: string; query: string; includeFamily: boolean; folder: number;
   folderName?: string; owner?: string; visibility?: "public" | "private"; selectedFields?: string[]; sort?: string;
+  definition?: import("./savedSearch").SearchDefinition; revision?: number;
 };
 export type DtSearchIndex = {
   id: string; name: string; searchableSet: string; status: string; documents: string; updated: string;
   searchableSetId?: string; searchableSetType?: "static" | "savedSearch";
   order: string; email: string; skipMalicious: boolean; defaultSubindex: boolean; progress: number; stage: number;
+  builtSearch?: SavedSearch; builtDocumentIds?: string[];
 };
 type WorkspaceState = {
   exportJobs: ExportJob[];
@@ -39,7 +41,7 @@ type WorkspaceState = {
   highlights: { name: string; terms: string; enabled: boolean }; savedSearches: SavedSearch[]; dtSearchIndexes: DtSearchIndex[]; activeIndexId: string | null;
   batchOwner: string | null; qcPassed: boolean; documentView: { query: string; folder: number; includeFamily: boolean; reportTerm: string | null; searchIndexId: string | null };
 };
-const newWorkspaceState = (): WorkspaceState => { const fields = withExampleFields(createFields()); const now = fieldTimestamp(); const layouts = copy.layoutManagement.defaultLayouts.map((name, index) => ({ id: `layout-default-${index + 1}`, name, order: index + 1, copyPrevious: false, keywords: "", notes: "", sections: defaultSections(fields), createdOn: now, modifiedOn: now })); return ({ exportJobs: [], fields, layouts, fieldCategories: createCategories(), highlights: { name: copy.modules.highlightDefault, terms: copy.modules.highlightTerms, enabled: true }, savedSearches: [], dtSearchIndexes: copy.analytics.indexRows.map((row, index) => ({ ...row, id: `idx-${index + 1}`, order: String(index + 1), email: "admin@example.com", skipMalicious: true, defaultSubindex: true, progress: 100, stage: 4 })), activeIndexId: null, batchOwner: null, qcPassed: false, documentView: { query: copy.documents.searchValue, folder: 0, includeFamily: true, reportTerm: null, searchIndexId: null } }); }
+const newWorkspaceState = (): WorkspaceState => { const fields = withExampleFields(createFields()); const now = fieldTimestamp(); const layouts = copy.layoutManagement.defaultLayouts.map((name, index) => ({ id: `layout-default-${index + 1}`, name, order: index + 1, copyPrevious: false, keywords: "", notes: "", sections: defaultSections(fields), createdOn: now, modifiedOn: now })); return ({ exportJobs: [], fields, layouts, fieldCategories: createCategories(), highlights: { name: copy.modules.highlightDefault, terms: copy.modules.highlightTerms, enabled: true }, savedSearches: [{ id: "search-extracted-text", name: copy.analytics.searchableSets[0], query: "", includeFamily: false, folder: 0, owner: copy.savedSearchEditor.public, visibility: "public", revision: 1, definition: { conditions: [], match: "all", fields: ["extractedText"], sorts: [], scope: "workspace", folders: [], includeSubfolders: true, related: "none", manualRerun: false, notes: "" } }], dtSearchIndexes: copy.analytics.indexRows.map((row, index) => ({ ...row, id: `idx-${index + 1}`, searchableSetId: "search-extracted-text", searchableSetType: "savedSearch" as const, order: String(index + 1), email: "admin@example.com", skipMalicious: true, defaultSubindex: true, progress: 100, stage: 4 })), activeIndexId: null, batchOwner: null, qcPassed: false, documentView: { query: copy.documents.searchValue, folder: 0, includeFamily: true, reportTerm: null, searchIndexId: null } }); }
 function useAdministrationState() {
   const [activeWorkspaceId, setActiveWorkspaceId] = useState<string | null>(null);
   const [workspaceStates, setWorkspaceStates] = useState<Record<string, WorkspaceState>>({});

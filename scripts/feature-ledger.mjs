@@ -25,7 +25,7 @@ const ids=new Set();
 function validate(){
   const errors=[];
   for(const f of ledger.features){
-    if(!/^FACT-(?:M0[1-8]|P0[1-4])-REQ-\d{3}$/.test(f.id)||ids.has(f.id))errors.push(`编号非法或重复：${f.id}`);
+    if(!/^(?:M0[1-8]|P0[1-4])-\d{3}$/.test(f.id)||ids.has(f.id))errors.push(`编号非法或重复：${f.id}`);
     ids.add(f.id);
     for(const key of ['name','module','entry','behavior','output','gap','acceptance','verification','reviewedAt'])if(!f[key])errors.push(`${f.id} 缺少 ${key}`);
     if(!ledger.modules.includes(f.module))errors.push(`${f.id} 模块未知`);
@@ -65,7 +65,7 @@ function markdown(){
   return s;
 }
 try{
-  if(!['check','refresh'].includes(command))throw new Error('用法：node scripts/feature-ledger.mjs check | refresh --date YYYY-MM-DD --reason 修改说明 --ids FACT-xxx,FACT-yyy --reviewed');
+  if(!['check','refresh'].includes(command))throw new Error('用法：node scripts/feature-ledger.mjs check | refresh --date YYYY-MM-DD --reason 修改说明 --ids M01-001,P01-001 --reviewed');
   validate();
   const files=snapshot();
   if(command==='refresh'){

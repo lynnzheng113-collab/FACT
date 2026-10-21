@@ -43,7 +43,7 @@ export function validateRegistry(r,previous){
  const relations=new Set();
  for(const rel of r.relations){const key=[rel.controlId,rel.event,rel.actionId,rel.mode].join('|');insist(!relations.has(key),'Duplicate relation '+key);relations.add(key);insist(sets.elements.has(rel.controlId)&&sets.actions.has(rel.actionId),'Dangling relation '+key);}
  for(const p of r.pages)insist(!p.parentId||sets.pages.has(p.parentId),'Unknown parent '+p.id);
- if(previous){for(const key of collections)for(const x of previous[key]||[])insist(sets[key].has(x.id),'Old identity removed '+x.id);for(const e of previous.elements||[]){const n=r.elements.find(x=>x.id===e.id);if(n&&n.label!==e.label)insist(Boolean(n.previousRegisteredName||n.identityHistory),'Rename without history '+e.id);}}
+ if(previous){for(const key of collections)for(const x of previous[key]||[])insist(sets[key].has(x.id)||(key==='features'&&r.features.some(n=>n.legacy_id===x.id&&n.id===x.id.replace(/^FACT-([MP]\d{2})-REQ-(\d{3})$/,'$1-$2'))),'Old identity removed '+x.id);for(const e of previous.elements||[]){const n=r.elements.find(x=>x.id===e.id);if(n&&n.label!==e.label)insist(Boolean(n.previousRegisteredName||n.identityHistory),'Rename without history '+e.id);}}
  if(r.bilingualPolicy){
   for(const key of collections)for(const x of r[key]){
    insist(Array.isArray(x.sourceNames),'Missing source-name inventory '+x.id);
@@ -53,7 +53,7 @@ export function validateRegistry(r,previous){
  if(previous?.bilingualPolicy){
   insist(Boolean(r.bilingualPolicy),'Bilingual policy removed');
   for(const key of collections)for(const old of previous[key]||[]){
-   const now=r[key].find(x=>x.id===old.id);if(!now)continue;
+   const now=r[key].find(x=>x.id===old.id||(key==='features'&&x.legacy_id===old.id));if(!now)continue;
    for(const n of [...(old.sourceNames||[]),...(old.sourceNameHistory||[])])insist([...(now.sourceNames||[]),...(now.sourceNameHistory||[])].some(x=>x.key===n.key&&x.text===n.text&&x.source===n.source),'Bilingual original lost '+old.id+' '+n.key);
    for(const n of old.nameHistory||[])insist((now.nameHistory||[]).some(x=>x.name===n.name),'Name history lost '+old.id);
    const before=old.label??old.name,after=now.label??now.name;

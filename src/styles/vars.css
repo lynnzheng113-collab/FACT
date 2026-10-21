@@ -1,4 +1,6 @@
 :root {
+  --size-saved-search-editor: 1220px;
+  --size-saved-search-information: 360px;
   --size-user-account-table: 1700px;
   --size-bulk-menu: 410px;
   --size-bulk-menu-height: 620px;

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>eDiscovery 专业术语表 v1.1 · 2026-10-11</title>
+<title>eDiscovery 专业术语表 v1.3 · 2026-10-21</title>
 <style>
 :root{--navy:#173847;--ink:#193744;--muted:#657881;--page:#f4f7f8;--gray:#e9eef0;--gray-line:#8fa2aa;--client:#c9554b;--client-bg:#fff3f1;--admin:#385f9f;--admin-bg:#eef5ff;--decision:#af7b1c;--decision-bg:#fff9e8;--green:#43815a;--green-bg:#eef8f1;--return:#b05b4e;--return-bg:#fff1ed}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--page);color:var(--ink);font:15px/1.65 "Microsoft YaHei","PingFang SC",Arial,sans-serif;overflow-x:hidden}header{background:var(--navy);color:#fff;padding:25px 28px 21px}header .inner,main{max-width:1500px;margin:0 auto}h1{margin:0;font-size:29px;line-height:1.25}header p{margin:7px 0 0;color:#d5e6eb}.toolbar{position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid #d5e0e4;padding:10px max(20px,calc((100vw - 1500px)/2));display:flex;align-items:center;gap:8px}.toolbar a,.toolbar button{border:1px solid #b8c8cf;background:#fff;color:#274c5d;border-radius:6px;padding:7px 11px;font:inherit;font-size:13px;text-decoration:none;cursor:pointer}.toolbar .spacer{flex:1}main{padding:21px 22px 48px}.intro{background:#fff;border-left:4px solid #32768a;padding:14px 17px;margin-bottom:15px;color:#3d5964}.intro strong{color:#173847}.legend{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 18px}.legend span{display:inline-flex;align-items:center;gap:6px;border:1px solid currentColor;border-radius:999px;padding:3px 10px;font-size:12px;font-weight:700}.legend i{width:9px;height:9px;border-radius:2px;background:currentColor}.client{color:var(--client)}.admin{color:var(--admin)}.gray{color:#66787f}.decision{color:var(--decision)}.section-title{text-align:center;font-size:23px;margin:18px 0 14px}.canvas{max-width:1440px;margin:0 auto;background:#fff;border:1px solid #d7e1e5;border-radius:8px;overflow:auto;box-shadow:0 3px 14px rgba(28,57,70,.06)}svg{display:block;width:1440px;height:2100px}.notes{max-width:1440px;margin:16px auto 0;color:var(--muted);font-size:13px}.notes strong{color:var(--ink)}.shot header,.shot .toolbar,.shot .intro,.shot .legend,.shot .notes{display:none}.shot main{max-width:none;padding:0}.shot .section-title{display:none}.shot .canvas{border:0;box-shadow:none;border-radius:0}.shot svg{width:1600px;height:2200px}@media print{header,.toolbar,.intro,.legend,.notes{display:none}.canvas{border:0;box-shadow:none;overflow:visible}.section-title{display:none}main{padding:0}}
@@ -13,7 +13,7 @@ svg{height:3000px!important}.shot svg{height:3100px!important}.shot .canvas{max-
 </style>
 </head>
 <body>
-<header><div class="inner"><h1>eDiscovery 专业术语表</h1><p>v1.1 · 2026-10-11 · 优先沿用 FACT 原型当前中英翻译；业务概念与产品对象按语境区分</p></div></header>
+<header><div class="inner"><h1>eDiscovery 专业术语表</h1><p>v1.3 · 2026-10-21 · 优先沿用 FACT 原型当前中英翻译；业务概念与产品对象按语境区分</p></div></header>
 <nav class="toolbar"><span class="spacer"></span><button id="printBtn" type="button">打印／导出 PDF</button></nav>
 <main class="glossary-page">
 <div class="glossary-head"><p>面向技术人员的业务词汇速查：先理解律师／调查团队在做什么，再理解系统为什么需要这些功能。术语优先沿用当前 FACT 原型的可见中英翻译；业务语境的 Presentation 与产品语境的 Representation 分开说明。具体含义仍需结合案件、辖区和交付协议确认。</p></div>
@@ -46,8 +46,12 @@ svg{height:3000px!important}.shot svg{height:3100px!important}.shot .canvas{max-
 <article class="term-card admin-term"><div class="term-en">Processing</div><div class="term-zh">数据处理</div><p>把原始数据解析、展开、提取、去重并转换成可搜索、可打开、可审阅的记录。</p></article>
 <article class="term-card admin-term"><div class="term-en">Deduplication</div><div class="term-zh">去重</div><p>识别内容相同的文件，减少重复审阅；但仍要保留来源和 Family 关系，不能简单地把所有副本都删掉。</p></article>
 <article class="term-card admin-term"><div class="term-en">Family</div><div class="term-zh">文件家族／关联文档组</div><p>一组有业务关系的文档，最常见是一封邮件和它的附件。Family 表示同组关系，不自动等于完整父子树。</p></article>
-<article class="term-card admin-term"><div class="term-en">Search Index</div><div class="term-zh">搜索索引</div><p>为大量文本建立快速查找结构，类似给巨型档案建立目录；它让律师能用关键词、条件或布尔逻辑定位材料。</p></article>
-<article class="term-card admin-term"><div class="term-en">Saved Search</div><div class="term-zh">已保存搜索</div><p>保存查询条件，方便重复使用或交给其他人。它通常不是永久冻结的结果快照，数据变化时结果也可能变化。</p></article>
+<article class="term-card admin-term"><div class="term-en">dtSearch Index</div><div class="term-zh">dtSearch 索引</div><p>根据一个搜索规则建立的检索结构，为大量文本建立快速查找目录；它不是普通静态文档清单。查询索引时返回命中文档列表。</p></article>
+<article class="term-card admin-term"><div class="term-en">Search Set (Relativity Saved Search)</div><div class="term-zh">搜索规则（Relativity Saved Search）</div><p>保存搜索范围、条件、返回字段和排序的可重复运行定义。一个搜索规则可以包含多个搜索条件，也可以直接运行返回当前命中文档，并可作为 dtSearch 索引的构建来源。</p></article>
+<article class="term-card admin-term"><div class="term-en">Search Condition</div><div class="term-zh">搜索条件</div><p>搜索规则中的单条字段、运算符和值，例如“提取文本 / Extracted Text 包含 / Contains termination”。</p></article>
+<article class="term-card admin-term"><div class="term-en">Run Search Set</div><div class="term-zh">运行搜索规则</div><p>按当前文档状态执行搜索规则并返回命中文档列表；它不等同于构建或更新 dtSearch 索引。</p></article>
+<article class="term-card admin-term"><div class="term-en">Build Index</div><div class="term-zh">构建索引</div><p>按来源搜索规则创建或更新 dtSearch 索引。修改搜索规则不会自动修改已经构建的索引，需要重新构建。</p></article>
+
 <article class="term-card admin-term"><div class="term-en">Coding</div><div class="term-zh">编码／审阅标记</div><p>审阅员把判断写入结构化字段，例如相关／不相关、特权、主题、处理意见和评论。</p></article>
 <article class="term-card admin-term"><div class="term-en">Coding Panel</div><div class="term-zh">编码面板／审阅字段面板</div><p>审阅员在文档旁边填写判断的界面。它把相关性、特权、主题、处理意见和评论等字段集中起来，供律师逐份记录结论。</p></article>
 <article class="term-card admin-term"><div class="term-en">Batch</div><div class="term-zh">审阅批次</div><p>预先切好的一包待审文档任务，通常分配给某位审阅员或团队，用来控制工作量、领取状态和完成进度。</p></article>
@@ -154,3 +158,6 @@ svg{height:3000px!important}.shot svg{height:3100px!important}.shot .canvas{max-
 <script>document.getElementById('printBtn').onclick=()=>window.print();</script>
 </body>
 </html>
+
+
+

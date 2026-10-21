@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
-  "version": "1.12",
-  "reviewedAt": "2026-10-16",
+  "version": "1.17",
+  "reviewedAt": "2026-10-21",
   "basis": {
     "edition": "原版",
     "prototypeLabel": "v0.17 · 2026-10-04",
-    "commit": "7b05d948bbdc91d9c27bf88905d76f59bb54bae9",
-    "latestCommitDate": "2026-10-12",
+    "commit": "52dab309d8f4e6dcad2d8769604fcc1c6a4d7a62",
+    "latestCommitDate": "2026-10-16",
     "includesWorkingTree": true,
     "scopeNote": "本清单以最新原版源码为准，不以独立 MVP 版的 58 项截断；M0/M1/M2/条件必要仅为旧建议，确认列保留。"
   },
@@ -42,14 +42,13 @@
     "P04 运维与生命周期"
   ],
   "notes": [
+    "2026-10-19按云端协议区分业务节点与产品验收标准：业务功能采用<模块>-<原序号>项目格式，REQ-*仅用于验收；legacy_id及旧新映射保留。",
     "模块归属采用用户截图作为分工建议；不修改当前产品导航中英文命名。",
     "完整功能台账包含未实现和条件项；记录数不是已实现功能数或已批准 MVP 数量。",
     "每项实现说明来自源码；验收列为待确认建议，不冒充已测试结果。",
     "情绪分析、转写和生成式助手没有当前原版实现证据；保留为范围问题，不凭截图增加已实现项。",
-    "主编号已按 PRD 的 M01–M08、P01–P04 模块重排为 FACT-<模块>-REQ-<三位序号>；Relativity/SUP 来源映射保留。每个模块的 REQ-001 对齐该模块 PRD 起始需求，其他功能按台账既有顺序连续编号。",
-    "本版主编号已按 PRD 的 M01–M08、P01–P04 模块重排为 FACT-<模块>-REQ-<三位序号>；Relativity/SUP 来源映射保留在 source 字段。",
-    "P01 本轮先形成两个独立PRD：REQ-001负责已激活账号的日常登录/登出/首页，REQ-002负责账号创建、邀请、首次设密、2FA绑定、激活、重发、禁用和密码重置；REQ-003/004保留为后续成员关系与权限配置依赖。",
-    "2026-10-11 MVP认证范围定论：先实现无MFA的邀请制账号和邮箱+密码登录；REQ-001不发起2FA，REQ-002不要求首次2FA绑定；认证抽象层保留后续MFA接口。",
+    "P01 本轮先形成两个独立PRD：P01-001负责已激活账号的日常登录/登出/首页，P01-002负责账号创建、邀请、首次设密、2FA绑定、激活、重发、禁用和密码重置；P01-003/P01-004保留为后续成员关系与权限配置依赖。",
+    "2026-10-11 MVP认证范围定论：先实现无MFA的邀请制账号和邮箱+密码登录；P01-001不发起2FA，P01-002不要求首次2FA绑定；认证抽象层保留后续MFA接口。",
     "2026-10-12：P01-009/010形成独立PRD；P01-011沿用需求目录编号补录为未实现设计项。通知业务归P02-008，Scope追溯抽屉不恢复。共115条记录，非已批准或已实现数量。"
   ],
   "knownIssues": [
@@ -68,7 +67,7 @@
   ],
   "features": [
     {
-      "id": "FACT-M01-REQ-001",
+      "id": "M01-001",
       "legacyModule": "项目与团队",
       "name": "项目工作区",
       "legacyPriority": "M0",
@@ -102,10 +101,11 @@
       "change": "2026-10-10 按用户视觉反馈调整原版：强化进入工作区后的返回入口；统一层级字号和选择控件尺寸；修正文档列表单元格垂直对齐；移除界面范围追溯、P0/P1 与 REL 编号展示；统一制作/导出双语标签与半角分隔符。仅影响前端可见呈现与演示文案，不改变后端能力边界。；本轮重新平衡原型视觉层级：最小字号调整为14px（页面标题28px、区块标题18px、字段与控件16px、辅助说明14px），同步增加页面留白、区块间距、控件高度和Tab可读宽度；仅影响前端可见呈现与信息层级，不改变业务行为、后端能力边界或验收范围。",
       "oldRow": 8,
       "sourceState": "未提交源码",
-      "verification": "2026-10-11 类型检查与生产构建通过；本地预览 HTTP 200；未进行真实后端联调"
+      "verification": "2026-10-11 类型检查与生产构建通过；本地预览 HTTP 200；未进行真实后端联调",
+      "legacy_id": "FACT-M01-REQ-001"
     },
     {
-      "id": "FACT-M01-REQ-002",
+      "id": "M01-002",
       "legacyModule": "项目与团队",
       "name": "客户档案",
       "legacyPriority": "M1",
@@ -139,10 +139,11 @@
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 6,
       "sourceState": "已提交源码",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-M01-REQ-002"
     },
     {
-      "id": "FACT-M01-REQ-003",
+      "id": "M01-003",
       "legacyModule": "项目与团队",
       "name": "项目事项",
       "legacyPriority": "M0",
@@ -176,10 +177,11 @@
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 7,
       "sourceState": "已提交源码",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-M01-REQ-003"
     },
     {
-      "id": "FACT-M01-REQ-004",
+      "id": "M01-004",
       "legacyModule": "项目与团队",
       "name": "工作区模板与收藏",
       "legacyPriority": "M2",
@@ -213,10 +215,11 @@
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 9,
       "sourceState": "已提交源码",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-M01-REQ-004"
     },
     {
-      "id": "FACT-M01-REQ-005",
+      "id": "M01-005",
       "legacyModule": "任务与可靠性",
       "name": "项目进度概览",
       "legacyPriority": "M1",
@@ -246,14 +249,15 @@
       ],
       "parent": null,
       "level": "原有功能",
-      "reviewedAt": "2026-10-08",
+      "reviewedAt": "2026-10-21",
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 85,
-      "sourceState": "已提交源码",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "sourceState": "HEAD 52dab30 + 工作区未提交文案修改",
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败；2026-10-21：演示项目文案统一为马克欺诈项目 / Project Mark Fraud；索引、制作、任务、通知及示例合同客户名称同步；仅文案调整，业务行为和验收规则不变。",
+      "legacy_id": "FACT-M01-REQ-005"
     },
     {
-      "id": "FACT-M01-REQ-006",
+      "id": "M01-006",
       "name": "工作区存储与高级设置",
       "legacyModule": "M01 案件与工作区",
       "legacyPriority": "待确认",
@@ -291,16 +295,17 @@
           "line": 28
         }
       ],
-      "parent": "FACT-M01-REQ-001",
+      "parent": "M01-001",
       "level": "细化子项",
       "reviewedAt": "2026-10-08",
       "change": "2026-10-08 新增追溯记录；细化父项，开发估时不与父项重复累加",
       "oldRow": null,
       "sourceState": "已提交源码",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-M01-REQ-006"
     },
     {
-      "id": "FACT-M02-REQ-001",
+      "id": "M02-001",
       "legacyModule": "数据接入与处理",
       "name": "原始文件导入",
       "legacyPriority": "M0",
@@ -334,10 +339,11 @@
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 29,
       "sourceState": "已提交源码",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-M02-REQ-001"
     },
     {
-      "id": "FACT-M02-REQ-002",
+      "id": "M02-002",
       "legacyModule": "数据接入与处理",
       "name": "结构化资料导入",
       "legacyPriority": "条件必要",
@@ -371,10 +377,11 @@
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 30,
       "sourceState": "已提交源码",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-M02-REQ-002"
     },
     {
-      "id": "FACT-M02-REQ-003",
+      "id": "M02-003",
       "name": "非结构化导入保管人检测与映射",
       "legacyModule": "M04 处理与成像",
       "legacyPriority": "待确认",
@@ -402,16 +409,17 @@
           "line": 6
         }
       ],
-      "parent": "FACT-M02-REQ-001",
+      "parent": "M02-001",
       "level": "细化子项",
       "reviewedAt": "2026-10-08",
       "change": "2026-10-08 新增追溯记录；细化父项，开发估时不与父项重复累加",
       "oldRow": null,
       "sourceState": "已提交源码",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-M02-REQ-003"
     },
     {
-      "id": "FACT-M02-REQ-004",
+      "id": "M02-004",
       "name": "处理数据源与保管人配置",
       "legacyModule": "M04 处理与成像",
       "legacyPriority": "待确认",
@@ -439,16 +447,17 @@
           "line": 82
         }
       ],
-      "parent": "FACT-M04-REQ-001",
+      "parent": "M04-001",
       "level": "细化子项",
       "reviewedAt": "2026-10-08",
       "change": "2026-10-08 新增追溯记录；细化父项，开发估时不与父项重复累加",
       "oldRow": null,
       "sourceState": "已提交源码",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-M02-REQ-004"
     },
     {
-      "id": "FACT-M03-REQ-001",
+      "id": "M03-001",
       "legacyModule": "任务与可靠性",
       "name": "跨页面状态与真实存储",
       "legacyPriority": "M0",
@@ -473,7 +482,7 @@
         {
           "path": "src/state/Administration.tsx",
           "anchor": "export function",
-          "line": 78
+          "line": 80
         }
       ],
       "parent": null,
@@ -482,10 +491,11 @@
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 88,
       "sourceState": "含未提交工作区修改",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-M03-REQ-001"
     },
     {
-      "id": "FACT-M03-REQ-002",
+      "id": "M03-002",
       "name": "原件、文档标识、表示和关系统一管理",
       "legacyModule": "P02 任务执行与恢复",
       "legacyPriority": "待确认",
@@ -510,19 +520,20 @@
         {
           "path": "src/state/Administration.tsx",
           "anchor": "type WorkspaceState",
-          "line": 36
+          "line": 38
         }
       ],
-      "parent": "FACT-M03-REQ-001",
+      "parent": "M03-001",
       "level": "细化子项",
       "reviewedAt": "2026-10-08",
       "change": "2026-10-08 新增追溯记录；细化父项，开发估时不与父项重复累加",
       "oldRow": null,
       "sourceState": "含未提交工作区修改",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-M03-REQ-002"
     },
     {
-      "id": "FACT-M04-REQ-001",
+      "id": "M04-001",
       "legacyModule": "数据接入与处理",
       "name": "数据源与处理批次",
       "legacyPriority": "M0",
@@ -552,7 +563,7 @@
         {
           "path": "src/styles/app.css",
           "anchor": ".processing-set-detail-column",
-          "line": 2220
+          "line": 2235
         }
       ],
       "parent": null,
@@ -561,10 +572,11 @@
       "change": "处理集详情改为独立 2:1 两栏；阶段统计下置、移除重复介绍。仅排版调整，既有业务操作与状态规则保留。",
       "oldRow": 31,
       "sourceState": "HEAD 9ccc8659f9db5f65d95230f2baf97b99e27814ee + 未提交修改",
-      "verification": "2026-10-09 浏览器验证 1536×1000、1280×900：两栏、统计位置、重复说明移除、新建数据源位置及页面无横向溢出通过；前端演示，不代表后端验收。"
+      "verification": "2026-10-09 浏览器验证 1536×1000、1280×900：两栏、统计位置、重复说明移除、新建数据源位置及页面无横向溢出通过；前端演示，不代表后端验收。",
+      "legacy_id": "FACT-M04-REQ-001"
     },
     {
-      "id": "FACT-M04-REQ-002",
+      "id": "M04-002",
       "legacyModule": "数据接入与处理",
       "name": "处理规则设置",
       "legacyPriority": "M0",
@@ -598,10 +610,11 @@
       "change": "2026-10-10 按用户视觉反馈调整原版：强化进入工作区后的返回入口；统一层级字号和选择控件尺寸；修正文档列表单元格垂直对齐；移除界面范围追溯、P0/P1 与 REL 编号展示；统一制作/导出双语标签与半角分隔符。仅影响前端可见呈现与演示文案，不改变后端能力边界。；本轮重新平衡原型视觉层级：最小字号调整为14px（页面标题28px、区块标题18px、字段与控件16px、辅助说明14px），同步增加页面留白、区块间距、控件高度和Tab可读宽度；仅影响前端可见呈现与信息层级，不改变业务行为、后端能力边界或验收范围。",
       "oldRow": 32,
       "sourceState": "未提交源码",
-      "verification": "2026-10-11 类型检查与生产构建通过；本地预览 HTTP 200；未进行真实后端联调"
+      "verification": "2026-10-11 类型检查与生产构建通过；本地预览 HTTP 200；未进行真实后端联调",
+      "legacy_id": "FACT-M04-REQ-002"
     },
     {
-      "id": "FACT-M04-REQ-003",
+      "id": "M04-003",
       "legacyModule": "数据接入与处理",
       "name": "导入前盘点",
       "legacyPriority": "M1",
@@ -640,10 +653,11 @@
       "change": "提交前补齐已实现原型行为描述，保留原编号、原优先级、来源与人工确认。",
       "oldRow": 33,
       "sourceState": "HEAD 9ccc8659f9db5f65d95230f2baf97b99e27814ee + 本次待提交修改",
-      "verification": "2026-10-09 Playwright 浏览器回归通过：Inclusion、Inventory 日期/类型筛选及校验、Files 视图、布局占位与预览；仅前端样例交互，不代表后端验收。"
+      "verification": "2026-10-09 Playwright 浏览器回归通过：Inclusion、Inventory 日期/类型筛选及校验、Files 视图、布局占位与预览；仅前端样例交互，不代表后端验收。",
+      "legacy_id": "FACT-M04-REQ-003"
     },
     {
-      "id": "FACT-M04-REQ-004",
+      "id": "M04-004",
       "legacyModule": "数据接入与处理",
       "name": "文件识别与内容提取",
       "legacyPriority": "M0",
@@ -677,10 +691,11 @@
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 34,
       "sourceState": "已提交源码",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-M04-REQ-004"
     },
     {
-      "id": "FACT-M04-REQ-005",
+      "id": "M04-005",
       "legacyModule": "数据接入与处理",
       "name": "附件展开与父子关系",
       "legacyPriority": "M0",
@@ -714,10 +729,11 @@
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 35,
       "sourceState": "已提交源码",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-M04-REQ-005"
     },
     {
-      "id": "FACT-M04-REQ-006",
+      "id": "M04-006",
       "legacyModule": "数据接入与处理",
       "name": "完全重复识别",
       "legacyPriority": "M0",
@@ -751,10 +767,11 @@
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 36,
       "sourceState": "已提交源码",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-M04-REQ-006"
     },
     {
-      "id": "FACT-M04-REQ-007",
+      "id": "M04-007",
       "legacyModule": "数据接入与处理",
       "name": "处理结果发布",
       "legacyPriority": "M0",
@@ -788,10 +805,11 @@
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 37,
       "sourceState": "已提交源码",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-M04-REQ-007"
     },
     {
-      "id": "FACT-M04-REQ-008",
+      "id": "M04-008",
       "legacyModule": "数据接入与处理",
       "name": "处理异常定位",
       "legacyPriority": "M0",
@@ -825,10 +843,11 @@
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 38,
       "sourceState": "已提交源码",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-M04-REQ-008"
     },
     {
-      "id": "FACT-M04-REQ-009",
+      "id": "M04-009",
       "legacyModule": "数据接入与处理",
       "name": "修复后重试",
       "legacyPriority": "M0",
@@ -862,10 +881,11 @@
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 39,
       "sourceState": "已提交源码",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-M04-REQ-009"
     },
     {
-      "id": "FACT-M04-REQ-010",
+      "id": "M04-010",
       "legacyModule": "数据接入与处理",
       "name": "加密文件处理",
       "legacyPriority": "条件必要",
@@ -899,10 +919,11 @@
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 40,
       "sourceState": "已提交源码",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-M04-REQ-010"
     },
     {
-      "id": "FACT-M04-REQ-011",
+      "id": "M04-011",
       "legacyModule": "数据接入与处理",
       "name": "处理结果对账",
       "legacyPriority": "M0",
@@ -936,10 +957,11 @@
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 41,
       "sourceState": "已提交源码",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-M04-REQ-011"
     },
     {
-      "id": "FACT-M04-REQ-012",
+      "id": "M04-012",
       "legacyModule": "遮盖与质检",
       "name": "文档成像与PDF转换",
       "legacyPriority": "条件必要",
@@ -973,10 +995,11 @@
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 70,
       "sourceState": "已提交源码",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-M04-REQ-012"
     },
     {
-      "id": "FACT-M04-REQ-013",
+      "id": "M04-013",
       "legacyModule": "遮盖与质检",
       "name": "扫描件文字识别",
       "legacyPriority": "条件必要",
@@ -1010,10 +1033,11 @@
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 71,
       "sourceState": "已提交源码",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-M04-REQ-013"
     },
     {
-      "id": "FACT-M04-REQ-014",
+      "id": "M04-014",
       "name": "处理工作流入口与阶段导航",
       "legacyModule": "M04 处理与成像",
       "legacyPriority": "待确认",
@@ -1052,10 +1076,11 @@
       "change": "处理集详情改为独立 2:1 两栏；阶段统计下置、移除重复介绍。仅排版调整，既有业务操作与状态规则保留。",
       "oldRow": null,
       "sourceState": "HEAD 9ccc8659f9db5f65d95230f2baf97b99e27814ee + 未提交修改",
-      "verification": "2026-10-09 浏览器验证 1536×1000、1280×900：两栏、统计位置、重复说明移除、新建数据源位置及页面无横向溢出通过；前端演示，不代表后端验收。"
+      "verification": "2026-10-09 浏览器验证 1536×1000、1280×900：两栏、统计位置、重复说明移除、新建数据源位置及页面无横向溢出通过；前端演示，不代表后端验收。",
+      "legacy_id": "FACT-M04-REQ-014"
     },
     {
-      "id": "FACT-M04-REQ-015",
+      "id": "M04-015",
       "name": "文件视图、异常处置与导出",
       "legacyModule": "M04 处理与成像",
       "legacyPriority": "待确认",
@@ -1083,16 +1108,17 @@
           "line": 211
         }
       ],
-      "parent": "FACT-M04-REQ-008",
+      "parent": "M04-008",
       "level": "细化子项",
       "reviewedAt": "2026-10-09",
       "change": "提交前补齐已实现原型行为描述，保留原编号、原优先级、来源与人工确认。",
       "oldRow": null,
       "sourceState": "HEAD 9ccc8659f9db5f65d95230f2baf97b99e27814ee + 本次待提交修改",
-      "verification": "2026-10-09 Playwright 浏览器回归通过：Inclusion、Inventory 日期/类型筛选及校验、Files 视图、布局占位与预览；仅前端样例交互，不代表后端验收。"
+      "verification": "2026-10-09 Playwright 浏览器回归通过：Inclusion、Inventory 日期/类型筛选及校验、Files 视图、布局占位与预览；仅前端样例交互，不代表后端验收。",
+      "legacy_id": "FACT-M04-REQ-015"
     },
     {
-      "id": "FACT-M04-REQ-016",
+      "id": "M04-016",
       "name": "处理报告选择、生成及历史",
       "legacyModule": "M04 处理与成像",
       "legacyPriority": "待确认",
@@ -1120,16 +1146,17 @@
           "line": 65
         }
       ],
-      "parent": "FACT-M04-REQ-011",
+      "parent": "M04-011",
       "level": "细化子项",
       "reviewedAt": "2026-10-08",
       "change": "2026-10-08 新增追溯记录；细化父项，开发估时不与父项重复累加",
       "oldRow": null,
       "sourceState": "已提交源码",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-M04-REQ-016"
     },
     {
-      "id": "FACT-M04-REQ-017",
+      "id": "M04-017",
       "name": "密码库条目与类型校验",
       "legacyModule": "M04 处理与成像",
       "legacyPriority": "待确认",
@@ -1157,16 +1184,17 @@
           "line": 29
         }
       ],
-      "parent": "FACT-M04-REQ-010",
+      "parent": "M04-010",
       "level": "细化子项",
       "reviewedAt": "2026-10-08",
       "change": "2026-10-08 新增追溯记录；细化父项，开发估时不与父项重复累加",
       "oldRow": null,
       "sourceState": "已提交源码",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-M04-REQ-017"
     },
     {
-      "id": "FACT-M05-REQ-001",
+      "id": "M05-001",
       "legacyModule": "文档检索",
       "name": "关键词与字段查询",
       "legacyPriority": "M0",
@@ -1191,7 +1219,7 @@
         {
           "path": "src/pages/DocumentsPage.tsx",
           "anchor": "export function",
-          "line": 14
+          "line": 16
         }
       ],
       "parent": null,
@@ -1200,10 +1228,11 @@
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 44,
       "sourceState": "含未提交工作区修改",
-      "verification": "2026-10-08 静态源码核对；已完成类型检查，待浏览器回归；仍为前端内存演示"
+      "verification": "2026-10-08 静态源码核对；已完成类型检查，待浏览器回归；仍为前端内存演示",
+      "legacy_id": "FACT-M05-REQ-001"
     },
     {
-      "id": "FACT-M05-REQ-002",
+      "id": "M05-002",
       "legacyModule": "文档检索",
       "name": "文档总清单",
       "legacyPriority": "M0",
@@ -1228,7 +1257,7 @@
         {
           "path": "src/pages/DocumentsPage.tsx",
           "anchor": "export function",
-          "line": 14
+          "line": 16
         }
       ],
       "parent": null,
@@ -1237,10 +1266,11 @@
       "change": "2026-10-10 按用户视觉反馈调整原版：强化进入工作区后的返回入口；统一层级字号和选择控件尺寸；修正文档列表单元格垂直对齐；移除界面范围追溯、P0/P1 与 REL 编号展示；统一制作/导出双语标签与半角分隔符。仅影响前端可见呈现与演示文案，不改变后端能力边界。；本轮重新平衡原型视觉层级：最小字号调整为14px（页面标题28px、区块标题18px、字段与控件16px、辅助说明14px），同步增加页面留白、区块间距、控件高度和Tab可读宽度；仅影响前端可见呈现与信息层级，不改变业务行为、后端能力边界或验收范围。",
       "oldRow": 42,
       "sourceState": "未提交源码",
-      "verification": "2026-10-11 类型检查与生产构建通过；本地预览 HTTP 200；未进行真实后端联调"
+      "verification": "2026-10-11 类型检查与生产构建通过；本地预览 HTTP 200；未进行真实后端联调",
+      "legacy_id": "FACT-M05-REQ-002"
     },
     {
-      "id": "FACT-M05-REQ-003",
+      "id": "M05-003",
       "legacyModule": "文档检索",
       "name": "文件夹浏览",
       "legacyPriority": "M1",
@@ -1265,7 +1295,7 @@
         {
           "path": "src/pages/DocumentsPage.tsx",
           "anchor": "export function",
-          "line": 14
+          "line": 16
         }
       ],
       "parent": null,
@@ -1274,17 +1304,18 @@
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 43,
       "sourceState": "含未提交工作区修改",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-M05-REQ-003"
     },
     {
-      "id": "FACT-M05-REQ-004",
+      "id": "M05-004",
       "legacyModule": "文档检索",
       "name": "组合条件编辑",
       "legacyPriority": "M1",
       "legacyForm": "内配",
       "legacyScope": "先提供日期、来源、类型、审阅状态的平铺筛选；自由嵌套 AND/OR 条件编辑后置。",
-      "prototypeStatus": "静态核对：前端演示／局部交互",
-      "gap": "保管人未参与实际过滤，添加条件未接通，自动运行仅切换状态",
+      "prototypeStatus": "前端配置与样例联动已验证；未接真实后台",
+      "gap": "未接服务端查询树、完整嵌套条件、日期/保管人等全字段；原侧栏添加条件未接通。",
       "finalPriority": "待确认",
       "confirmedBy": null,
       "confirmedDate": null,
@@ -1294,34 +1325,50 @@
       "module": "M05 搜索与分析",
       "role": "管理员、用户／律师／工作区",
       "entry": "Documents",
-      "behavior": "固定条件卡片和保管人选择；添加条件、自动运行有界面",
-      "output": "局部保管人选择和条件摘要",
+      "behavior": "搜索规则 编辑器支持字段、运算符、值、平铺 AND/OR 条件及无关联项/Family；条件缺值拦截，本地样例过滤与预览。文档页旧侧栏仍为局部演示。",
+      "output": "结构化条件定义与样例匹配结果",
       "boundary": "文档结果与查询定义；文档身份与关联由 M03 提供，批量标注调用 M06",
-      "acceptance": "建议验收：先提供日期、来源、类型、审阅状态的平铺筛选；自由嵌套 AND/OR 条件编辑后置。",
+      "acceptance": "建议验收：先提供日期、来源、类型、审阅状态的平铺筛选；自由嵌套 AND/OR 条件编辑后置。 本轮补充：验证条件/字段/排序保存与取消、空值/零字段/重复排序校验、无长文本警告、构建快照及修改来源后重建提示。",
       "evidence": [
         {
+          "path": "src/components/SavedSearchEditor.tsx",
+          "anchor": "export function SavedSearchEditor",
+          "line": 10
+        },
+        {
+          "path": "src/state/savedSearch.ts",
+          "anchor": "export function evaluateSearch",
+          "line": 27
+        },
+        {
+          "path": "src/pages/AnalyticsPage.tsx",
+          "anchor": "const runIndex",
+          "line": 91
+        },
+        {
           "path": "src/pages/DocumentsPage.tsx",
-          "anchor": "export function",
-          "line": 14
+          "anchor": "const resultFields",
+          "line": 95
         }
       ],
       "parent": null,
       "level": "原有功能",
-      "reviewedAt": "2026-10-08",
-      "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
+      "reviewedAt": "2026-10-21",
+      "change": "按 RelativityOne Searching Guide 2026-10-01 pp56–57、167–171 补齐搜索规则配置；未变更本期范围确认。",
       "oldRow": 45,
-      "sourceState": "含未提交工作区修改",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "sourceState": "HEAD 52dab309d8f4e6dcad2d8769604fcc1c6a4d7a62 + 本轮及既有未提交修改",
+      "verification": "2026-10-21：类型/生产构建通过；10 项搜索语义检查通过；1440×1000 浏览器验证必填、字段、排序、预览、保存、取消、回显、构建计数、源版本提示及索引快照。仅样例内存交互。",
+      "legacy_id": "FACT-M05-REQ-004"
     },
     {
-      "id": "FACT-M05-REQ-005",
+      "id": "M05-005",
       "legacyModule": "文档检索",
       "name": "搜索方案保存",
       "legacyPriority": "M1",
       "legacyForm": "前台",
       "legacyScope": "保存名称、查询条件及关联项设置，再次运行得到当前结果；简单项目内共享即可。",
-      "prototypeStatus": "静态核对：前端演示／局部交互",
-      "gap": "未接服务端查询树、持久化和权限执行；Saved Search 与 dtSearch 的关联为前端会话状态",
+      "prototypeStatus": "前端配置与样例联动已验证；未接真实后台",
+      "gap": "未接服务端持久化、真实全文索引、权限执行及完整 Dashboard/应用配置；刷新页面重置会话。",
       "finalPriority": "待确认",
       "confirmedBy": null,
       "confirmedDate": null,
@@ -1331,27 +1378,43 @@
       "module": "M05 搜索与分析",
       "role": "管理员、用户／律师／工作区",
       "entry": "Documents",
-      "behavior": "Saved Searches 独立浏览器保存查询定义、文件夹、所有者和可见性；Saved Search 可作为 dtSearch Searchable Set 来源，查询定义变化后需重新构建；Saved Searches 侧栏操作按钮在窄栏内换行，保持内容不越界",
-      "output": "动态 Saved Search 定义、文件夹浏览及索引来源关联",
+      "behavior": "统一 搜索规则 编辑器由文档页和索引页复用；名称、所有者、范围、文件夹、备注、手动重跑、条件、返回字段及排序保存到工作区会话；保存、搜索预览、保存并搜索、取消分别执行，重开回显。",
+      "output": "带 revision 的搜索定义；索引来源关联同一 ID；结果使用所选字段顺序",
       "boundary": "文档结果与查询定义；文档身份与关联由 M03 提供，批量标注调用 M06",
-      "acceptance": "建议验收：保存名称、查询条件及关联项设置，再次运行得到当前结果；简单项目内共享即可。",
+      "acceptance": "建议验收：保存名称、查询条件及关联项设置，再次运行得到当前结果；简单项目内共享即可。 本轮补充：验证条件/字段/排序保存与取消、空值/零字段/重复排序校验、无长文本警告、构建快照及修改来源后重建提示。",
       "evidence": [
         {
+          "path": "src/components/SavedSearchEditor.tsx",
+          "anchor": "export function SavedSearchEditor",
+          "line": 10
+        },
+        {
+          "path": "src/state/savedSearch.ts",
+          "anchor": "export function evaluateSearch",
+          "line": 27
+        },
+        {
+          "path": "src/pages/AnalyticsPage.tsx",
+          "anchor": "const runIndex",
+          "line": 91
+        },
+        {
           "path": "src/pages/DocumentsPage.tsx",
-          "anchor": "export function",
-          "line": 14
+          "anchor": "const resultFields",
+          "line": 95
         }
       ],
       "parent": null,
       "level": "原有功能",
-      "reviewedAt": "2026-10-08",
-      "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
+      "reviewedAt": "2026-10-21",
+      "change": "按 RelativityOne Searching Guide 2026-10-01 pp56–57、167–171 补齐搜索规则配置；未变更本期范围确认。",
       "oldRow": 46,
-      "sourceState": "含未提交工作区修改",
-      "verification": "2026-10-08 静态源码核对；已完成类型检查，待浏览器回归；仍为前端内存演示"
+      "sourceState": "HEAD 52dab309d8f4e6dcad2d8769604fcc1c6a4d7a62 + 本轮及既有未提交修改",
+      "verification": "2026-10-21：类型/生产构建通过；10 项搜索语义检查通过；1440×1000 浏览器验证必填、字段、排序、预览、保存、取消、回显、构建计数、源版本提示及索引快照。仅样例内存交互。",
+      "legacy_id": "FACT-M05-REQ-005"
     },
     {
-      "id": "FACT-M05-REQ-006",
+      "id": "M05-006",
       "legacyModule": "文档检索",
       "name": "连同附件和父邮件查看",
       "legacyPriority": "M0",
@@ -1376,7 +1439,7 @@
         {
           "path": "src/pages/DocumentsPage.tsx",
           "anchor": "export function",
-          "line": 14
+          "line": 16
         }
       ],
       "parent": null,
@@ -1385,10 +1448,11 @@
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 47,
       "sourceState": "含未提交工作区修改",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-M05-REQ-006"
     },
     {
-      "id": "FACT-M05-REQ-007",
+      "id": "M05-007",
       "legacyModule": "文档检索",
       "name": "索引覆盖提示",
       "legacyPriority": "M0",
@@ -1413,7 +1477,7 @@
         {
           "path": "src/pages/DocumentsPage.tsx",
           "anchor": "export function",
-          "line": 14
+          "line": 16
         }
       ],
       "parent": null,
@@ -1422,17 +1486,18 @@
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 49,
       "sourceState": "含未提交工作区修改",
-      "verification": "2026-10-08 静态源码核对；已完成类型检查，待浏览器回归；仍为前端内存演示"
+      "verification": "2026-10-08 静态源码核对；已完成类型检查，待浏览器回归；仍为前端内存演示",
+      "legacy_id": "FACT-M05-REQ-007"
     },
     {
-      "id": "FACT-M05-REQ-008",
+      "id": "M05-008",
       "legacyModule": "文档检索",
       "name": "列表字段与视图配置",
       "legacyPriority": "M2",
       "legacyForm": "内配",
       "legacyScope": "一个默认文档视图；固定列与排序由内部配置，用户自建和编辑视图后置，见 View 专页。",
-      "prototypeStatus": "静态核对：前端演示／局部交互",
-      "gap": "没有完整 Views 编辑器或列配置持久化",
+      "prototypeStatus": "前端配置与样例联动已验证；未接真实后台",
+      "gap": "仅覆盖 搜索规则 的 6 个样例字段；独立 Views 编辑器和服务端列配置未实现；长文本不可排序。",
       "finalPriority": "待确认",
       "confirmedBy": null,
       "confirmedDate": null,
@@ -1442,27 +1507,43 @@
       "module": "M05 搜索与分析",
       "role": "管理员、用户／律师／工作区",
       "entry": "Documents",
-      "behavior": "固定 All Documents 列与视图下拉",
-      "output": "固定文档表格",
+      "behavior": "搜索规则 的 Fields 双栏支持筛选、添加、移除、全部添加/移除、上移/下移和 Extracted Text Only；Sort 支持多个字段、升降序及顺序调整；预览和结果按定义展示，保留选择文档和进入审阅入口。",
+      "output": "有序返回字段与多字段排序定义",
       "boundary": "文档结果与查询定义；文档身份与关联由 M03 提供，批量标注调用 M06",
-      "acceptance": "建议验收：一个默认文档视图；固定列与排序由内部配置，用户自建和编辑视图后置，见 View 专页。",
+      "acceptance": "建议验收：一个默认文档视图；固定列与排序由内部配置，用户自建和编辑视图后置，见 View 专页。 本轮补充：验证条件/字段/排序保存与取消、空值/零字段/重复排序校验、无长文本警告、构建快照及修改来源后重建提示。",
       "evidence": [
         {
+          "path": "src/components/SavedSearchEditor.tsx",
+          "anchor": "export function SavedSearchEditor",
+          "line": 10
+        },
+        {
+          "path": "src/state/savedSearch.ts",
+          "anchor": "export function evaluateSearch",
+          "line": 27
+        },
+        {
+          "path": "src/pages/AnalyticsPage.tsx",
+          "anchor": "const runIndex",
+          "line": 91
+        },
+        {
           "path": "src/pages/DocumentsPage.tsx",
-          "anchor": "export function",
-          "line": 14
+          "anchor": "const resultFields",
+          "line": 95
         }
       ],
       "parent": null,
       "level": "原有功能",
-      "reviewedAt": "2026-10-08",
-      "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
+      "reviewedAt": "2026-10-21",
+      "change": "按 RelativityOne Searching Guide 2026-10-01 pp56–57、167–171 补齐搜索规则配置；未变更本期范围确认。",
       "oldRow": 50,
-      "sourceState": "含未提交工作区修改",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "sourceState": "HEAD 52dab309d8f4e6dcad2d8769604fcc1c6a4d7a62 + 本轮及既有未提交修改",
+      "verification": "2026-10-21：类型/生产构建通过；10 项搜索语义检查通过；1440×1000 浏览器验证必填、字段、排序、预览、保存、取消、回显、构建计数、源版本提示及索引快照。仅样例内存交互。",
+      "legacy_id": "FACT-M05-REQ-008"
     },
     {
-      "id": "FACT-M05-REQ-009",
+      "id": "M05-009",
       "legacyModule": "文档检索",
       "name": "可配置统计看板",
       "legacyPriority": "M2",
@@ -1487,7 +1568,7 @@
         {
           "path": "src/pages/DocumentsPage.tsx",
           "anchor": "export function",
-          "line": 14
+          "line": 16
         }
       ],
       "parent": null,
@@ -1496,17 +1577,18 @@
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 51,
       "sourceState": "含未提交工作区修改",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-M05-REQ-009"
     },
     {
-      "id": "FACT-M05-REQ-010",
+      "id": "M05-010",
       "legacyModule": "分析辅助",
       "name": "搜索索引构建与维护",
       "legacyPriority": "M0",
       "legacyForm": "自动",
       "legacyScope": "每项目默认一个全文索引，导入/正文变化后更新；提供状态、失败重试及后台重建。",
-      "prototypeStatus": "源码已写入；前端模拟构建流程可运行",
-      "gap": "未接真实全文索引服务、Index Manager Agent、子索引作业和持久化；进度为定时演示",
+      "prototypeStatus": "前端配置与样例联动已验证；未接真实后台",
+      "gap": "未接真实全文索引服务、Index Manager Agent、持久化、后台子索引或全量/增量差异执行；定时模拟任务在当前页面运行。",
       "finalPriority": "待确认",
       "confirmedBy": null,
       "confirmedDate": null,
@@ -1516,27 +1598,43 @@
       "module": "M05 搜索与分析",
       "role": "管理员／工作区",
       "entry": "Search & Analytics",
-      "behavior": "索引列表、新建、Saved Search 可搜索集、完整构建确认、Initializing/Populating/Indexing/Finalizing 阶段、取消、完成后激活或 Built - Inactive 手动激活",
-      "output": "工作区内存索引记录、构建阶段、进度、文档统计及文档搜索联动",
+      "behavior": "索引列表、新建/编辑、配置搜索规则及构建确认；构建捕获 搜索规则 定义版本和匹配文档 ID 快照，模拟阶段推进与激活；实际样例计数；搜索定义修改提示重建，索引结果继续使用构建快照。",
+      "output": "内存索引配置、定义快照、样例匹配数、阶段和激活状态",
       "boundary": "索引或分析结果；依赖已发布文档及提取文本，后台运行接入 P02",
-      "acceptance": "建议验收：每项目默认一个全文索引，导入/正文变化后更新；提供状态、失败重试及后台重建。",
+      "acceptance": "建议验收：每项目默认一个全文索引，导入/正文变化后更新；提供状态、失败重试及后台重建。 本轮补充：验证条件/字段/排序保存与取消、空值/零字段/重复排序校验、无长文本警告、构建快照及修改来源后重建提示。",
       "evidence": [
         {
+          "path": "src/components/SavedSearchEditor.tsx",
+          "anchor": "export function SavedSearchEditor",
+          "line": 10
+        },
+        {
+          "path": "src/state/savedSearch.ts",
+          "anchor": "export function evaluateSearch",
+          "line": 27
+        },
+        {
           "path": "src/pages/AnalyticsPage.tsx",
-          "anchor": "export function",
-          "line": 8
+          "anchor": "const runIndex",
+          "line": 91
+        },
+        {
+          "path": "src/pages/DocumentsPage.tsx",
+          "anchor": "const resultFields",
+          "line": 95
         }
       ],
       "parent": null,
       "level": "原有功能",
-      "reviewedAt": "2026-10-08",
-      "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
+      "reviewedAt": "2026-10-21",
+      "change": "按 RelativityOne Searching Guide 2026-10-01 pp56–57、167–171 补齐搜索规则配置；未变更本期范围确认。",
       "oldRow": 52,
-      "sourceState": "含未提交工作区修改",
-      "verification": "2026-10-08 静态源码核对；npm.cmd run check 已通过；构建与浏览器回归待完成"
+      "sourceState": "HEAD 52dab309d8f4e6dcad2d8769604fcc1c6a4d7a62 + 本轮及既有未提交修改",
+      "verification": "2026-10-21：类型/生产构建通过；10 项搜索语义检查通过；1440×1000 浏览器验证必填、字段、排序、预览、保存、取消、回显、构建计数、源版本提示及索引快照。仅样例内存交互。",
+      "legacy_id": "FACT-M05-REQ-010"
     },
     {
-      "id": "FACT-M05-REQ-011",
+      "id": "M05-011",
       "legacyModule": "分析辅助",
       "name": "分析任务组织",
       "legacyPriority": "M1",
@@ -1561,7 +1659,7 @@
         {
           "path": "src/pages/AnalyticsPage.tsx",
           "anchor": "export function",
-          "line": 8
+          "line": 11
         }
       ],
       "parent": null,
@@ -1570,10 +1668,11 @@
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 53,
       "sourceState": "含未提交工作区修改",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败（IndexRecord 未定义）"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败（IndexRecord 未定义）",
+      "legacy_id": "FACT-M05-REQ-011"
     },
     {
-      "id": "FACT-M05-REQ-012",
+      "id": "M05-012",
       "legacyModule": "分析辅助",
       "name": "邮件链与重点邮件",
       "legacyPriority": "M1",
@@ -1598,7 +1697,7 @@
         {
           "path": "src/pages/AnalyticsPage.tsx",
           "anchor": "export function",
-          "line": 8
+          "line": 11
         }
       ],
       "parent": null,
@@ -1607,10 +1706,11 @@
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 54,
       "sourceState": "含未提交工作区修改",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败（IndexRecord 未定义）"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败（IndexRecord 未定义）",
+      "legacy_id": "FACT-M05-REQ-012"
     },
     {
-      "id": "FACT-M05-REQ-013",
+      "id": "M05-013",
       "legacyModule": "分析辅助",
       "name": "近似文档分组",
       "legacyPriority": "M1",
@@ -1635,7 +1735,7 @@
         {
           "path": "src/pages/AnalyticsPage.tsx",
           "anchor": "export function",
-          "line": 8
+          "line": 11
         }
       ],
       "parent": null,
@@ -1644,10 +1744,11 @@
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 55,
       "sourceState": "含未提交工作区修改",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败（IndexRecord 未定义）"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败（IndexRecord 未定义）",
+      "legacy_id": "FACT-M05-REQ-013"
     },
     {
-      "id": "FACT-M05-REQ-014",
+      "id": "M05-014",
       "legacyModule": "分析辅助",
       "name": "文档语言识别",
       "legacyPriority": "M1",
@@ -1672,7 +1773,7 @@
         {
           "path": "src/pages/AnalyticsPage.tsx",
           "anchor": "export function",
-          "line": 8
+          "line": 11
         }
       ],
       "parent": null,
@@ -1681,10 +1782,11 @@
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 56,
       "sourceState": "含未提交工作区修改",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败（IndexRecord 未定义）"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败（IndexRecord 未定义）",
+      "legacy_id": "FACT-M05-REQ-014"
     },
     {
-      "id": "FACT-M05-REQ-015",
+      "id": "M05-015",
       "legacyModule": "分析辅助",
       "name": "主题聚类与语义查找",
       "legacyPriority": "M2",
@@ -1709,7 +1811,7 @@
         {
           "path": "src/pages/AnalyticsPage.tsx",
           "anchor": "export function",
-          "line": 8
+          "line": 11
         }
       ],
       "parent": null,
@@ -1718,10 +1820,11 @@
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 57,
       "sourceState": "含未提交工作区修改",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败（IndexRecord 未定义）"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败（IndexRecord 未定义）",
+      "legacy_id": "FACT-M05-REQ-015"
     },
     {
-      "id": "FACT-M05-REQ-016",
+      "id": "M05-016",
       "legacyModule": "分析辅助",
       "name": "人员归一与通信关系",
       "legacyPriority": "M2",
@@ -1746,7 +1849,7 @@
         {
           "path": "src/pages/AnalyticsPage.tsx",
           "anchor": "export function",
-          "line": 8
+          "line": 11
         }
       ],
       "parent": null,
@@ -1755,10 +1858,11 @@
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 58,
       "sourceState": "含未提交工作区修改",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败（IndexRecord 未定义）"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败（IndexRecord 未定义）",
+      "legacy_id": "FACT-M05-REQ-016"
     },
     {
-      "id": "FACT-M05-REQ-017",
+      "id": "M05-017",
       "name": "文档抽样参数与结果预览",
       "legacyModule": "M05 搜索与分析",
       "legacyPriority": "待确认",
@@ -1792,17 +1896,18 @@
       "change": "2026-10-08 新增追溯记录；本期范围待确认",
       "oldRow": null,
       "sourceState": "含未提交工作区修改",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-M05-REQ-017"
     },
     {
-      "id": "FACT-M05-REQ-018",
-      "name": "Saved Search 文件夹与访问设置",
+      "id": "M05-018",
+      "name": "搜索规则 文件夹与访问设置",
       "legacyModule": "M05 搜索与分析",
       "legacyPriority": "待确认",
       "legacyForm": "待确认",
       "legacyScope": "新增核对项；本期实现深度待确认，原型出现不等于已批准",
-      "prototypeStatus": "静态核对：前端演示／局部交互",
-      "gap": "Security 保存仅提示、目标勾选无实际切换，未写入权限",
+      "prototypeStatus": "前端配置与样例联动已验证；未接真实后台",
+      "gap": "Public/Me 仅保存演示元数据，不执行真实访问权限；无子文件夹样例层级，Include Subfolders 仅保存配置。",
       "finalPriority": "待确认",
       "confirmedBy": null,
       "confirmedDate": null,
@@ -1811,28 +1916,44 @@
       "basis": "最新版原版补录",
       "module": "M05 搜索与分析",
       "role": "管理员／工作区（实例审计和用户管理位于平台）",
-      "entry": "Documents > Saved Searches > Move / Security",
-      "behavior": "保存查询的文件夹、所有者及可见性；移动保留查询；按用户或组显示访问设置；Saved Search 浏览器与搜索条件区的操作按钮在窄侧栏内换行，不超出侧栏范围",
-      "output": "移动更新会话记录，Security 为弹窗草稿",
+      "entry": "Documents > 搜索规则es > Move / Security",
+      "behavior": "搜索规则 信息区保存 Public/Me 所有者、所在搜索文件夹、范围、备注及手动重跑；已有移动与 Security 弹窗继续保留。",
+      "output": "工作区会话中的所有者/可见性、文件夹和范围定义",
       "boundary": "文档结果与查询定义；文档身份与关联由 M03 提供，批量标注调用 M06",
-      "acceptance": "建议验收：保存查询的文件夹、所有者及可见性；移动保留查询；按用户或组显示访问设置；失败保留输入并说明原因；记录对象 ID 与版本",
+      "acceptance": "建议验收：保存查询的文件夹、所有者及可见性；移动保留查询；按用户或组显示访问设置；失败保留输入并说明原因；记录对象 ID 与版本 本轮补充：验证条件/字段/排序保存与取消、空值/零字段/重复排序校验、无长文本警告、构建快照及修改来源后重建提示。",
       "evidence": [
         {
+          "path": "src/components/SavedSearchEditor.tsx",
+          "anchor": "export function SavedSearchEditor",
+          "line": 10
+        },
+        {
+          "path": "src/state/savedSearch.ts",
+          "anchor": "export function evaluateSearch",
+          "line": 27
+        },
+        {
+          "path": "src/pages/AnalyticsPage.tsx",
+          "anchor": "const runIndex",
+          "line": 91
+        },
+        {
           "path": "src/pages/DocumentsPage.tsx",
-          "anchor": "const [moveOpen",
-          "line": 38
+          "anchor": "const resultFields",
+          "line": 95
         }
       ],
-      "parent": "FACT-M05-REQ-005",
+      "parent": "M05-005",
       "level": "细化子项",
-      "reviewedAt": "2026-10-08",
-      "change": "2026-10-08 新增追溯记录；细化父项，开发估时不与父项重复累加",
+      "reviewedAt": "2026-10-21",
+      "change": "按 RelativityOne Searching Guide 2026-10-01 pp56–57、167–171 补齐搜索规则配置；未变更本期范围确认。",
       "oldRow": null,
-      "sourceState": "含未提交工作区修改",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "sourceState": "HEAD 52dab309d8f4e6dcad2d8769604fcc1c6a4d7a62 + 本轮及既有未提交修改",
+      "verification": "2026-10-21：类型/生产构建通过；10 项搜索语义检查通过；1440×1000 浏览器验证必填、字段、排序、预览、保存、取消、回显、构建计数、源版本提示及索引快照。仅样例内存交互。",
+      "legacy_id": "FACT-M05-REQ-018"
     },
     {
-      "id": "FACT-M05-REQ-019",
+      "id": "M05-019",
       "name": "保管人查询条件选择",
       "legacyModule": "M05 搜索与分析",
       "legacyPriority": "待确认",
@@ -1860,23 +1981,24 @@
           "line": 36
         }
       ],
-      "parent": "FACT-M05-REQ-004",
+      "parent": "M05-004",
       "level": "细化子项",
       "reviewedAt": "2026-10-08",
       "change": "2026-10-08 新增追溯记录；细化父项，开发估时不与父项重复累加",
       "oldRow": null,
       "sourceState": "含未提交工作区修改",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-M05-REQ-019"
     },
     {
-      "id": "FACT-M05-REQ-020",
-      "name": "索引可搜索集、构建与激活配置",
+      "id": "M05-020",
+      "name": "索引搜索规则、构建与激活配置",
       "legacyModule": "M05 搜索与分析",
       "legacyPriority": "待确认",
       "legacyForm": "待确认",
       "legacyScope": "新增核对项；本期实现深度待确认，原型出现不等于已批准",
-      "prototypeStatus": "源码已写入；前端模拟构建流程可运行",
-      "gap": "未接真实通知、恶意文件处理、子索引配置和增量/全量后台任务；仅在内存中关联 Saved Search ID",
+      "prototypeStatus": "前端配置与样例联动已验证；未接真实后台",
+      "gap": "通知、恶意文件跳过及默认子索引仍为原演示选项，未实现邮件地址、自定义子索引大小和后台执行；不是完整 Relativity 租户配置。",
       "finalPriority": "待确认",
       "confirmedBy": null,
       "confirmedDate": null,
@@ -1886,27 +2008,43 @@
       "module": "M05 搜索与分析",
       "role": "管理员／工作区（实例审计和用户管理位于平台）",
       "entry": "Search & Analytics > dtSearch > 新建 / 详情",
-      "behavior": "名称、顺序、Saved Search 或固定范围、通知、恶意文件跳过、子索引选项；完整/增量构建确认，阶段推进，取消和完成后激活",
-      "output": "内存索引配置、构建作业状态与 Saved Search 来源提示",
+      "behavior": "搜索规则由真实会话 搜索规则 ID 选择，可在新建/编辑索引、详情和构建确认中配置；右侧 Conditions/Fields/Sort 与文档 搜索规则 共用；至少一个字段，无 Long Text 仅警告；索引名称及整数顺序校验；构建使用保存的定义。",
+      "output": "已保存搜索来源、当前可索引字段列表、构建前确认及源修改后重建提示",
       "boundary": "索引或分析结果；依赖已发布文档及提取文本，后台运行接入 P02",
-      "acceptance": "建议验收：名称、顺序、可搜索集、通知、恶意文件跳过、子索引；全量/增量构建及激活确认；失败保留输入并说明原因；记录对象 ID 与版本",
+      "acceptance": "建议验收：名称、顺序、搜索规则、通知、恶意文件跳过、子索引；全量/增量构建及激活确认；失败保留输入并说明原因；记录对象 ID 与版本 本轮补充：验证条件/字段/排序保存与取消、空值/零字段/重复排序校验、无长文本警告、构建快照及修改来源后重建提示。",
       "evidence": [
         {
+          "path": "src/components/SavedSearchEditor.tsx",
+          "anchor": "export function SavedSearchEditor",
+          "line": 10
+        },
+        {
+          "path": "src/state/savedSearch.ts",
+          "anchor": "export function evaluateSearch",
+          "line": 27
+        },
+        {
           "path": "src/pages/AnalyticsPage.tsx",
-          "anchor": "const saveIndex",
-          "line": 45
+          "anchor": "const runIndex",
+          "line": 91
+        },
+        {
+          "path": "src/pages/DocumentsPage.tsx",
+          "anchor": "const resultFields",
+          "line": 95
         }
       ],
-      "parent": "FACT-M05-REQ-010",
+      "parent": "M05-010",
       "level": "细化子项",
-      "reviewedAt": "2026-10-08",
-      "change": "2026-10-08 新增追溯记录；细化父项，开发估时不与父项重复累加",
+      "reviewedAt": "2026-10-21",
+      "change": "按 RelativityOne Searching Guide 2026-10-01 pp56–57、167–171 补齐搜索规则配置；未变更本期范围确认。",
       "oldRow": null,
-      "sourceState": "含未提交工作区修改",
-      "verification": "2026-10-08 静态源码核对；npm.cmd run check 已通过；构建与浏览器回归待完成"
+      "sourceState": "HEAD 52dab309d8f4e6dcad2d8769604fcc1c6a4d7a62 + 本轮及既有未提交修改",
+      "verification": "2026-10-21：类型/生产构建通过；10 项搜索语义检查通过；1440×1000 浏览器验证必填、字段、排序、预览、保存、取消、回显、构建计数、源版本提示及索引快照。仅样例内存交互。",
+      "legacy_id": "FACT-M05-REQ-020"
     },
     {
-      "id": "FACT-M05-REQ-021",
+      "id": "M05-021",
       "name": "搜索词报告与命中文档跳转",
       "legacyModule": "M05 搜索与分析",
       "legacyPriority": "待确认",
@@ -1940,10 +2078,11 @@
       "change": "2026-10-08 新增追溯记录；本期范围待确认",
       "oldRow": null,
       "sourceState": "含未提交工作区修改",
-      "verification": "2026-10-08 静态源码核对；已补齐高亮字段选项并通过 npm.cmd run check；待浏览器回归"
+      "verification": "2026-10-08 静态源码核对；已补齐高亮字段选项并通过 npm.cmd run check；待浏览器回归",
+      "legacy_id": "FACT-M05-REQ-021"
     },
     {
-      "id": "FACT-M05-REQ-022",
+      "id": "M05-022",
       "name": "报告关联持久高亮集",
       "legacyModule": "M05 搜索与分析",
       "legacyPriority": "待确认",
@@ -1971,16 +2110,17 @@
           "line": 30
         }
       ],
-      "parent": "FACT-M05-REQ-021",
+      "parent": "M05-021",
       "level": "细化子项",
       "reviewedAt": "2026-10-08",
       "change": "2026-10-08 新增追溯记录；细化父项，开发估时不与父项重复累加",
       "oldRow": null,
       "sourceState": "含未提交工作区修改",
-      "verification": "2026-10-08 静态源码核对；已补齐高亮字段选项并通过 npm.cmd run check；待浏览器回归"
+      "verification": "2026-10-08 静态源码核对；已补齐高亮字段选项并通过 npm.cmd run check；待浏览器回归",
+      "legacy_id": "FACT-M05-REQ-022"
     },
     {
-      "id": "FACT-M06-REQ-001",
+      "id": "M06-001",
       "legacyModule": "文档审阅",
       "name": "审阅结果填写与保存",
       "legacyPriority": "M0",
@@ -2014,10 +2154,11 @@
       "change": "2026-10-10 按用户视觉反馈调整原版：强化进入工作区后的返回入口；统一层级字号和选择控件尺寸；修正文档列表单元格垂直对齐；移除界面范围追溯、P0/P1 与 REL 编号展示；统一制作/导出双语标签与半角分隔符。仅影响前端可见呈现与演示文案，不改变后端能力边界。；本轮重新平衡原型视觉层级：最小字号调整为14px（页面标题28px、区块标题18px、字段与控件16px、辅助说明14px），同步增加页面留白、区块间距、控件高度和Tab可读宽度；仅影响前端可见呈现与信息层级，不改变业务行为、后端能力边界或验收范围。",
       "oldRow": 62,
       "sourceState": "未提交源码",
-      "verification": "2026-10-11 类型检查与生产构建通过；本地预览 HTTP 200；未进行真实后端联调"
+      "verification": "2026-10-11 类型检查与生产构建通过；本地预览 HTTP 200；未进行真实后端联调",
+      "legacy_id": "FACT-M06-REQ-001"
     },
     {
-      "id": "FACT-M06-REQ-002",
+      "id": "M06-002",
       "legacyModule": "审阅配置",
       "name": "审阅字段定义",
       "legacyPriority": "M0",
@@ -2051,10 +2192,11 @@
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准；本轮重新平衡原型视觉层级：最小字号调整为14px（页面标题28px、区块标题18px、字段与控件16px、辅助说明14px），同步增加页面留白、区块间距、控件高度和Tab可读宽度；仅影响前端可见呈现与信息层级，不改变业务行为、后端能力边界或验收范围。；本轮按用户反馈调整原版：Fields & Layouts 页签顺序改为字段分类、字段、选项、布局；Fields & Layouts 与 Highlights 使用同一 Review Setup 区块标题层级；Export 弹窗仅保留导出工作流并删除 Express Transfer；仅影响前端入口、层级与可见呈现，不改变后端能力边界。",
       "oldRow": 16,
       "sourceState": "未提交源码",
-      "verification": "2026-10-11 类型检查、生产构建及桌面浏览器回归通过；未进行真实后端联调"
+      "verification": "2026-10-11 类型检查、生产构建及桌面浏览器回归通过；未进行真实后端联调",
+      "legacy_id": "FACT-M06-REQ-002"
     },
     {
-      "id": "FACT-M06-REQ-003",
+      "id": "M06-003",
       "legacyModule": "审阅配置",
       "name": "议题选项维护",
       "legacyPriority": "M0",
@@ -2088,10 +2230,11 @@
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 17,
       "sourceState": "已提交源码",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-M06-REQ-003"
     },
     {
-      "id": "FACT-M06-REQ-004",
+      "id": "M06-004",
       "legacyModule": "审阅配置",
       "name": "多层级议题选项",
       "legacyPriority": "M2",
@@ -2125,10 +2268,11 @@
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 18,
       "sourceState": "已提交源码",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-M06-REQ-004"
     },
     {
-      "id": "FACT-M06-REQ-005",
+      "id": "M06-005",
       "legacyModule": "审阅配置",
       "name": "字段分组管理",
       "legacyPriority": "M2",
@@ -2162,10 +2306,11 @@
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 19,
       "sourceState": "已提交源码",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-M06-REQ-005"
     },
     {
-      "id": "FACT-M06-REQ-006",
+      "id": "M06-006",
       "legacyModule": "审阅配置",
       "name": "字段类别排序",
       "legacyPriority": "M2",
@@ -2199,10 +2344,11 @@
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 20,
       "sourceState": "已提交源码",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-M06-REQ-006"
     },
     {
-      "id": "FACT-M06-REQ-007",
+      "id": "M06-007",
       "legacyModule": "审阅配置",
       "name": "审阅表单管理",
       "legacyPriority": "M1",
@@ -2236,10 +2382,11 @@
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 21,
       "sourceState": "已提交源码",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-M06-REQ-007"
     },
     {
-      "id": "FACT-M06-REQ-008",
+      "id": "M06-008",
       "legacyModule": "审阅配置",
       "name": "表单分区与字段编排",
       "legacyPriority": "M2",
@@ -2283,10 +2430,11 @@
       "change": "提交前补齐已实现原型行为描述，保留原编号、原优先级、来源与人工确认。；本轮重新平衡原型视觉层级：最小字号调整为14px（页面标题28px、区块标题18px、字段与控件16px、辅助说明14px），同步增加页面留白、区块间距、控件高度和Tab可读宽度；仅影响前端可见呈现与信息层级，不改变业务行为、后端能力边界或验收范围。；本轮按用户反馈调整原版：Fields & Layouts 页签顺序改为字段分类、字段、选项、布局；Fields & Layouts 与 Highlights 使用同一 Review Setup 区块标题层级；Export 弹窗仅保留导出工作流并删除 Express Transfer；仅影响前端入口、层级与可见呈现，不改变后端能力边界。",
       "oldRow": 22,
       "sourceState": "未提交源码",
-      "verification": "2026-10-11 类型检查、生产构建及桌面浏览器回归通过；未进行真实后端联调"
+      "verification": "2026-10-11 类型检查、生产构建及桌面浏览器回归通过；未进行真实后端联调",
+      "legacy_id": "FACT-M06-REQ-008"
     },
     {
-      "id": "FACT-M06-REQ-009",
+      "id": "M06-009",
       "legacyModule": "审阅配置",
       "name": "字段显示与只读规则",
       "legacyPriority": "M0",
@@ -2325,10 +2473,11 @@
       "change": "提交前补齐已实现原型行为描述，保留原编号、原优先级、来源与人工确认。",
       "oldRow": 23,
       "sourceState": "HEAD 9ccc8659f9db5f65d95230f2baf97b99e27814ee + 本次待提交修改",
-      "verification": "2026-10-09 Playwright 浏览器回归通过：Inclusion、Inventory 日期/类型筛选及校验、Files 视图、布局占位与预览；仅前端样例交互，不代表后端验收。"
+      "verification": "2026-10-09 Playwright 浏览器回归通过：Inclusion、Inventory 日期/类型筛选及校验、Files 视图、布局占位与预览；仅前端样例交互，不代表后端验收。",
+      "legacy_id": "FACT-M06-REQ-009"
     },
     {
-      "id": "FACT-M06-REQ-010",
+      "id": "M06-010",
       "legacyModule": "审阅配置",
       "name": "表单说明与折叠",
       "legacyPriority": "M2",
@@ -2367,10 +2516,11 @@
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 24,
       "sourceState": "已提交源码",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-M06-REQ-010"
     },
     {
-      "id": "FACT-M06-REQ-011",
+      "id": "M06-011",
       "legacyModule": "审阅配置",
       "name": "表单排序与切换",
       "legacyPriority": "M2",
@@ -2404,10 +2554,11 @@
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 25,
       "sourceState": "已提交源码",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-M06-REQ-011"
     },
     {
-      "id": "FACT-M06-REQ-012",
+      "id": "M06-012",
       "legacyModule": "审阅配置",
       "name": "表单预览",
       "legacyPriority": "M1",
@@ -2441,10 +2592,11 @@
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 26,
       "sourceState": "已提交源码",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-M06-REQ-012"
     },
     {
-      "id": "FACT-M06-REQ-013",
+      "id": "M06-013",
       "legacyModule": "审阅配置",
       "name": "表单接入审阅面板",
       "legacyPriority": "M0",
@@ -2478,10 +2630,11 @@
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 27,
       "sourceState": "已提交源码",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-M06-REQ-013"
     },
     {
-      "id": "FACT-M06-REQ-014",
+      "id": "M06-014",
       "legacyModule": "审阅配置",
       "name": "允许复制的字段配置",
       "legacyPriority": "M1",
@@ -2520,10 +2673,11 @@
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 28,
       "sourceState": "已提交源码",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-M06-REQ-014"
     },
     {
-      "id": "FACT-M06-REQ-015",
+      "id": "M06-015",
       "legacyModule": "文档检索",
       "name": "文档批量标注",
       "legacyPriority": "M1",
@@ -2548,7 +2702,7 @@
         {
           "path": "src/pages/DocumentsPage.tsx",
           "anchor": "<BulkOperations",
-          "line": 118
+          "line": 119
         },
         {
           "path": "src/components/BulkOperations.tsx",
@@ -2562,10 +2716,11 @@
       "change": "从统一静态入口扩展为14项可展开菜单及操作范围预览。",
       "oldRow": 48,
       "sourceState": "原版 HEAD 7b05d94；含本轮未提交修改",
-      "verification": "类型检查通过；管理员及律师双角色、14项菜单、选择条件、范围预览、键盘、外部点击和1600/1280桌面视口核对通过；未验证实际执行或权限引擎。"
+      "verification": "类型检查通过；管理员及律师双角色、14项菜单、选择条件、范围预览、键盘、外部点击和1600/1280桌面视口核对通过；未验证实际执行或权限引擎。",
+      "legacy_id": "FACT-M06-REQ-015"
     },
     {
-      "id": "FACT-M06-REQ-016",
+      "id": "M06-016",
       "legacyModule": "文档审阅",
       "name": "审阅任务分配与领取",
       "legacyPriority": "条件必要",
@@ -2599,10 +2754,11 @@
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 59,
       "sourceState": "已提交源码",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-M06-REQ-016"
     },
     {
-      "id": "FACT-M06-REQ-017",
+      "id": "M06-017",
       "legacyModule": "文档审阅",
       "name": "文档内容查看",
       "legacyPriority": "M0",
@@ -2636,10 +2792,11 @@
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 60,
       "sourceState": "已提交源码",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-M06-REQ-017"
     },
     {
-      "id": "FACT-M06-REQ-018",
+      "id": "M06-018",
       "legacyModule": "文档审阅",
       "name": "文档内定位与缩放",
       "legacyPriority": "M0",
@@ -2673,10 +2830,11 @@
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 61,
       "sourceState": "已提交源码",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-M06-REQ-018"
     },
     {
-      "id": "FACT-M06-REQ-019",
+      "id": "M06-019",
       "legacyModule": "文档审阅",
       "name": "填写校验",
       "legacyPriority": "M0",
@@ -2710,10 +2868,11 @@
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 63,
       "sourceState": "已提交源码",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-M06-REQ-019"
     },
     {
-      "id": "FACT-M06-REQ-020",
+      "id": "M06-020",
       "legacyModule": "文档审阅",
       "name": "保存并审下一份",
       "legacyPriority": "M0",
@@ -2747,10 +2906,11 @@
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 64,
       "sourceState": "已提交源码",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-M06-REQ-020"
     },
     {
-      "id": "FACT-M06-REQ-021",
+      "id": "M06-021",
       "legacyModule": "文档审阅",
       "name": "沿用上一份标注",
       "legacyPriority": "M1",
@@ -2784,10 +2944,11 @@
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 65,
       "sourceState": "已提交源码",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-M06-REQ-021"
     },
     {
-      "id": "FACT-M06-REQ-022",
+      "id": "M06-022",
       "legacyModule": "文档审阅",
       "name": "关联文档导航",
       "legacyPriority": "M0",
@@ -2821,10 +2982,11 @@
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 66,
       "sourceState": "已提交源码",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-M06-REQ-022"
     },
     {
-      "id": "FACT-M06-REQ-023",
+      "id": "M06-023",
       "legacyModule": "文档审阅",
       "name": "审阅修改记录",
       "legacyPriority": "M0",
@@ -2858,10 +3020,11 @@
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 67,
       "sourceState": "已提交源码",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-M06-REQ-023"
     },
     {
-      "id": "FACT-M06-REQ-024",
+      "id": "M06-024",
       "legacyModule": "文档审阅",
       "name": "并发占用与冲突保护",
       "legacyPriority": "条件必要",
@@ -2895,10 +3058,11 @@
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 68,
       "sourceState": "已提交源码",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-M06-REQ-024"
     },
     {
-      "id": "FACT-M06-REQ-025",
+      "id": "M06-025",
       "legacyModule": "文档审阅",
       "name": "独立复核流程",
       "legacyPriority": "条件必要",
@@ -2932,10 +3096,11 @@
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 69,
       "sourceState": "已提交源码",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-M06-REQ-025"
     },
     {
-      "id": "FACT-M06-REQ-026",
+      "id": "M06-026",
       "name": "字段批量复制与删除",
       "legacyModule": "M06 审阅配置与作业",
       "legacyPriority": "待确认",
@@ -2963,16 +3128,17 @@
           "line": 134
         }
       ],
-      "parent": "FACT-M06-REQ-002",
+      "parent": "M06-002",
       "level": "细化子项",
       "reviewedAt": "2026-10-08",
       "change": "2026-10-08 新增追溯记录；细化父项，开发估时不与父项重复累加",
       "oldRow": null,
       "sourceState": "已提交源码",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-M06-REQ-026"
     },
     {
-      "id": "FACT-M06-REQ-027",
+      "id": "M06-027",
       "name": "工作区高亮配置",
       "legacyModule": "M06 审阅配置与作业",
       "legacyPriority": "待确认",
@@ -3006,10 +3172,11 @@
       "change": "2026-10-08 新增追溯记录；本期范围待确认",
       "oldRow": null,
       "sourceState": "已提交源码",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-M06-REQ-027"
     },
     {
-      "id": "FACT-M07-REQ-001",
+      "id": "M07-001",
       "legacyModule": "遮盖与质检",
       "name": "遮盖质检与提交复核",
       "legacyPriority": "条件必要",
@@ -3043,10 +3210,11 @@
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 74,
       "sourceState": "已提交源码",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-M07-REQ-001"
     },
     {
-      "id": "FACT-M07-REQ-002",
+      "id": "M07-002",
       "legacyModule": "遮盖与质检",
       "name": "手工遮盖",
       "legacyPriority": "条件必要",
@@ -3076,14 +3244,15 @@
       ],
       "parent": null,
       "level": "原有功能",
-      "reviewedAt": "2026-10-08",
+      "reviewedAt": "2026-10-21",
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 72,
-      "sourceState": "已提交源码",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "sourceState": "HEAD 52dab30 + 工作区未提交文案修改",
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败；2026-10-21：演示项目文案统一为马克欺诈项目 / Project Mark Fraud；索引、制作、任务、通知及示例合同客户名称同步；仅文案调整，业务行为和验收规则不变。",
+      "legacy_id": "FACT-M07-REQ-002"
     },
     {
-      "id": "FACT-M07-REQ-003",
+      "id": "M07-003",
       "legacyModule": "遮盖与质检",
       "name": "遮盖标记集与理由",
       "legacyPriority": "条件必要",
@@ -3117,10 +3286,11 @@
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 73,
       "sourceState": "已提交源码",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-M07-REQ-003"
     },
     {
-      "id": "FACT-M07-REQ-004",
+      "id": "M07-004",
       "legacyModule": "遮盖与质检",
       "name": "规则遮盖与跨文档复用",
       "legacyPriority": "M2",
@@ -3154,10 +3324,11 @@
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 75,
       "sourceState": "已提交源码",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-M07-REQ-004"
     },
     {
-      "id": "FACT-M08-REQ-001",
+      "id": "M08-001",
       "legacyModule": "交付与导出",
       "name": "交付前检查与阻断",
       "legacyPriority": "M0",
@@ -3191,10 +3362,11 @@
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 81,
       "sourceState": "已提交源码",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-M08-REQ-001"
     },
     {
-      "id": "FACT-M08-REQ-002",
+      "id": "M08-002",
       "legacyModule": "交付与导出",
       "name": "交付文档集合",
       "legacyPriority": "M0",
@@ -3228,10 +3400,11 @@
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 76,
       "sourceState": "已提交源码",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-M08-REQ-002"
     },
     {
-      "id": "FACT-M08-REQ-003",
+      "id": "M08-003",
       "legacyModule": "交付与导出",
       "name": "交付编号",
       "legacyPriority": "条件必要",
@@ -3265,10 +3438,11 @@
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 77,
       "sourceState": "已提交源码",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-M08-REQ-003"
     },
     {
-      "id": "FACT-M08-REQ-004",
+      "id": "M08-004",
       "legacyModule": "交付与导出",
       "name": "输出文件及元数据",
       "legacyPriority": "M0",
@@ -3302,10 +3476,11 @@
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 78,
       "sourceState": "已提交源码",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-M08-REQ-004"
     },
     {
-      "id": "FACT-M08-REQ-005",
+      "id": "M08-005",
       "legacyModule": "交付与导出",
       "name": "图像、PDF和load file制作",
       "legacyPriority": "条件必要",
@@ -3335,14 +3510,15 @@
       ],
       "parent": null,
       "level": "原有功能",
-      "reviewedAt": "2026-10-08",
+      "reviewedAt": "2026-10-21",
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 79,
-      "sourceState": "已提交源码",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "sourceState": "HEAD 52dab30 + 工作区未提交文案修改",
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败；2026-10-21：演示项目文案统一为马克欺诈项目 / Project Mark Fraud；索引、制作、任务、通知及示例合同客户名称同步；仅文案调整，业务行为和验收规则不变。",
+      "legacy_id": "FACT-M08-REQ-005"
     },
     {
-      "id": "FACT-M08-REQ-006",
+      "id": "M08-006",
       "legacyModule": "交付与导出",
       "name": "保留说明占位页",
       "legacyPriority": "条件必要",
@@ -3376,10 +3552,11 @@
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 80,
       "sourceState": "已提交源码",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-M08-REQ-006"
     },
     {
-      "id": "FACT-M08-REQ-007",
+      "id": "M08-007",
       "legacyModule": "交付与导出",
       "name": "制作任务运行",
       "legacyPriority": "M0",
@@ -3413,10 +3590,11 @@
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 82,
       "sourceState": "已提交源码",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-M08-REQ-007"
     },
     {
-      "id": "FACT-M08-REQ-008",
+      "id": "M08-008",
       "legacyModule": "交付与导出",
       "name": "清单和交付包下载",
       "legacyPriority": "M0",
@@ -3450,10 +3628,11 @@
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 83,
       "sourceState": "已提交源码",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-M08-REQ-008"
     },
     {
-      "id": "FACT-M08-REQ-009",
+      "id": "M08-009",
       "legacyModule": "交付与导出",
       "name": "交付版本与重新制作",
       "legacyPriority": "M1",
@@ -3487,10 +3666,11 @@
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 84,
       "sourceState": "已提交源码",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-M08-REQ-009"
     },
     {
-      "id": "FACT-M08-REQ-010",
+      "id": "M08-010",
       "name": "导出来源与传输方式向导",
       "legacyModule": "M08 制作与交付",
       "legacyPriority": "待确认",
@@ -3518,16 +3698,17 @@
           "line": 49
         }
       ],
-      "parent": "FACT-M08-REQ-004",
+      "parent": "M08-004",
       "level": "细化子项",
       "reviewedAt": "2026-10-11",
       "change": "2026-10-10 按用户视觉反馈调整原版：强化进入工作区后的返回入口；统一层级字号和选择控件尺寸；修正文档列表单元格垂直对齐；移除界面范围追溯、P0/P1 与 REL 编号展示；统一制作/导出双语标签与半角分隔符。仅影响前端可见呈现与演示文案，不改变后端能力边界。；本轮重新平衡原型视觉层级：最小字号调整为14px（页面标题28px、区块标题18px、字段与控件16px、辅助说明14px），同步增加页面留白、区块间距、控件高度和Tab可读宽度；仅影响前端可见呈现与信息层级，不改变业务行为、后端能力边界或验收范围。；本轮按用户反馈调整原版：Fields & Layouts 页签顺序改为字段分类、字段、选项、布局；Fields & Layouts 与 Highlights 使用同一 Review Setup 区块标题层级；Export 弹窗仅保留导出工作流并删除 Express Transfer；仅影响前端入口、层级与可见呈现，不改变后端能力边界。；移除 Express Transfer 配置入口及状态展示，导出向导仅保留导出流程。",
       "oldRow": null,
       "sourceState": "未提交源码",
-      "verification": "2026-10-11 类型检查、生产构建及桌面浏览器回归通过；未进行真实后端联调"
+      "verification": "2026-10-11 类型检查、生产构建及桌面浏览器回归通过；未进行真实后端联调",
+      "legacy_id": "FACT-M08-REQ-010"
     },
     {
-      "id": "FACT-M08-REQ-011",
+      "id": "M08-011",
       "name": "导出加载文件与字段选择",
       "legacyModule": "M08 制作与交付",
       "legacyPriority": "待确认",
@@ -3560,16 +3741,17 @@
           "line": 49
         }
       ],
-      "parent": "FACT-M08-REQ-005",
+      "parent": "M08-005",
       "level": "细化子项",
       "reviewedAt": "2026-10-11",
       "change": "2026-10-10 按用户视觉反馈调整原版：强化进入工作区后的返回入口；统一层级字号和选择控件尺寸；修正文档列表单元格垂直对齐；移除界面范围追溯、P0/P1 与 REL 编号展示；统一制作/导出双语标签与半角分隔符。仅影响前端可见呈现与演示文案，不改变后端能力边界。；本轮重新平衡原型视觉层级：最小字号调整为14px（页面标题28px、区块标题18px、字段与控件16px、辅助说明14px），同步增加页面留白、区块间距、控件高度和Tab可读宽度；仅影响前端可见呈现与信息层级，不改变业务行为、后端能力边界或验收范围。；本轮按用户反馈调整原版：Fields & Layouts 页签顺序改为字段分类、字段、选项、布局；Fields & Layouts 与 Highlights 使用同一 Review Setup 区块标题层级；Export 弹窗仅保留导出工作流并删除 Express Transfer；仅影响前端入口、层级与可见呈现，不改变后端能力边界。",
       "oldRow": null,
       "sourceState": "未提交源码",
-      "verification": "2026-10-11 类型检查、生产构建及桌面浏览器回归通过；未进行真实后端联调"
+      "verification": "2026-10-11 类型检查、生产构建及桌面浏览器回归通过；未进行真实后端联调",
+      "legacy_id": "FACT-M08-REQ-011"
     },
     {
-      "id": "FACT-M08-REQ-012",
+      "id": "M08-012",
       "name": "导出目录、文件命名与分组",
       "legacyModule": "M08 制作与交付",
       "legacyPriority": "待确认",
@@ -3597,16 +3779,17 @@
           "line": 41
         }
       ],
-      "parent": "FACT-M08-REQ-004",
+      "parent": "M08-004",
       "level": "细化子项",
       "reviewedAt": "2026-10-11",
       "change": "2026-10-10 按用户视觉反馈调整原版：强化进入工作区后的返回入口；统一层级字号和选择控件尺寸；修正文档列表单元格垂直对齐；移除界面范围追溯、P0/P1 与 REL 编号展示；统一制作/导出双语标签与半角分隔符。仅影响前端可见呈现与演示文案，不改变后端能力边界。；本轮重新平衡原型视觉层级：最小字号调整为14px（页面标题28px、区块标题18px、字段与控件16px、辅助说明14px），同步增加页面留白、区块间距、控件高度和Tab可读宽度；仅影响前端可见呈现与信息层级，不改变业务行为、后端能力边界或验收范围。；本轮按用户反馈调整原版：Fields & Layouts 页签顺序改为字段分类、字段、选项、布局；Fields & Layouts 与 Highlights 使用同一 Review Setup 区块标题层级；Export 弹窗仅保留导出工作流并删除 Express Transfer；仅影响前端入口、层级与可见呈现，不改变后端能力边界。",
       "oldRow": null,
       "sourceState": "未提交源码",
-      "verification": "2026-10-11 类型检查、生产构建及桌面浏览器回归通过；未进行真实后端联调"
+      "verification": "2026-10-11 类型检查、生产构建及桌面浏览器回归通过；未进行真实后端联调",
+      "legacy_id": "FACT-M08-REQ-012"
     },
     {
-      "id": "FACT-M08-REQ-013",
+      "id": "M08-013",
       "name": "导出文本字段、顺序与空值",
       "legacyModule": "M08 制作与交付",
       "legacyPriority": "待确认",
@@ -3634,16 +3817,17 @@
           "line": 51
         }
       ],
-      "parent": "FACT-M08-REQ-004",
+      "parent": "M08-004",
       "level": "细化子项",
       "reviewedAt": "2026-10-11",
       "change": "2026-10-10 按用户视觉反馈调整原版：强化进入工作区后的返回入口；统一层级字号和选择控件尺寸；修正文档列表单元格垂直对齐；移除界面范围追溯、P0/P1 与 REL 编号展示；统一制作/导出双语标签与半角分隔符。仅影响前端可见呈现与演示文案，不改变后端能力边界。；本轮重新平衡原型视觉层级：最小字号调整为14px（页面标题28px、区块标题18px、字段与控件16px、辅助说明14px），同步增加页面留白、区块间距、控件高度和Tab可读宽度；仅影响前端可见呈现与信息层级，不改变业务行为、后端能力边界或验收范围。；本轮按用户反馈调整原版：Fields & Layouts 页签顺序改为字段分类、字段、选项、布局；Fields & Layouts 与 Highlights 使用同一 Review Setup 区块标题层级；Export 弹窗仅保留导出工作流并删除 Express Transfer；仅影响前端入口、层级与可见呈现，不改变后端能力边界。",
       "oldRow": null,
       "sourceState": "未提交源码",
-      "verification": "2026-10-11 类型检查、生产构建及桌面浏览器回归通过；未进行真实后端联调"
+      "verification": "2026-10-11 类型检查、生产构建及桌面浏览器回归通过；未进行真实后端联调",
+      "legacy_id": "FACT-M08-REQ-013"
     },
     {
-      "id": "FACT-M08-REQ-014",
+      "id": "M08-014",
       "name": "导出配置保存与载入",
       "legacyModule": "M08 制作与交付",
       "legacyPriority": "待确认",
@@ -3671,16 +3855,17 @@
           "line": 67
         }
       ],
-      "parent": "FACT-M08-REQ-004",
+      "parent": "M08-004",
       "level": "细化子项",
       "reviewedAt": "2026-10-11",
       "change": "2026-10-10 按用户视觉反馈调整原版：强化进入工作区后的返回入口；统一层级字号和选择控件尺寸；修正文档列表单元格垂直对齐；移除界面范围追溯、P0/P1 与 REL 编号展示；统一制作/导出双语标签与半角分隔符。仅影响前端可见呈现与演示文案，不改变后端能力边界。；本轮重新平衡原型视觉层级：最小字号调整为14px（页面标题28px、区块标题18px、字段与控件16px、辅助说明14px），同步增加页面留白、区块间距、控件高度和Tab可读宽度；仅影响前端可见呈现与信息层级，不改变业务行为、后端能力边界或验收范围。；本轮按用户反馈调整原版：Fields & Layouts 页签顺序改为字段分类、字段、选项、布局；Fields & Layouts 与 Highlights 使用同一 Review Setup 区块标题层级；Export 弹窗仅保留导出工作流并删除 Express Transfer；仅影响前端入口、层级与可见呈现，不改变后端能力边界。",
       "oldRow": null,
       "sourceState": "未提交源码",
-      "verification": "2026-10-11 类型检查、生产构建及桌面浏览器回归通过；未进行真实后端联调"
+      "verification": "2026-10-11 类型检查、生产构建及桌面浏览器回归通过；未进行真实后端联调",
+      "legacy_id": "FACT-M08-REQ-014"
     },
     {
-      "id": "FACT-M08-REQ-015",
+      "id": "M08-015",
       "name": "导出任务详情与演示清单",
       "legacyModule": "M08 制作与交付",
       "legacyPriority": "待确认",
@@ -3708,16 +3893,17 @@
           "line": 49
         }
       ],
-      "parent": "FACT-M08-REQ-007",
+      "parent": "M08-007",
       "level": "细化子项",
       "reviewedAt": "2026-10-11",
       "change": "2026-10-10 按用户视觉反馈调整原版：强化进入工作区后的返回入口；统一层级字号和选择控件尺寸；修正文档列表单元格垂直对齐；移除界面范围追溯、P0/P1 与 REL 编号展示；统一制作/导出双语标签与半角分隔符。仅影响前端可见呈现与演示文案，不改变后端能力边界。；本轮重新平衡原型视觉层级：最小字号调整为14px（页面标题28px、区块标题18px、字段与控件16px、辅助说明14px），同步增加页面留白、区块间距、控件高度和Tab可读宽度；仅影响前端可见呈现与信息层级，不改变业务行为、后端能力边界或验收范围。；本轮按用户反馈调整原版：Fields & Layouts 页签顺序改为字段分类、字段、选项、布局；Fields & Layouts 与 Highlights 使用同一 Review Setup 区块标题层级；Export 弹窗仅保留导出工作流并删除 Express Transfer；仅影响前端入口、层级与可见呈现，不改变后端能力边界。",
       "oldRow": null,
       "sourceState": "未提交源码",
-      "verification": "2026-10-11 类型检查、生产构建及桌面浏览器回归通过；未进行真实后端联调"
+      "verification": "2026-10-11 类型检查、生产构建及桌面浏览器回归通过；未进行真实后端联调",
+      "legacy_id": "FACT-M08-REQ-015"
     },
     {
-      "id": "FACT-P01-REQ-001",
+      "id": "P01-001",
       "name": "用户登录、登出、登录后首页",
       "legacyModule": "M01 案件与工作区",
       "legacyPriority": "待确认",
@@ -3736,7 +3922,7 @@
       "entry": "/login；登录后平台首页；账户菜单退出",
       "behavior": "登录页保留演示角色入口；管理员进入用户与组管理后，在用户列表和用户详情中查看账户状态、邀请和停用操作。",
       "output": "演示登录入口、管理员用户管理中的账户状态和相关操作；真实会话与审计服务待开发。",
-      "boundary": "接收FACT-P01-REQ-002已激活且已设密账号；读取REQ-003/004有效组与权限；不负责用户创建、邀请、首次设密、未来MFA绑定",
+      "boundary": "接收P01-002已激活且已设密账号；读取P01-003/P01-004有效组与权限；不负责用户创建、邀请、首次设密、未来MFA绑定",
       "acceptance": "建议验收：管理员登录后可从用户页查看账户状态和停用/启用；登录页不展示术语表入口；MVP不出现MFA步骤。",
       "evidence": [
         {
@@ -3761,10 +3947,11 @@
       "change": "2026-10-11 删除登录页截图中的专业术语表入口；账号生命周期入口不再放在登录页，改由管理员用户与组管理页承载；不改变真实认证未接通边界",
       "oldRow": null,
       "sourceState": "未提交源码",
-      "verification": "2026-10-11 静态核对原版源码；npm run check、npm run build 通过；未进行真实认证联调"
+      "verification": "2026-10-11 静态核对原版源码；npm run check、npm run build 通过；未进行真实认证联调",
+      "legacy_id": "FACT-P01-REQ-001"
     },
     {
-      "id": "FACT-P01-REQ-002",
+      "id": "P01-002",
       "legacyModule": "项目与团队",
       "name": "用户创建与邀请激活",
       "legacyPriority": "M0",
@@ -3783,7 +3970,7 @@
       "entry": "部署初始化；内部管理页；/set-password?token=xxx；/forgot-password",
       "behavior": "管理员在原有用户列表中查看账户状态、邀请时间和发送结果；新建用户可选择所属组并创建并发送邀请；用户详情提供账户生命周期区块，可重发邀请、发送重置邮件、停用或启用。",
       "output": "原有用户记录上的演示账户状态、邀请时间、发送结果、重置时间和操作反馈；真实邮件和后端状态机待开发。",
-      "boundary": "向REQ-001交付已启用、已设密账号；向REQ-003/004交付用户记录；不负责日常登录、登出、首页或业务权限；MFA绑定留待后续",
+      "boundary": "向P01-001交付已启用、已设密账号；向P01-003/P01-004交付用户记录；不负责日常登录、登出、首页或业务权限；MFA绑定留待后续",
       "acceptance": "建议验收：管理员可在原有用户页创建并发送邀请；列表能区分待邀请、待激活、已激活、已停用；详情可重发、发送重置、停用/启用；现有组和工作区权限结构保留；真实服务边界明确。",
       "evidence": [
         {
@@ -3808,10 +3995,11 @@
       "change": "2026-10-11 将账号生命周期内容合并到管理员原有用户管理页和用户详情；新建用户增加所属组选择及创建并发送邀请；删除登录页截图中的额外入口",
       "oldRow": 10,
       "sourceState": "未提交源码",
-      "verification": "2026-10-11 静态核对原版源码；npm run check、npm run build 通过；未进行真实邮件、token或账号服务联调"
+      "verification": "2026-10-11 静态核对原版源码；npm run check、npm run build 通过；未进行真实邮件、token或账号服务联调",
+      "legacy_id": "FACT-P01-REQ-002"
     },
     {
-      "id": "FACT-P01-REQ-003",
+      "id": "P01-003",
       "legacyModule": "项目与团队",
       "name": "项目角色组与成员",
       "legacyPriority": "M0",
@@ -3845,10 +4033,11 @@
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 11,
       "sourceState": "已提交源码",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-P01-REQ-003"
     },
     {
-      "id": "FACT-P01-REQ-004",
+      "id": "P01-004",
       "legacyModule": "项目与团队",
       "name": "基础角色授权",
       "legacyPriority": "M0",
@@ -3882,10 +4071,11 @@
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 12,
       "sourceState": "已提交源码",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-P01-REQ-004"
     },
     {
-      "id": "FACT-P01-REQ-005",
+      "id": "P01-005",
       "legacyModule": "项目与团队",
       "name": "编辑并复制工作区组权限",
       "legacyPriority": "M2",
@@ -3904,7 +4094,7 @@
       "entry": "Workspaces > Manage Workspace Permissions",
       "behavior": "按工作区选择组后编辑对象安全、标签可见性、其他设置；Tab与工作区导航共用ID和中英名称，仅覆盖截图中的8个一级入口：概览、审阅配置、处理、文档、搜索与分析、遮盖、制作、其他；审阅批次不单列权限Tab。对象写动作联动View；抽样只配置“使用抽样”，方法和参数在文档抽样入口选择。其他设置两列独立排列，左列导航与管理操作连续、右列批量操作；支持复核保存、撤回、复制、未保存离开确认。正式目标复制先形成草稿再原子保存。",
       "output": "工作区与目标组的权限策略草稿、before/after 差异、已保存策略版本、复制来源/目标记录",
-      "boundary": "组与成员关系由 REQ-003 提供；有效权限计算和服务端鉴权由 REQ-004 提供；字段条目级权限由 REQ-009 细化；本条不授予工作区管理员身份",
+      "boundary": "组与成员关系由 P01-003 提供；有效权限计算和服务端鉴权由 P01-004 提供；字段条目级权限由 P01-009 细化；本条不授予工作区管理员身份",
       "acceptance": "建议验收：对象动作与 View 依赖、页签与对象范围、其他设置联动、差异复核、复制差异草稿、并发版本冲突、未保存离开、服务端拒绝越权和审计；当前原型只证明前端演示交互，不代表后端完成；本轮核对Tab名称同源、搜索与保存摘要一致；抽样不再区分方法权限；其他设置无等高行大片留白且长文案不溢出。",
       "evidence": [
         {
@@ -3939,10 +4129,11 @@
       "change": "2026-10-16 用户确认仅保留工作区侧栏八项；遮盖/Redact、制作/Production采用侧栏同名；取消审阅批次独立权限Tab。保留紧凑排版和抽样单开关。",
       "oldRow": 13,
       "sourceState": "基于HEAD 1a8db2a核对；本轮源码、台账与既有PRD索引一并提交",
-      "verification": "2026-10-16 TypeScript检查、构建及原版浏览器回归通过：工作区导航与权限Tab逐项同名；搜索、复核保存、重开回显、8个Tab预览和权限快照；1280/1440/1920桌面宽度无横向溢出；抽样仅一个权限，文档抽样三种方法保留。无页面脚本错误；真实服务端鉴权和持久化未验收。"
+      "verification": "2026-10-16 TypeScript检查、构建及原版浏览器回归通过：工作区导航与权限Tab逐项同名；搜索、复核保存、重开回显、8个Tab预览和权限快照；1280/1440/1920桌面宽度无横向溢出；抽样仅一个权限，文档抽样三种方法保留。无页面脚本错误；真实服务端鉴权和持久化未验收。",
+      "legacy_id": "FACT-P01-REQ-005"
     },
     {
-      "id": "FACT-P01-REQ-006",
+      "id": "P01-006",
       "legacyModule": "项目与团队",
       "name": "预览已保存的有效权限",
       "legacyPriority": "M1",
@@ -3959,9 +4150,9 @@
       "module": "P01 身份与授权",
       "role": "管理员／平台",
       "entry": "Workspaces > Manage Workspace Permissions > Preview；目标可扩展 Users/Groups 详情",
-      "behavior": "从关联组已保存权限进入只读预览，预览Tab和标题复用工作区导航名称，按已保存开关显示；文档空态保留，其他模块只提示在工作区查看内容，不将旧队列/审阅库样例冒充实际模块页面。权限快照仅显示一个使用抽样开关。正式目标复用REQ-004有效权限与来源解释。",
+      "behavior": "从关联组已保存权限进入只读预览，预览Tab和标题复用工作区导航名称，按已保存开关显示；文档空态保留，其他模块只提示在工作区查看内容，不将旧队列/审阅库样例冒充实际模块页面。权限快照仅显示一个使用抽样开关。正式目标复用P01-004有效权限与来源解释。",
       "output": "预览会话、主体/工作区/策略版本、可见页签和对象/字段/动作快照、退出和拒绝结果、审计事件",
-      "boundary": "预览不修改权限、不切换真实登录身份、不做实时监控；有效权限计算由 REQ-004 提供；权限编辑由 REQ-005 提供；特殊能力须单独标记不支持或只读",
+      "boundary": "预览不修改权限、不切换真实登录身份、不做实时监控；有效权限计算由 P01-004 提供；权限编辑由 P01-005 提供；特殊能力须单独标记不支持或只读",
       "acceptance": "建议验收：组与用户主体范围、已保存版本、无权/过期/计算失败、无页签空态、直接地址保护、只读禁止写入下载、退出/超时、发起人审计归属、多组冲突解释和官方不支持能力；当前原型只证明组视角前端模拟；本轮逐项打开全部8个可见Tab无脚本错误；摘要/预览名称与工作区同源，设置快照不再出现抽样方法子权限。",
       "evidence": [
         {
@@ -3981,10 +4172,11 @@
       "change": "2026-10-16 用户确认仅保留工作区侧栏八项；遮盖/Redact、制作/Production采用侧栏同名；取消审阅批次独立权限Tab。保留紧凑排版和抽样单开关。",
       "oldRow": 14,
       "sourceState": "基于HEAD 1a8db2a核对；本轮源码、台账与既有PRD索引一并提交",
-      "verification": "2026-10-16 TypeScript检查、构建及原版浏览器回归通过：工作区导航与权限Tab逐项同名；搜索、复核保存、重开回显、8个Tab预览和权限快照；1280/1440/1920桌面宽度无横向溢出；抽样仅一个权限，文档抽样三种方法保留。无页面脚本错误；真实服务端鉴权和持久化未验收。"
+      "verification": "2026-10-16 TypeScript检查、构建及原版浏览器回归通过：工作区导航与权限Tab逐项同名；搜索、复核保存、重开回显、8个Tab预览和权限快照；1280/1440/1920桌面宽度无横向溢出；抽样仅一个权限，文档抽样三种方法保留。无页面脚本错误；真实服务端鉴权和持久化未验收。",
+      "legacy_id": "FACT-P01-REQ-006"
     },
     {
-      "id": "FACT-P01-REQ-007",
+      "id": "P01-007",
       "legacyModule": "项目与团队",
       "name": "指定工作区管理员组",
       "legacyPriority": "M1",
@@ -4003,8 +4195,8 @@
       "entry": "Workspaces > Advanced Settings",
       "behavior": "高级设置 Edit → Select → 单选 → Set → Save；Set 只暂存，Save 写入内存；当前选择器按名称过滤所有组，未限定已关联组。",
       "output": "工作区关联管理员组",
-      "boundary": "指定一个已有管理员组；REQ-003 管组成员，REQ-004 计算权限，M01 展示关联，P03 留审计。PRD v1.0 待评审，不改变人工优先级。",
-      "acceptance": "见 FACT-P01-REQ-007 PRD v1.0：AC01–AC17，覆盖 Set/Save/取消、仅选已关联组、越权、最后管理员跨功能保护、并发冲突、超时回读和旧组权限撤销。",
+      "boundary": "指定一个已有管理员组；P01-003 管组成员，P01-004 计算权限，M01 展示关联，P03 留审计。PRD v1.0 待评审，不改变人工优先级。",
+      "acceptance": "见 P01-007 PRD v1.0：AC01–AC17，覆盖 Set/Save/取消、仅选已关联组、越权、最后管理员跨功能保护、并发冲突、超时回读和旧组权限撤销。",
       "evidence": [
         {
           "path": "src/components/WorkspaceAdvanced.tsx",
@@ -4020,13 +4212,14 @@
       "sourceState": "源码已提交；本轮 PRD 与台账同步未提交",
       "verification": "2026-10-12 当前原版页面截图与静态源码核对；HEAD 1a8db2ab6ce89fc0e6ad5e2baca735e2ccef74da；本轮未修改产品源码；真实服务端未验收。",
       "prd": {
-        "path": "工作成果/02_需求与规划/FACT-P01-REQ-007_指定工作区管理员组_PRD_v1.0_2026-10-12.html",
+        "path": "工作成果/02_需求与规划/P01-007_指定工作区管理员组_PRD_v1.0_2026-10-12.html",
         "version": "v1.0",
         "status": "需求已编写，待评审；开发与验收未完成"
-      }
+      },
+      "legacy_id": "FACT-P01-REQ-007"
     },
     {
-      "id": "FACT-P01-REQ-008",
+      "id": "P01-008",
       "name": "查询用户在线状态",
       "legacyModule": "M01 案件与工作区",
       "legacyPriority": "待确认",
@@ -4045,8 +4238,8 @@
       "entry": "Users & Groups > User Status；工作区其他 > User Status",
       "behavior": "平台与工作区 User Status 展示当前角色和固定样例；按用户名、邮箱、案件、客户、服务器、状态、更新时间七项本地文本过滤。",
       "output": "当前角色与示例用户的状态表",
-      "boundary": "只读查询；REQ-001 提供会话，REQ-003/004 限定范围，P03 保留登录审计；在线不等于正在审阅。PRD v1.0 待评审，目录建议后续扩展。",
-      "acceptance": "见 FACT-P01-REQ-008 PRD v1.0：AC01–AC18，覆盖筛选与刷新、授权隔离、多会话去重、在线阈值、未知状态、心跳与活动区分及迟到响应。",
+      "boundary": "只读查询；P01-001 提供会话，P01-003/P01-004 限定范围，P03 保留登录审计；在线不等于正在审阅。PRD v1.0 待评审，目录建议后续扩展。",
+      "acceptance": "见 P01-008 PRD v1.0：AC01–AC18，覆盖筛选与刷新、授权隔离、多会话去重、在线阈值、未知状态、心跳与活动区分及迟到响应。",
       "evidence": [
         {
           "path": "src/pages/AccessPages.tsx",
@@ -4062,13 +4255,14 @@
       "sourceState": "源码已提交；本轮 PRD 与台账同步未提交",
       "verification": "2026-10-12 当前原版页面截图与静态源码核对；HEAD 1a8db2ab6ce89fc0e6ad5e2baca735e2ccef74da；本轮未修改产品源码；真实服务端未验收。",
       "prd": {
-        "path": "工作成果/02_需求与规划/FACT-P01-REQ-008_查询用户在线状态_PRD_v1.0_2026-10-12.html",
+        "path": "工作成果/02_需求与规划/P01-008_查询用户在线状态_PRD_v1.0_2026-10-12.html",
         "version": "v1.0",
         "status": "需求已编写，待评审；开发与验收未完成"
-      }
+      },
+      "legacy_id": "FACT-P01-REQ-008"
     },
     {
-      "id": "FACT-P01-REQ-009",
+      "id": "P01-009",
       "name": "配置字段组权限与继承",
       "legacyModule": "M06 审阅配置与作业",
       "legacyPriority": "待确认",
@@ -4087,7 +4281,7 @@
       "entry": "审阅配置 > 字段与布局 > 字段列表 > 盾牌字段权限；详情编辑权限按钮当前禁用",
       "behavior": "当前只列本工作区组和成员；按字段保存覆盖开关、按字段与组保存五项动作；非查看项联动查看，关闭查看清除其他项；换组直接读取已存值。",
       "output": "页面局部权限状态；同页重开可回显；不是持久策略或真实继承结果。",
-      "boundary": "REQ-003提供组关系，REQ-005提供上级策略，REQ-004统一计算并执行；M06定义字段与编码；本条维护字段组策略。继承粒度和动作语义待评审。",
+      "boundary": "P01-003提供组关系，P01-005提供上级策略，P01-004统一计算并执行；M06定义字段与编码；本条维护字段组策略。继承粒度和动作语义待评审。",
       "acceptance": "PRD v1.0 AC01–AC15：继承来源、逐组草稿、五项联动、原子版本保存、幂等/冲突恢复、撤权及各数据出口字段过滤；当前仅局部原型行为已核对。",
       "evidence": [
         {
@@ -4112,14 +4306,15 @@
       "prd": {
         "version": "1.0",
         "date": "2026-10-12",
-        "file": "FACT-P01-REQ-009_配置字段组权限与继承_PRD_v1.0_2026-10-12.md",
+        "file": "P01-009_配置字段组权限与继承_PRD_v1.0_2026-10-12.md",
         "definitionStatus": "待评审",
         "developmentStatus": "交互原型：字段权限局部演示；目标PRD待评审",
         "dependencyStatus": "待联调及第10节确认项关闭"
-      }
+      },
+      "legacy_id": "FACT-P01-REQ-009"
     },
     {
-      "id": "FACT-P01-REQ-010",
+      "id": "P01-010",
       "name": "使用全局导航和帮助入口",
       "legacyModule": "P02 任务执行与恢复",
       "legacyPriority": "待确认",
@@ -4138,7 +4333,7 @@
       "entry": "AppShell 左侧导航及顶部工作区、搜索快捷入口、帮助、账户菜单；通知为P02挂载位",
       "behavior": "按演示角色及工作区上下文呈现入口；工作区内搜索跳文档页；帮助固定文字，账户部分项只关闭弹层，退出清除演示身份；Scope追溯抽屉已移除。",
       "output": "演示导航、上下文和弹层；不产生真实授权、搜索、通知或会话撤销结果。",
-      "boundary": "本条只做导航与帮助呈现；工作区交M01-007，搜索交M05，退出交REQ-001，授权交REQ-004；投递、已读、未读数量及通知目标交P02-008。",
+      "boundary": "本条只做导航与帮助呈现；工作区交M01-007，搜索交M05，退出交P01-001，授权交P01-004；投递、已读、未读数量及通知目标交P02-008。",
       "acceptance": "PRD v1.0 AC01–AC16：角色/上下文导航、返回、搜索交接、未保存保护、异步隔离、帮助可用性、弹层、通知挂载、真实登出及越权拒绝；不恢复Scope。",
       "evidence": [
         {
@@ -4154,23 +4349,24 @@
       ],
       "parent": null,
       "level": "补录功能",
-      "reviewedAt": "2026-10-12",
+      "reviewedAt": "2026-10-21",
       "change": "2026-10-12 依据需求目录形成独立十节PRD，核对当前原型差距及目标验收；不改原型源码或人工批准状态。",
       "oldRow": null,
-      "sourceState": "原型源码已提交；本轮PRD与台账未提交",
-      "verification": "2026-10-12 原版桌面核对平台/工作区导航、搜索跳文档、帮助及账户菜单；页面无脚本错误。未验收真实身份、通知、资料目录或服务端退出。",
+      "sourceState": "HEAD 52dab30 + 工作区未提交文案修改",
+      "verification": "2026-10-12 原版桌面核对平台/工作区导航、搜索跳文档、帮助及账户菜单；页面无脚本错误。未验收真实身份、通知、资料目录或服务端退出。；2026-10-21：演示项目文案统一为马克欺诈项目 / Project Mark Fraud；索引、制作、任务、通知及示例合同客户名称同步；仅文案调整，业务行为和验收规则不变。",
       "legacyName": "全局搜索、通知、帮助与范围入口",
       "prd": {
         "version": "1.0",
         "date": "2026-10-12",
-        "file": "FACT-P01-REQ-010_使用全局导航和帮助入口_PRD_v1.0_2026-10-12.md",
+        "file": "P01-010_使用全局导航和帮助入口_PRD_v1.0_2026-10-12.md",
         "definitionStatus": "待评审",
         "developmentStatus": "交互原型：全局入口与帮助演示；目标PRD待评审",
         "dependencyStatus": "待联调及第10节确认项关闭"
-      }
+      },
+      "legacy_id": "FACT-P01-REQ-010"
     },
     {
-      "id": "FACT-P01-REQ-011",
+      "id": "P01-011",
       "name": "配置服务账户和调用权限",
       "legacyModule": "P01 身份与授权",
       "legacyPriority": "待确认",
@@ -4182,19 +4378,19 @@
       "confirmedBy": null,
       "confirmedDate": null,
       "decision": null,
-      "source": "需求目录v2.0既有FACT-P01-REQ-011；整体产品设计v28；FACT-N-002/007；未指定REL来源",
+      "source": "需求目录v2.0既有P01-011；整体产品设计v28；FACT-N-002/007；未指定REL来源",
       "basis": "整体设计生产要求补齐；非源码实现证据",
       "module": "P01 身份与授权",
       "role": "授权运维、权限管理者、后台服务、审计人员",
       "entry": "目标：受控部署配置/运维入口；当前无业务页面",
       "behavior": "当前未实现。本轮只形成服务身份、用途/范围、凭据引用、启停、轮换与调用交接的目标PRD。",
       "output": "当前仅PRD与目标图；目标输出稳定服务身份及配置版本、调用策略和可审计的启停/轮换结果。",
-      "boundary": "REQ-004统一鉴权，P04-009保存和轮换秘密，P02绑定真实发起人及任务范围，业务模块核对批准；没有无发起人例外。",
+      "boundary": "P01-004统一鉴权，P04-009保存和轮换秘密，P02绑定真实发起人及任务范围，业务模块核对批准；没有无发起人例外。",
       "acceptance": "PRD v1.0 AC01–AC18：环境/目标/范围隔离、真实发起人、最小动作、启停撤销、正常/紧急轮换、幂等恢复、持久化和脱敏审计；全部待实现验收。",
       "evidence": [
         {
           "path": "docs/P01_PRD_REFERENCES.md",
-          "anchor": "## FACT-P01-REQ-011 配置服务账户和调用权限",
+          "anchor": "## P01-011 配置服务账户和调用权限",
           "line": 21
         }
       ],
@@ -4208,14 +4404,15 @@
       "prd": {
         "version": "1.0",
         "date": "2026-10-12",
-        "file": "FACT-P01-REQ-011_配置服务账户和调用权限_PRD_v1.0_2026-10-12.md",
+        "file": "P01-011_配置服务账户和调用权限_PRD_v1.0_2026-10-12.md",
         "definitionStatus": "待评审",
         "developmentStatus": "未实现：设计补齐，PRD待评审",
         "dependencyStatus": "待联调及第10节确认项关闭"
-      }
+      },
+      "legacy_id": "FACT-P01-REQ-011"
     },
     {
-      "id": "FACT-P02-REQ-001",
+      "id": "P02-001",
       "legacyModule": "任务与可靠性",
       "name": "统一任务列表",
       "legacyPriority": "M0",
@@ -4245,14 +4442,15 @@
       ],
       "parent": null,
       "level": "原有功能",
-      "reviewedAt": "2026-10-08",
+      "reviewedAt": "2026-10-21",
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 86,
-      "sourceState": "已提交源码",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "sourceState": "HEAD 52dab30 + 工作区未提交文案修改",
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败；2026-10-21：演示项目文案统一为马克欺诈项目 / Project Mark Fraud；索引、制作、任务、通知及示例合同客户名称同步；仅文案调整，业务行为和验收规则不变。",
+      "legacy_id": "FACT-P02-REQ-001"
     },
     {
-      "id": "FACT-P02-REQ-002",
+      "id": "P02-002",
       "legacyModule": "任务与可靠性",
       "name": "任务详情与运行记录",
       "legacyPriority": "M0",
@@ -4286,10 +4484,11 @@
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 87,
       "sourceState": "已提交源码",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-P02-REQ-002"
     },
     {
-      "id": "FACT-P03-REQ-001",
+      "id": "P03-001",
       "legacyModule": "任务与可靠性",
       "name": "关键操作审计与恢复",
       "legacyPriority": "M0",
@@ -4323,10 +4522,11 @@
       "change": "对照最新原版源码重新核对；保留历史范围建议，不代表本期批准",
       "oldRow": 89,
       "sourceState": "已提交源码",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-P03-REQ-001"
     },
     {
-      "id": "FACT-P03-REQ-002",
+      "id": "P03-002",
       "name": "审计范围、查询与统计",
       "legacyModule": "P02 任务执行与恢复",
       "legacyPriority": "待确认",
@@ -4354,16 +4554,17 @@
           "line": 15
         }
       ],
-      "parent": "FACT-P03-REQ-001",
+      "parent": "P03-001",
       "level": "细化子项",
       "reviewedAt": "2026-10-08",
       "change": "2026-10-08 新增追溯记录；细化父项，开发估时不与父项重复累加",
       "oldRow": null,
       "sourceState": "已提交源码",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-P03-REQ-002"
     },
     {
-      "id": "FACT-P03-REQ-003",
+      "id": "P03-003",
       "name": "审计详情及 CSV/XLSX 导出",
       "legacyModule": "P02 任务执行与恢复",
       "legacyPriority": "待确认",
@@ -4391,16 +4592,17 @@
           "line": 47
         }
       ],
-      "parent": "FACT-P03-REQ-001",
+      "parent": "P03-001",
       "level": "细化子项",
       "reviewedAt": "2026-10-08",
       "change": "2026-10-08 新增追溯记录；细化父项，开发估时不与父项重复累加",
       "oldRow": null,
       "sourceState": "已提交源码",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-P03-REQ-003"
     },
     {
-      "id": "FACT-P03-REQ-004",
+      "id": "P03-004",
       "name": "审计撤回预检与补偿记录",
       "legacyModule": "P02 任务执行与恢复",
       "legacyPriority": "待确认",
@@ -4428,16 +4630,17 @@
           "line": 44
         }
       ],
-      "parent": "FACT-P03-REQ-001",
+      "parent": "P03-001",
       "level": "细化子项",
       "reviewedAt": "2026-10-08",
       "change": "2026-10-08 新增追溯记录；细化父项，开发估时不与父项重复累加",
       "oldRow": null,
       "sourceState": "已提交源码",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-P03-REQ-004"
     },
     {
-      "id": "FACT-P04-REQ-001",
+      "id": "P04-001",
       "name": "备份、恢复与运行监控",
       "legacyModule": "P02 任务执行与恢复",
       "legacyPriority": "待确认",
@@ -4462,16 +4665,17 @@
         {
           "path": "src/state/Administration.tsx",
           "anchor": "function useAdministrationState",
-          "line": 43
+          "line": 45
         }
       ],
-      "parent": "FACT-P03-REQ-001",
+      "parent": "P03-001",
       "level": "细化子项",
       "reviewedAt": "2026-10-08",
       "change": "2026-10-08 新增追溯记录；细化父项，开发估时不与父项重复累加",
       "oldRow": null,
       "sourceState": "含未提交工作区修改",
-      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败"
+      "verification": "2026-10-08 静态源码核对；未进行本轮页面回归；当前全工程类型检查失败",
+      "legacy_id": "FACT-P04-REQ-001"
     }
   ],
   "changes": [
@@ -5757,6 +5961,262 @@
       "summary": "批量操作新增14项菜单、文档选择约束与范围预览；保留具体批量执行和权限联动缺口，未改变人工范围确认。",
       "ids": [
         "FACT-M06-REQ-015"
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "version": "1.13",
+      "summary": "按用户授权统一业务节点编号与引用，同步PRD和五份Excel；只核对编号及关联，不改变既有行为、人工确认或实现验收日期",
+      "ids": [
+        "M01-001",
+        "M01-002",
+        "M01-003",
+        "M01-004",
+        "M01-005",
+        "M01-006",
+        "M02-001",
+        "M02-002",
+        "M02-003",
+        "M02-004",
+        "M03-001",
+        "M03-002",
+        "M04-001",
+        "M04-002",
+        "M04-003",
+        "M04-004",
+        "M04-005",
+        "M04-006",
+        "M04-007",
+        "M04-008",
+        "M04-009",
+        "M04-010",
+        "M04-011",
+        "M04-012",
+        "M04-013",
+        "M04-014",
+        "M04-015",
+        "M04-016",
+        "M04-017",
+        "M05-001",
+        "M05-002",
+        "M05-003",
+        "M05-004",
+        "M05-005",
+        "M05-006",
+        "M05-007",
+        "M05-008",
+        "M05-009",
+        "M05-010",
+        "M05-011",
+        "M05-012",
+        "M05-013",
+        "M05-014",
+        "M05-015",
+        "M05-016",
+        "M05-017",
+        "M05-018",
+        "M05-019",
+        "M05-020",
+        "M05-021",
+        "M05-022",
+        "M06-001",
+        "M06-002",
+        "M06-003",
+        "M06-004",
+        "M06-005",
+        "M06-006",
+        "M06-007",
+        "M06-008",
+        "M06-009",
+        "M06-010",
+        "M06-011",
+        "M06-012",
+        "M06-013",
+        "M06-014",
+        "M06-015",
+        "M06-016",
+        "M06-017",
+        "M06-018",
+        "M06-019",
+        "M06-020",
+        "M06-021",
+        "M06-022",
+        "M06-023",
+        "M06-024",
+        "M06-025",
+        "M06-026",
+        "M06-027",
+        "M07-001",
+        "M07-002",
+        "M07-003",
+        "M07-004",
+        "M08-001",
+        "M08-002",
+        "M08-003",
+        "M08-004",
+        "M08-005",
+        "M08-006",
+        "M08-007",
+        "M08-008",
+        "M08-009",
+        "M08-010",
+        "M08-011",
+        "M08-012",
+        "M08-013",
+        "M08-014",
+        "M08-015",
+        "P01-001",
+        "P01-002",
+        "P01-003",
+        "P01-004",
+        "P01-005",
+        "P01-006",
+        "P01-007",
+        "P01-008",
+        "P01-009",
+        "P01-010",
+        "P01-011",
+        "P02-001",
+        "P02-002",
+        "P03-001",
+        "P03-002",
+        "P03-003",
+        "P03-004",
+        "P04-001"
+      ]
+    },
+    {
+      "date": "2026-10-21",
+      "version": "1.14",
+      "summary": "演示项目文案统一为马克欺诈项目 / Project Mark Fraud；索引、制作、任务、通知与示例合同客户同步，仅改名，不影响业务行为和验收规则。",
+      "ids": [
+        "M01-005",
+        "M05-010",
+        "M07-002",
+        "M08-005",
+        "P02-001",
+        "P01-010"
+      ]
+    },
+    {
+      "date": "2026-10-21",
+      "version": "1.14",
+      "summary": "制作编号的旧项目缩写MLP同步为MFP，完成摘要编号同步；仅演示默认值调整，编号规则与业务行为不变。",
+      "ids": [
+        "M08-005"
+      ]
+    },
+    {
+      "date": "2026-10-21",
+      "version": "1.15",
+      "summary": "对照官方 Searching Guide 补齐可搜索集 Conditions、Fields、Sort，并验证保存取消、索引构建快照和修改来源后重建提示；保留人工范围确认。",
+      "ids": [
+        "M05-004",
+        "M05-005",
+        "M05-008",
+        "M05-010",
+        "M05-018",
+        "M05-020"
+      ]
+    },
+    {
+      "date": "2026-10-21",
+      "version": "1.15",
+      "summary": "构建完成状态回归通过；将任务完成状态更新移至独立 effect，消除跨组件渲染时更新错误；可搜索集配置语义及范围保持。",
+      "ids": [
+        "M05-010",
+        "M05-020"
+      ]
+    },
+    {
+      "date": "2026-10-21",
+      "version": "1.15",
+      "summary": "将 Searchable Set 的用户可见术语统一为搜索规则，并明确 dtSearch 索引按搜索规则构建、规则可直接运行且修改后需重建；同步术语表。",
+      "ids": [
+        "M05-004",
+        "M05-005",
+        "M05-008",
+        "M05-010",
+        "M05-018",
+        "M05-020"
+      ]
+    },
+    {
+      "date": "2026-10-21",
+      "version": "1.16",
+      "summary": "用户确认将 Search Set 统一解释为搜索规则：规则包含多个搜索条件、返回字段和排序，可直接运行返回当前命中文档；dtSearch Index 作为按搜索规则建立的检索索引，规则修改后需重新构建。同步术语表与界面双语文案。",
+      "ids": [
+        "M05-004",
+        "M05-005",
+        "M05-008",
+        "M05-010",
+        "M05-018",
+        "M05-020"
+      ]
+    },
+    {
+      "date": "2026-10-21",
+      "version": "1.16",
+      "summary": "同步搜索规则与 dtSearch 索引的对象边界、运行和重建说明。",
+      "ids": [
+        "M05-004",
+        "M05-005",
+        "M05-008",
+        "M05-010",
+        "M05-018",
+        "M05-020"
+      ]
+    },
+    {
+      "date": "2026-10-21",
+      "version": "1.16",
+      "summary": "统一 Search Set／搜索规则与 dtSearch Index／dtSearch 索引术语，并同步术语表发布文件。",
+      "ids": [
+        "M05-004",
+        "M05-005",
+        "M05-008",
+        "M05-010",
+        "M05-018",
+        "M05-020"
+      ]
+    },
+    {
+      "date": "2026-10-21",
+      "version": "1.17",
+      "summary": "按用户要求仅修正英文对象术语为 Search Set；中文统一保留为搜索规则；dtSearch Index、业务行为、内部字段和验收边界不变。",
+      "ids": [
+        "M05-004",
+        "M05-005",
+        "M05-008",
+        "M05-010",
+        "M05-018",
+        "M05-020"
+      ]
+    },
+    {
+      "date": "2026-10-21",
+      "version": "1.17",
+      "summary": "仅修正英文对象术语为 Search Set；中文搜索规则语义、dtSearch 索引行为、内部字段和验收边界不变。",
+      "ids": [
+        "M05-004",
+        "M05-005",
+        "M05-008",
+        "M05-010",
+        "M05-018",
+        "M05-020"
+      ]
+    },
+    {
+      "date": "2026-10-21",
+      "version": "1.17",
+      "summary": "同步术语表发布副本，仅修正英文对象术语为 Search Set；中文搜索规则语义及业务边界不变。",
+      "ids": [
+        "M05-004",
+        "M05-005",
+        "M05-008",
+        "M05-010",
+        "M05-018",
+        "M05-020"
       ]
     }
   ]
