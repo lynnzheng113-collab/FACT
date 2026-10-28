@@ -1,22 +1,17 @@
 {
   "schemaVersion": 1,
-  "reviewedAt": "2026-10-21",
-  "reason": "同步术语表发布副本，仅修正英文对象术语为 Search Set；中文搜索规则语义及业务边界不变。",
+  "reviewedAt": "2026-10-28",
+  "reason": "移除顶部全局帮助按钮及弹层，P01-010同步PRD v1.5；AC09和AC10撤销；保留角色导航、账户、通知及业务页面内部说明。",
   "affectedIds": [
-    "M05-004",
-    "M05-005",
-    "M05-008",
-    "M05-010",
-    "M05-018",
-    "M05-020"
+    "P01-010"
   ],
   "files": {
     "index.html": "31131ed4d242933ebacf8334005b92db5c725c9081aa00738e2e6cfa9ba1647a",
     "package-lock.json": "aceee2b5557b9b4ff5d4d779d8549b00f7f3511887a552482001ee1ced604566",
     "package.json": "d47b175cfb71e266ed8334a847960c8b2e093e286aac885e46e0f44931b8482e",
     "public/eDiscovery-glossary.html": "c5f7d4e12e790967a1379ae1c1cc2cda9650d62d0d1d26b07d52a5b6f793f922",
-    "src/App.tsx": "592275ba314c152bc21b85596963a3abc0de9eded4f49407cb9b232b4ea185e3",
-    "src/components/AppShell.tsx": "e9f5447fa8209d850adf17d9ddb489096d27c84dec16b51014fcf540a404704f",
+    "src/App.tsx": "c64b3923050a01677a0060dbf810ef8b0e5fe8494feff8cbf481377d22cfdcf6",
+    "src/components/AppShell.tsx": "e2c4837eb075e2f04cd13052d429087e09565cf19fbc449dbe653710add5e8f1",
     "src/components/BulkOperations.tsx": "b86329554c623d26a014ac2f98cde1ea497c26fe299f916b3d9c9c072433bbd5",
     "src/components/FieldChoices.tsx": "d337ecfd23d537bae0a4f6b6521ff0193a6981f2f2876a12df22fa938d248a74",
     "src/components/InventoryFilters.tsx": "f46371a061fac67f0e81c8c03cde2676e0a247808409467dbb8344cd077949f7",
@@ -32,7 +27,7 @@
     "src/components/UserForm.tsx": "52abb0b939e345efc64c174014d6915d91edbf49767d496892a9b1d177d942fa",
     "src/components/WorkspaceAdvanced.tsx": "ad6cdd8031f137be82b9839d4ebb7947b209594496b613d60a8b82f5acc3ee7a",
     "src/components/WorkspacePermissions.tsx": "82bb7b4148d2f5979fb8aeb0cab58f105ed83e244457433687d88d1921710afc",
-    "src/constants/copy.ts": "994c35964cf3a04e9460a209e77b816f96701ddbf317858bc767cbfba0a9e8d2",
+    "src/constants/copy.ts": "ef134e2af95482c344fd1883dee940f1941430db9e8403a3c950c8cd8eaec773",
     "src/main.tsx": "00192230c902a8bc8730ac3c5ce29da318fc3072eeaa9eb8fec1d8faa21a18c9",
     "src/pages/AccessPages.tsx": "0347613aae4cd6e41291d1b1b94cba7651188d8a2dc2621042defbcaa5941662",
     "src/pages/AnalyticsPage.tsx": "d6fb819caa78fec487e2bb157ca9fff70f3a84cba7886907d6ca6e473635ef76",
@@ -79,7 +74,7 @@
     "tsconfig.node.json": "477a22e56a74a5ed799afa0ef521eae5d4d12cdc8a411465242c3c1d7f6ec72c",
     "vite.config.ts": "8a18c5e2038444028aa8afde616e9a899a477a4f5321f22a3d924649a10b40c1"
   },
-  "ledgerHash": "737fce656d278747a699b201e58c35185bf32dfa4ef6b8c4bbd2de944627e558",
-  "featuresHash": "7ffa93814e7bd8a6a42ee7b0a7abd90df904e8ec7e1aa894f00f9f84db692858",
-  "markdownHash": "82042bb471adb00216dffc4e4e44d7e76e589edf20df754db482bd62aeadb503"
+  "ledgerHash": "9419c3973ea9cd707c5113341ffc27aa4f6a034fbd753a5334e9961dfc9e2533",
+  "featuresHash": "d3fe51eeaec4b4451ddc085bd121552ae34429bf8c11bd3b7bc33151f6e33452",
+  "markdownHash": "8039c67991fc1e78b6a7f0e1c28a5deb94983b5d100b759ba8ecb20b530d8c62"
 }

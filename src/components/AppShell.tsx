@@ -6,7 +6,6 @@ import {
   ArrowLeft,
   Files,
   FolderCog,
-  HelpCircle,
   Home,
   ListTodo,
   Menu,
@@ -44,8 +43,6 @@ export function AppShell({
   children,
   notificationsOpen,
   setNotificationsOpen,
-  helpOpen,
-  setHelpOpen,
   userOpen,
   setUserOpen,
 }: {
@@ -55,8 +52,6 @@ export function AppShell({
   children: ReactNode;
   notificationsOpen: boolean;
   setNotificationsOpen: (open: boolean) => void;
-  helpOpen: boolean;
-  setHelpOpen: (open: boolean) => void;
   userOpen: boolean;
   setUserOpen: (open: boolean) => void;
 }) {
@@ -104,9 +99,6 @@ export function AppShell({
               <Bell size={19} />
               <span className="notification-dot" />
             </IconButton>
-            <IconButton label={copy.common.help} onClick={() => setHelpOpen(!helpOpen)} active={helpOpen}>
-              <HelpCircle size={19} />
-            </IconButton>
             <button type="button" className="user-button" onClick={() => setUserOpen(!userOpen)}>
               <User size={18} aria-hidden="true" />
               <span>{copy.access.accounts[role].name}</span>
@@ -125,14 +117,6 @@ export function AppShell({
                   </button>
                 ))}
               </div>
-            </div>
-          )}
-
-          {helpOpen && (
-            <div className="popover popover--help">
-              <h2>{copy.overlays.helpTitle}</h2>
-              <p>{copy.overlays.helpText}</p>
-              <p className="popover__note">{copy.overlays.noBackend}</p>
             </div>
           )}
 

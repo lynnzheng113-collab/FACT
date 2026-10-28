@@ -92,7 +92,6 @@ export const copy = {
     open: "打开 / Open",
     details: "详情 / Details",
     notifications: "通知 / Notifications",
-    help: "帮助 / Help",
     userOptions: "用户选项 / User options",
     openImport: "打开导入 / Open import",
   },
@@ -4423,9 +4422,6 @@ export const copy = {
     ],
     userTitle: "用户选项 / User Options",
     userItems: ["个人资料 / Profile", "界面偏好 / Preferences", "键盘快捷键 / Keyboard shortcuts", "退出 / Sign out"],
-    helpTitle: "原型说明 / Prototype Help",
-    helpText: "使用左侧导航体验完整流程；点击顶部返回按钮可回到工作区列表。 / Use the left navigation to explore the workflow and the top back button to return to the workspace list.",
-    noBackend: "这是可交互的前端原型，操作只改变当前浏览器中的演示状态。 / This is an interactive front-end prototype; actions only change demo state in this browser session.",
   },
   toasts: {
     generic: "操作已完成 / Action completed",

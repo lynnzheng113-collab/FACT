@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
-  "version": "1.17",
-  "reviewedAt": "2026-10-21",
+  "version": "1.18",
+  "reviewedAt": "2026-10-28",
   "basis": {
     "edition": "原版",
     "prototypeLabel": "v0.17 · 2026-10-04",
-    "commit": "52dab309d8f4e6dcad2d8769604fcc1c6a4d7a62",
-    "latestCommitDate": "2026-10-16",
+    "commit": "6db5dcfc6824b23616adf5912168d3d98a67acbe",
+    "latestCommitDate": "2026-10-21",
     "includesWorkingTree": true,
     "scopeNote": "本清单以最新原版源码为准，不以独立 MVP 版的 58 项截断；M0/M1/M2/条件必要仅为旧建议，确认列保留。"
   },
@@ -4009,7 +4009,7 @@
       "gap": "用户属于多组时的真实授权合并待实现",
       "finalPriority": "确认",
       "confirmedBy": null,
-      "confirmedDate": "",
+      "confirmedDate": null,
       "decision": "2026-10-12",
       "source": "SUP-005",
       "basis": "原型现有",
@@ -4047,7 +4047,7 @@
       "gap": "无服务端认证和文档级授权，不能以隐藏导航作为授权完成",
       "finalPriority": "确认",
       "confirmedBy": null,
-      "confirmedDate": "",
+      "confirmedDate": null,
       "decision": "2026-10-12",
       "source": "SUP-006",
       "basis": "原型现有",
@@ -4115,7 +4115,7 @@
         {
           "path": "src/constants/copy.ts",
           "anchor": "    tabRows:",
-          "line": 1022
+          "line": 1021
         },
         {
           "path": "src/styles/permissions.css",
@@ -4315,13 +4315,13 @@
     },
     {
       "id": "P01-010",
-      "name": "使用全局导航和帮助入口",
+      "name": "使用全局导航",
       "legacyModule": "P02 任务执行与恢复",
       "legacyPriority": "待确认",
       "legacyForm": "待确认",
       "legacyScope": "新增核对项；本期实现深度待确认，原型出现不等于已批准",
-      "prototypeStatus": "交互原型：全局入口与帮助演示；目标PRD待评审",
-      "gap": "无真实身份授权导航、统一未保存保护、弹层互斥及焦点管理；帮助无实际资料列表；通知红点与数据为固定样例。",
+      "prototypeStatus": "交互原型：角色导航、账户与通知入口；顶部全局帮助已移除；目标PRD待评审",
+      "gap": "无真实身份授权导航、统一未保存保护、弹层互斥及焦点管理；通知红点与数据为固定样例。",
       "finalPriority": "待确认",
       "confirmedBy": null,
       "confirmedDate": null,
@@ -4330,16 +4330,16 @@
       "basis": "最新版原版补录",
       "module": "P01 身份与授权",
       "role": "已登录用户；平台或当前工作区",
-      "entry": "AppShell 左侧导航及顶部工作区、搜索快捷入口、帮助、账户菜单；通知为P02挂载位",
-      "behavior": "按演示角色及工作区上下文呈现入口；工作区内搜索跳文档页；帮助固定文字，账户部分项只关闭弹层，退出清除演示身份；Scope追溯抽屉已移除。",
+      "entry": "AppShell 左侧导航及顶部工作区、搜索快捷入口、账户菜单；通知为P02挂载位",
+      "behavior": "管理员在工作区前进入工作区管理页，普通用户进入工作区选择页；工作区内搜索跳文档页。顶部全局帮助按钮及弹层已移除；账户部分项只关闭弹层，退出清除演示身份；Scope追溯抽屉已移除。",
       "output": "演示导航、上下文和弹层；不产生真实授权、搜索、通知或会话撤销结果。",
-      "boundary": "本条只做导航与帮助呈现；工作区交M01-007，搜索交M05，退出交P01-001，授权交P01-004；投递、已读、未读数量及通知目标交P02-008。",
-      "acceptance": "PRD v1.0 AC01–AC16：角色/上下文导航、返回、搜索交接、未保存保护、异步隔离、帮助可用性、弹层、通知挂载、真实登出及越权拒绝；不恢复Scope。",
+      "boundary": "本条负责导航、上下文、账户与通知挂载；工作区交M01-007，搜索交M05，退出交P01-001，授权交P01-004；投递、已读、未读数量及通知目标交P02-008。",
+      "acceptance": "PRD v1.5：AC01–AC08、AC11–AC16；AC09/AC10已撤销不复用。管理员和普通用户在平台及工作区内均无全局帮助按钮和弹层；角色导航、账户、通知及返回入口保留。真实授权、未保存保护、异步隔离和登出仍待验收。",
       "evidence": [
         {
           "path": "src/components/AppShell.tsx",
           "anchor": "export function AppShell",
-          "line": 40
+          "line": 39
         },
         {
           "path": "src/App.tsx",
@@ -4349,21 +4349,27 @@
       ],
       "parent": null,
       "level": "补录功能",
-      "reviewedAt": "2026-10-21",
-      "change": "2026-10-12 依据需求目录形成独立十节PRD，核对当前原型差距及目标验收；不改原型源码或人工批准状态。",
+      "reviewedAt": "2026-10-28",
+      "change": "2026-10-28 用户确认删除顶部问号帮助入口及弹层；同步PRD v1.5，撤销AC09/AC10；不移除业务页面内部说明。",
       "oldRow": null,
-      "sourceState": "HEAD 52dab30 + 工作区未提交文案修改",
-      "verification": "2026-10-12 原版桌面核对平台/工作区导航、搜索跳文档、帮助及账户菜单；页面无脚本错误。未验收真实身份、通知、资料目录或服务端退出。；2026-10-21：演示项目文案统一为马克欺诈项目 / Project Mark Fraud；索引、制作、任务、通知及示例合同客户名称同步；仅文案调整，业务行为和验收规则不变。",
+      "sourceState": "HEAD 6db5dcf + 本轮本地未提交修改；线上原型未发布",
+      "verification": "2026-10-28 本地原版浏览器核对管理员/普通用户工作区前后均无全局帮助入口，通知与账户菜单可打开，角色导航和返回入口保留，浏览器未记录脚本错误。真实授权、通知服务及服务端退出未验收。",
       "legacyName": "全局搜索、通知、帮助与范围入口",
       "prd": {
-        "version": "1.0",
-        "date": "2026-10-12",
-        "file": "P01-010_使用全局导航和帮助入口_PRD_v1.0_2026-10-12.md",
+        "version": "1.5",
+        "date": "2026-10-28",
+        "file": "https://factlab-cn-hangzhou.devops.aliyuncs.com/codeup/factlab/ediscovery/engineering/blob/master/prd/00-产品整体/P01_身份与授权/010-使用全局导航和帮助入口/fact-身份与授权-使用全局导航和帮助入口-prd.md",
         "definitionStatus": "待评审",
-        "developmentStatus": "交互原型：全局入口与帮助演示；目标PRD待评审",
-        "dependencyStatus": "待联调及第10节确认项关闭"
+        "developmentStatus": "交互原型：角色导航、账户与通知入口；顶部全局帮助已移除；目标PRD待评审",
+        "dependencyStatus": "真实身份、授权、通知、会话撤销及未保存接口待联调"
       },
-      "legacy_id": "FACT-P01-REQ-010"
+      "legacy_id": "FACT-P01-REQ-010",
+      "nameHistory": [
+        {
+          "date": "2026-10-28",
+          "name": "使用全局导航和帮助入口"
+        }
+      ]
     },
     {
       "id": "P01-011",
@@ -4391,7 +4397,7 @@
         {
           "path": "docs/P01_PRD_REFERENCES.md",
           "anchor": "## P01-011 配置服务账户和调用权限",
-          "line": 21
+          "line": 22
         }
       ],
       "parent": null,
@@ -6217,6 +6223,14 @@
         "M05-010",
         "M05-018",
         "M05-020"
+      ]
+    },
+    {
+      "date": "2026-10-28",
+      "version": "1.18",
+      "summary": "移除顶部全局帮助按钮及弹层，P01-010同步PRD v1.5；AC09和AC10撤销；保留角色导航、账户、通知及业务页面内部说明。",
+      "ids": [
+        "P01-010"
       ]
     }
   ]
